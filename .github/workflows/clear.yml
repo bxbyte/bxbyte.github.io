@@ -10,4 +10,4 @@ on:
 
 jobs:
   clear-runs:
-    uses: bxbyte/bxbyte.github.io/workflows/clear.yml
+    uses: ./workflows/clear.yml

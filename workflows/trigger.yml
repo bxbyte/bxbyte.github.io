@@ -1,5 +1,9 @@
 name: Trigger workflow of public repo
 
+on:
+  # Call from workflow file
+  workflow_call:
+  
 # Environment variables
 env:
   repo: bxbyte.github.io

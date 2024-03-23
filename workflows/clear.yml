@@ -1,6 +1,10 @@
 # Keep only one workflow run by day for a month
 name: Clear old workflow runs
 
+on:
+  # Call from workflow file
+  workflow_call:
+
 jobs:
   clear-runs:
     runs-on: ubuntu-latest
