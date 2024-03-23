@@ -1,0 +1,29 @@
+name: Update submodule
+
+on:
+  # Run on pushes targeting main branches
+  push:
+    tags:
+      - "*"
+  # Run on pushes from other repo
+  repository_dispatch:
+  # Manually run from the Actions tab
+  workflow_dispatch:
+
+env:
+  commit_msg: Submodule update
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          submodules: recursive
+      - name: Update submodule
+        run: git submodule foreach "git add . && git commit -m '${{ env.commit_msg }}' && git push"
+      - name: Update itself
+        run: git add . && git commit -m '${{ env.commit_msg }}' && git push
