@@ -23,11 +23,17 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           submodules: recursive
-      - name: Config github
+      - name: Config git
         run: |
           git config --global user.name '${{ github.repository_owner }}'
           git config --global user.email '${{ github.repository_owner }}@users.noreply.github.com'
       - name: Update submodule
-        run: git submodule foreach "git add . && git commit -m '${{ env.commit_msg }}' && git push"
+        run: |
+          git submodule foreach --recursive \
+          "git add . && git commit -m '${{ env.commit_msg }}' && git push"
+          exit 0
       - name: Update itself
-        run: git add . && git commit -m '${{ env.commit_msg }}' && git push
+        run: 
+          git add .
+          git commit -m '${{ env.commit_msg }}'
+          git push
