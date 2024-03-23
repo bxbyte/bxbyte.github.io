@@ -1,4 +1,0 @@
-[submodule "website/articles"]
-	path = website/articles
-	url = git@github.com:bxbyte/bxbyte.github.io.articles.git
-	branch = main
