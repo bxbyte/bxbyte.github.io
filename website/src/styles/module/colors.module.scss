@@ -1,0 +1,73 @@
+// Fillings
+
+.fillIndex {
+	color: var(--c-a-index-w);
+
+	& > * {
+		fill: color-mix(
+			in srgb,
+			var(--c-a-index-start),
+			var(--c-a-index-end) calc(var(--n-i) / var(--n-n) * 100%)
+		);
+	}
+}
+
+// Backgrounds
+
+.backIndex {
+	& > * {
+		background-color: color-mix(
+			in srgb,
+			var(--c-a-index-start),
+			var(--c-a-index-end) calc(var(--n-i) / var(--n-n) * 100%)
+		);
+		color: var(--c-a-index-w);
+	}
+}
+
+.backGradient {
+	background: linear-gradient(
+		-45deg,
+		var(--c-a-gradient-start),
+		var(--c-a-gradient-end)
+	);
+	color: var(--c-a-gradient-w);
+}
+
+.backNoisy {
+	position: absolute;
+	color: var(--c-a-noisy-w);
+
+	&::after {
+		content: '';
+		position: absolute;
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		color: var(--c-a-w);
+		background: linear-gradient(
+				45deg,
+				var(--c-a-noisy-start),
+				var(--c-a-noisy-end)
+			),
+			svg('../img/noise.svg');
+		filter: var(--c-a-noisy-filter);
+	}
+}
+
+.backAccent {
+	background-color: var(--c-a);
+	color: var(--c-a-w);
+}
+
+.backContrast {
+	background-color: var(--c-b);
+	color: var(--c-w);
+}
+
+// Filters
+
+.filterBW {
+	filter: saturate(0) brightness(var(--f-bw));
+}

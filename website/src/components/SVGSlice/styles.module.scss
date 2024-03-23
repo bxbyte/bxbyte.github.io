@@ -1,0 +1,35 @@
+$correcter-factor: 1.25; // Adjust 3d view
+$bottom-idx: 0;
+$number-idx: 32;
+
+.slice {
+	--number-idx: #{$number-idx};
+	--bottom-idx: #{$bottom-idx};
+	overflow: clip;
+	overflow-clip-margin: 10000px; // Fix for firefox
+	fill-rule: evenodd;
+	stroke: none;
+	perspective: 10000px;
+	transform-style: preserve-3d;
+
+	path {
+		transform-origin: center;
+		transition: transform 1s ease-in-out;
+	}
+
+	&:hover path {
+		transform: rotateX(45deg) rotateZ(-405deg)
+			translateZ(
+				calc(
+					(800px / var(--number-idx) / #{$correcter-factor}) *
+						(var(--idx) - var(--number-idx) / 2)
+				)
+			);
+	}
+
+	@for $idx from $bottom-idx through calc($number-idx - $bottom-idx) {
+		& > :nth-child(#{$idx}) {
+			--idx: #{$idx};
+		}
+	}
+}

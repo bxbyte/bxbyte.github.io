@@ -1,0 +1,22 @@
+.center {
+	flex-wrap: wrap;
+
+	& > * {
+		margin: auto;
+	}
+}
+
+.vertical {
+	flex-direction: column;
+}
+
+.horizontal {
+	display: flex;
+	flex-direction: row;
+
+	& > hr {
+		min-height: 100%;
+		width: 0;
+		border-left: 1px solid var(--c-w-b);
+	}
+}
