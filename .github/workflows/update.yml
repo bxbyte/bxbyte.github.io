@@ -1,4 +1,4 @@
-name: Update submodule
+name: Update submodules
 
 on:
   # Run on pushes targeting main branches
@@ -23,6 +23,10 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           submodules: recursive
+      - name: Config github
+        run: |
+          git config --global user.name '${{ github.repository_owner }}'
+          git config --global user.email '${{ github.repository_owner }}@users.noreply.github.com'
       - name: Update submodule
         run: git submodule foreach "git add . && git commit -m '${{ env.commit_msg }}' && git push"
       - name: Update itself
