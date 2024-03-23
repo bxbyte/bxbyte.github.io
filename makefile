@@ -11,6 +11,5 @@ update.modules:
 	git submodule foreach --recursive "git add . && git commit -m 'submodule update' && git push origin HEAD:main"
 
 pull:
-	git pull --recurse-submodules
-	git submodule update --remote --recursive
+	git pull --force --recurse-submodules
 	git submodule update --force --recursive --init --remote
