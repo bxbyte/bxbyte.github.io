@@ -1,4 +1,4 @@
-update: update.self update.modules
+update: update.modules update.self
 
 update.self:
 	echo Updating itself
@@ -8,4 +8,4 @@ update.self:
 
 update.modules:
 	echo Updating modules
-	git submodule foreach --recursive "git add . && git commit -m 'submodule update' && git push"
+	git submodule foreach --recursive "git add . && git commit -m 'submodule update' && git push --checkout"
