@@ -11,7 +11,7 @@ graph
     src("bxbyte.github.src (private)"):::privateRepo
     articles("bxbyte.github.articles (private)"):::privateRepo
 
-    worflow([<a href="./.github/workflows/publish.yml">Publisher workflow</a>])
+    worflow([<a href="https://github.com/bxbyte/bxbyte.github.io/blob/main/.github/workflows/publish.yml">Publisher workflow</a>])
 
     website{{<a href="https://bxbyte.net"> bxbyte.net</a>}}
     style worflow stroke-dasharray: 4,stroke-width:2
