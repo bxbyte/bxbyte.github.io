@@ -42,6 +42,11 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           submodules: recursive
+      # Update references
+      - name: Git Submodule Update
+        working-directory:
+        run: |
+          git submodule update --force --recursive --init --remote
       - name: List articles
         run: tree articles
       - name: Set absolute working directory path
