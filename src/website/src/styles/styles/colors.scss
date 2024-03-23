@@ -1,0 +1,64 @@
+// Colors are based on a BWA (Black, White & Accent) tree system
+// in order to keep a good contrast.
+
+html {
+	// White
+	--c-w: #fffaf8; // root white
+	--c-w-w: #faeae0; // white for root white
+	--c-w-b: #c0b8b8; // black for root white
+
+	// Black
+	--c-b: #111; // root black
+
+	// Accent
+	--c-a: #1b56d4; // root accent
+	--c-a-w: #f8f3f1; // white for accent
+
+	// Indexable accent colors
+	--c-a-index-w: #fffaf8;
+	--c-a-index-start: #580a7c;
+	--c-a-index-end: #08b4d3;
+
+	// Gradial accent colors
+	--c-a-gradient-w: var(--c-a-index-w);
+	--c-a-gradient-start: var(--c-a-index-start);
+	--c-a-gradient-end: var(--c-a-index-end);
+
+	// Noisy accent colors
+	--c-a-noisy-w: #fffaf8;
+	--c-a-noisy-start: #8400ff80;
+	--c-a-noisy-end: #00ffc880;
+	--c-a-noisy-filter: drop-shadow(0px -1px 0 #9900ff)
+		drop-shadow(-1px 0px 0 #5900ff);
+
+	// Black and white luminosity
+	--f-bw: 1.1;
+
+	&.dark {
+		--c-a: #608ef3;
+
+		--c-w: #17191d;
+		--c-w-w: #141313;
+		--c-w-b: #2e2b2b;
+
+		--c-b: #f5eeee;
+
+		--f-bw: 0.6;
+	}
+}
+
+.hljs-keyword {
+	color: #6010e0;
+}
+
+.hljs-title {
+	color: #c300ff;
+}
+
+.hljs-attr {
+	color: #6e8ae7;
+}
+
+.hljs-string {
+	color: #21bd5d;
+}
