@@ -1,4 +1,4 @@
-name: Trigger workflow of portfolio
+name: Trigger workflow of portfolio repo
 
 on:
   # Run on pushes targeting main branches
@@ -16,7 +16,7 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger workflow of portfolio
+      - name: Trigger workflow
         run: |
           curl -L \
             -X POST \
