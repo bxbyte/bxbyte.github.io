@@ -1,0 +1,13 @@
+# Keep only one workflow run by day for a month
+name: Clear old workflow runs
+
+on:
+  # Automatically run every day
+  schedule:
+    - cron: "0 0 * * *"
+  # Manually run from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  clear-runs:
+    uses: bxbyte/bxbyte.github.io/workflows/clear.yml

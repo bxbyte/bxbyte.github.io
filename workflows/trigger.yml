@@ -1,0 +1,19 @@
+name: Trigger workflow of public repo
+
+# Environment variables
+env:
+  repo: bxbyte.github.io
+
+jobs:
+  trigger-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger workflow
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PAT }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository_owner }}/${{ env.repo }}/dispatches \
+            -d "{\"event_type\": \"${{ github.event_name }} from ${{ github.repository }}\"}"
