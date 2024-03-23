@@ -29,6 +29,8 @@ jobs:
           git config --global user.email '${{ github.repository_owner }}@users.noreply.github.com'
       - name: Update submodules
         run: |
+          git pull
+          git fetch 
           git submodule foreach --recursive "git add . && git commit -m '${{ env.commit_msg }}' && git push"
       - name: Update itself
         run: |
