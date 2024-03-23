@@ -17,7 +17,7 @@ graph
     style worflow stroke-dasharray: 4,stroke-width:2
 
     public  == ./src/ ==> src
-    src  == ./articles/ ==> articles
+    src  == ./website/articles/ ==> articles
 
     src  -. Tag events .-> worflow
     articles -. Push events .-> worflow
