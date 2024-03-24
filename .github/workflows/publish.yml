@@ -1,10 +1,6 @@
 name: Build & publish Next.js site to Github Pages
 
 on:
-  # Run on pushes targeting main branches
-  push:
-    tags:
-      - '*.public'
   # Run on pushes from other repo
   repository_dispatch:
   # Manually run from the Actions tab
