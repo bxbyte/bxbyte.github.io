@@ -6,8 +6,22 @@ update.self:
 	git push
 
 update.modules:
-	git submodule foreach --recursive "git add . && git commit -m '$m' && git push origin HEAD:main"
+	git submodule foreach --recursive "git add . && git commit -a -m '$m' && git push origin main"
+	# pull.modules
+	# reset.modules
 
-pull:
-	git pull --force --recurse-submodules
+pull: pull.self pull.modules
+
+pull.self:
+	git pull --force --recurse-submodules --init
+
+pull.modules:
 	git submodule update --force --recursive --init --remote
+
+reset: reset.self reset.modules
+
+reset.self:
+	git reset --hard
+
+reset.modules:
+	git submodule foreach --recursive "git reset --hard"

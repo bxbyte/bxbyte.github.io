@@ -16,6 +16,7 @@ env:
   command: ci
   runner: npx --no-install
   lock: '**/package-lock.json'
+  nodeVersion: 20
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -57,9 +58,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.nodeVersion }}
           cache: ${{ env.manager }}
-          cache-dependency-path: '**/package-lock.json'
+          cache-dependency-path: ${{ env.lock }}
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
