@@ -57,7 +57,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@main
         with:
-          path: ../*
+          path: ${{ steps.dir.outputs.working }}
           overwrite: true
 
   # Building website
@@ -68,7 +68,7 @@ jobs:
       - name: Restore artifacts
         uses: actions/download-artifact@main
         with:
-          path: '..'
+          path: '.'
           pattern: '*'
       - name: Setup Node
         uses: actions/setup-node@v4
