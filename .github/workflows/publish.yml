@@ -20,12 +20,6 @@ env:
   websitePath: src/website
   commitMsg: Publishing update
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 # Allow only one concurrent deployment
 concurrency:
   group: pages
@@ -34,6 +28,8 @@ concurrency:
 jobs:
   # Assembling repositery
   assembling:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     outputs:
       workingPath: ${{ steps.dir.outputs.workingPath }}
@@ -125,6 +121,9 @@ jobs:
 
   # Publishing website
   publish:
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -141,6 +140,9 @@ jobs:
     needs:
       - assembling
       - publish
+    permissions:
+      contents: write
+      # pull-requests: write
     steps:
       - name: Restore artifacts
         uses: actions/download-artifact@main
@@ -153,8 +155,8 @@ jobs:
 
       - name: Setup git
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
 
       - name: Commit & push to repositery
         run: |
