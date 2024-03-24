@@ -34,29 +34,54 @@ jobs:
   # Assembling repositery
   assembling:
     runs-on: ubuntu-latest
+    outputs:
+      workingPath: ${{ steps.dir.outputs.workingPath }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
           submodules: recursive
+
       - name: Update git submodule
         working-directory:
         run: |
           git submodule update --force --recursive --init --remote
-      - name: Set absolute path and list working directory
+
+      - name: Set absolute working directory path
         id: dir
         run: |
-          echo "working=$(pwd)" >> $GITHUB_OUTPUT
-          echo Working directory : $(pwd)
+          echo "workingPath=$(pwd)" >> $GITHUB_OUTPUT
+
+      - name: List working directory
+        run: |
+          echo Working directory : ${{ steps.dir.outputs.workingPath }}
           echo Content :
           tree
+
       - name: Upload artifacts
         uses: actions/upload-artifact@main
         with:
           name: '.'
-          path: ${{ steps.dir.outputs.working }}
+          path: ${{ steps.dir.outputs.workingPath }}
           overwrite: true
+          retention-days: 1 # Keep artifacts for only a day
+          compression-level: 9
+
+  # Update repositery
+  update:
+    runs-on: ubuntu-latest
+    needs: assembling
+    steps:
+      - name: Restore artifacts
+        uses: actions/download-artifact@main
+        with:
+          name: '.'
+          path: ${{ needs.assembling.outputs.workingPath }}
+
+      - name: Restore artifacts
+        run: |
+          ls .
 
   # Building website
   build:
@@ -70,22 +95,25 @@ jobs:
         uses: actions/download-artifact@main
         with:
           name: '.'
-          path: ${{ steps.dir.outputs.working }}
+          path: ${{ needs.assembling.outputs.workingPath }}
+
       - name: Set absolute working directory path
         id: dir
         run: |
           echo "working=$(pwd)" >> $GITHUB_OUTPUT
-          echo Working directory : $(pwd)
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.nodeVersion }}
           cache: ${{ env.manager }}
           cache-dependency-path: ${{ env.lock }}
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
           static_site_generator: next
+
       - name: Restore cache
         uses: actions/cache@v4
         with:
@@ -97,10 +125,13 @@ jobs:
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles(env.lock) }}-
+
       - name: Install dependencies
         run: ${{ env.manager }} ${{ env.command }}
+
       - name: Build with Next.js
         run: ${{ env.runner }} next build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
