@@ -1,14 +1,12 @@
 update: update.modules update.self
 
 update.self:
-	echo Updating itself
 	git add .
-	git commit -m 'submodule update'
+	git commit -m '$m'
 	git push
 
 update.modules:
-	echo Updating modules
-	git submodule foreach --recursive "git add . && git commit -m 'submodule update' && git push origin HEAD:main"
+	git submodule foreach --recursive "git add . && git commit -m '$m' && git push origin HEAD:main"
 
 pull:
 	git pull --force --recurse-submodules
