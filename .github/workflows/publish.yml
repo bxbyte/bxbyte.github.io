@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   # Assembling repositery
-  assembling:
+  assemble:
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
   # Building website
   build:
     runs-on: ubuntu-latest
-    needs: assembling
+    needs: assemble
     defaults:
       run:
         working-directory: ${{ env.websitePath }}
@@ -73,7 +73,7 @@ jobs:
         uses: actions/download-artifact@main
         with:
           name: '.'
-          path: ${{ needs.assembling.outputs.workingPath }}
+          path: ${{ needs.assemble.outputs.workingPath }}
 
       - name: Set absolute working directory path
         id: dir
@@ -134,7 +134,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     needs:
-      - assembling
+      - assemble
       - publish
     permissions:
       contents: write
@@ -144,7 +144,7 @@ jobs:
         uses: actions/download-artifact@main
         with:
           name: '.'
-          path: ${{ needs.assembling.outputs.workingPath }}
+          path: ${{ needs.assemble.outputs.workingPath }}
 
       - name: Checkout
         uses: actions/checkout@v4

@@ -12,18 +12,20 @@ graph
     src("bxbyte.github.src (private)"):::privateRepo
     articles("bxbyte.github.articles (private)"):::privateRepo
 
-    worflow([<a href="https://github.com/bxbyte/bxbyte.github.io/blob/main/.github/workflows/publish.yml">Publisher workflow</a>])
+    workflow([<a href="https://github.com/bxbyte/bxbyte.github.io/blob/main/.github/workflows/publish.yml">Publisher workflow</a>])
 
     website{{<a href="https://bxbyte.net"> bxbyte.net</a>}}
-    style worflow stroke-dasharray: 4,stroke-width:2
+    style workflow stroke-dasharray: 4,stroke-width:2
 
     public  == ./src/ ==> src
     src  == ./website/articles/ ==> articles
 
-    src  -. Tag events .-> worflow
-    articles -. Push events .-> worflow
+    src  -. Tag events .-> workflow
+    articles -. Push events .-> workflow
 
-    public -. Manual events .-> worflow
+    public -. Manual events .-> workflow
 
-    worflow -. Build & publish .-> website
+    workflow -- Push --> public
+
+    workflow -. Build & publish .-> website
 ```
