@@ -64,16 +64,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: assembling
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v4
-      #   with:
-      #     token: ${{ secrets.PAT }}
-      #     submodules: recursive
       - name: Restore artifacts
         uses: actions/download-artifact@main
-      - name: Check artifacts
-        run: |
-          ls
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
