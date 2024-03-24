@@ -142,6 +142,12 @@ jobs:
       - assembling
       - publish
     steps:
+      - name: Restore artifacts
+        uses: actions/download-artifact@main
+        with:
+          name: '.'
+          path: ${{ needs.assembling.outputs.workingPath }}
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -149,12 +155,6 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-
-      - name: Restore artifacts
-        uses: actions/download-artifact@main
-        with:
-          name: '.'
-          path: ${{ needs.assembling.outputs.workingPath }}
 
       - name: Commit & push to repositery
         run: |
