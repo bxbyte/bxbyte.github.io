@@ -66,11 +66,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Restore artifacts
         uses: actions/download-artifact@main
       - name: Check artifacts
         run: |
-          ls
+          tree
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
