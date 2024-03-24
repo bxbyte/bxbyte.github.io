@@ -3,29 +3,31 @@
 <link href="" rel="stylesheet">
 As you can see, none of the source code is stored here, as it came from a submodule, a private repo of me used to hide you from the horrible mess that this website is.
 
+## Repositery structure
+
+Here you see how was structured the repo, each color representing a different repo.
+
 ```mermaid
-graph
+graph TD
     classDef publicRepo fill:#477287,color:#eee;
-    classDef privateRepo fill:#913a3a,color:#eee;
+    classDef sourceRepo fill:#913a3a,color:#eee;
+    classDef articlesRepo fill:#785fc9,color:#eee;
 
     public("bxbyte.github (public)"):::publicRepo
-    src("bxbyte.github.src (private)"):::privateRepo
-    articles("bxbyte.github.articles (private)"):::privateRepo
+    src("bxbyte.github.src (private)"):::sourceRepo
+    articles("bxbyte.github.articles (private)"):::articlesRepo
 
-    workflow([<a href="https://github.com/bxbyte/bxbyte.github.io/blob/main/.github/workflows/publish.yml">Publisher workflow</a>])
+    action([<a href="https://github.com/bxbyte/bxbyte.github.io/blob/main/.github/actions/publish.yml">Build & Publish</a>]):::publicRepo
 
-    website{{<a href="https://bxbyte.net"> bxbyte.net</a>}}
-    style workflow stroke-dasharray: 4,stroke-width:2
+    website{{<a href="https://bxbyte.net">bxbyte.net</a>}}
 
-    public  == ./src/ ==> src
-    src  == ./website/articles/ ==> articles
+    public  == "`*./src*`" ==> src
+    src  == "`*./website/articles/*`" ==> articles
 
-    src  -. Tag events .-> workflow
-    articles -. Push events .-> workflow
+    src  -. On tag \n release event .-> action
+    articles -. "On ./articles \n push event" .-> action
 
-    public -. Manual events .-> workflow
+    action -. Push on \n change .-> public
 
-    workflow -. Push .-> public
-
-    workflow -. Build & publish .-> website
+    action -. Deploy on \n Github Pages .-> website
 ```
