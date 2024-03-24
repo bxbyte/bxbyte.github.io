@@ -13,7 +13,7 @@ update.modules:
 pull: pull.self pull.modules
 
 pull.self:
-	git pull --force --recurse-submodules --init
+	git pull
 
 pull.modules:
 	git submodule update --force --recursive --init --remote
