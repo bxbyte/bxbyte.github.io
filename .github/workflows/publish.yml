@@ -68,21 +68,6 @@ jobs:
           retention-days: 1 # Keep artifacts for only a day
           compression-level: 9
 
-  # Update repositery
-  update:
-    runs-on: ubuntu-latest
-    needs: assembling
-    steps:
-      - name: Restore artifacts
-        uses: actions/download-artifact@main
-        with:
-          name: '.'
-          path: ${{ needs.assembling.outputs.workingPath }}
-
-      - name: Restore artifacts
-        run: |
-          ls .
-
   # Building website
   build:
     runs-on: ubuntu-latest
@@ -148,3 +133,20 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Update repositery
+  update:
+    runs-on: ubuntu-latest
+    needs:
+      - assembling
+      - publish
+    steps:
+      - name: Restore artifacts
+        uses: actions/download-artifact@main
+        with:
+          name: '.'
+          path: ${{ needs.assembling.outputs.workingPath }}
+
+      - name: Restore artifacts
+        run: |
+          ls .
