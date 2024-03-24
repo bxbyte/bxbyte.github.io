@@ -160,7 +160,6 @@ jobs:
 
       - name: Commit & push to repositery
         run: |
-          git submodule foreach --recursive "git add . && git commit -a -m '${{ env.commitMsg }}' && git push origin main"
           git add .
           git commit -am '${{ env.commitMsg }}'
           git push
