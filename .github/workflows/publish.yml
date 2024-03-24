@@ -161,6 +161,5 @@ jobs:
       - name: Commit & push to repositery
         run: |
           git add .
-          git commit -m '${{ env.commitMsg }}'
-          echo eesssssss
-          git push origin ${{ github.ref_name }} || echo No update needed.
+          git commit -m '${{ env.commitMsg }}' || echo No update needed.
+          git push origin ${{ github.ref_name }}
