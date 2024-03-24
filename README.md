@@ -24,8 +24,8 @@ graph TD
     public  == "`*./src*`" ==> src
     src  == "`*./website/articles/*`" ==> articles
 
-    src  -. On tag \n release event .-> action
-    articles -. "On ./articles \n push event" .-> action
+    src  -. Trigger on tag \n release .-> action
+    articles -. "Trigger on  \n ./articles push" .-> action
 
     action -. Push on \n change .-> public
 
