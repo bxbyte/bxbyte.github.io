@@ -18,10 +18,11 @@ env:
   lock: '**/package-lock.json'
   nodeVersion: 20
   websitePath: src/website
+  commitMsg: Publishing update
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -43,7 +44,7 @@ jobs:
           token: ${{ secrets.PAT }}
           submodules: recursive
 
-      - name: Update git submodule
+      - name: Update git submodules
         working-directory:
         run: |
           git submodule update --force --recursive --init --remote
@@ -141,12 +142,23 @@ jobs:
       - assembling
       - publish
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
       - name: Restore artifacts
         uses: actions/download-artifact@main
         with:
           name: '.'
           path: ${{ needs.assembling.outputs.workingPath }}
 
-      - name: Restore artifacts
+      - name: Commit & push to repositery
         run: |
-          ls .
+          git submodule foreach --recursive "git add . && git commit -a -m '${{ env.commitMsg }}' && git push origin main"
+          git add .
+          git commit -am '${{ env.commitMsg }}'
+          git push
