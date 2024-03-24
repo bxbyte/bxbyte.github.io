@@ -162,5 +162,4 @@ jobs:
         run: |
           git add .
           git commit -am '${{ env.commitMsg }}'
-          git push
-          exit 0
+          git push origin ${{ github.ref_name }}
