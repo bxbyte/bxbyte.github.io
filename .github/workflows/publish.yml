@@ -1,4 +1,4 @@
-name: Deploy Next.js site to Pages
+name: Build & publish Next.js site to Github Pages
 
 on:
   # Run on pushes targeting main branches
@@ -24,19 +24,18 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow only one concurrent deployment
 concurrency:
-  group: 'pages'
-  cancel-in-progress: false
+  group: pages
+  cancel-in-progress: true
 
 defaults:
   run:
     working-directory: src/website
 
 jobs:
-  # Build job
-  build:
+  # Assembling repositery
+  assembling:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -55,6 +54,13 @@ jobs:
           echo Working directory : $(pwd)
           echo Content :
           tree
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  # Building website
+  build:
+    runs-on: ubuntu-latest
+    steps:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -85,8 +91,8 @@ jobs:
         with:
           path: ${{ steps.dir.outputs.working }}/out
 
-  # Deployment job
-  deploy:
+  # Publishing website
+  publish:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
