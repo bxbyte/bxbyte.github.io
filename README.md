@@ -25,7 +25,7 @@ graph
 
     public -. Manual events .-> workflow
 
-    workflow -- Push --> public
+    workflow -. Push .-> public
 
     workflow -. Build & publish .-> website
 ```
