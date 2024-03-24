@@ -159,8 +159,7 @@ jobs:
           git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
 
       - name: Commit & push to repositery
-        continue-on-error: true
         run: |
           git add .
           git commit -m '${{ env.commitMsg }}'
-          git push origin ${{ github.ref_name }}
+          git push origin ${{ github.ref_name }} || true
