@@ -117,9 +117,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Post-build
-        run: ls ${{ steps.dir.outputs.working }}/out
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
