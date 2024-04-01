@@ -40,11 +40,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo SITE_URL="$(gh api "repos/${{ github.repository }}/pages" --jq '.html_url')
-          sed -i '19i\
-                <meta http-equiv="refresh" content="0;URL='"$url"manual/'">
-          ' _site/index.html" >> .env
-          touch .env
+          echo SITE_URL="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> .env
+          source .env
           echo $SITE_URL
           ls
           exit 1
