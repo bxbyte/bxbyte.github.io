@@ -9,7 +9,8 @@ on:
 # Environment variables
 env:
   manager: npm
-  command: ci
+  installCommand: ci
+  buildCommand: run build
   runner: npx --no-install
   lock: '**/package-lock.json'
   nodeVersion: 20
@@ -111,10 +112,10 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles(env.lock) }}-
 
       - name: Install dependencies
-        run: ${{ env.manager }} ${{ env.command }}
+        run: ${{ env.manager }} ${{ env.installCommand }}
 
       - name: Build with Next.js
-        run: ${{ env.runner }} next build
+        run: ${{ env.manager }} ${{ env.buildCommand }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
