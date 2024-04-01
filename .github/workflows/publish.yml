@@ -41,6 +41,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo SITE_URL="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> ${{ env.websitePath }}/.env
+          echo REPO="${{ github.repository }}" >> ${{ env.websitePath }}/.env
+          echo REPO_URL="${{ github.repositoryUrl }}" >> ${{ env.websitePath }}/.env
+          echo REPO_OWNER="${{ github.repository_owner }}" >> ${{ env.websitePath }}/.env
 
       - name: Set absolute working directory path
         id: dir
@@ -113,9 +116,6 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Post-build
-        run: npm run post-build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
