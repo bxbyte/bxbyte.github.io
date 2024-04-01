@@ -19,7 +19,7 @@ graph TD
 
     action([<a href="https://github.com/bxbyte/bxbyte.github.io/blob/main/.github/actions/publish.yml">Build & Publish</a>]):::publicRepo
 
-    website{{<a href="https://bxbyte.net">bxbyte.net</a>}}
+    website{{<a href="https://lucas-maillet.com">lucas-maillet.com</a>}}
 
     public  == "`*./src*`" ==> src
     src  == "`*./website/articles/*`" ==> articles

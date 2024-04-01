@@ -36,18 +36,17 @@ jobs:
           token: ${{ secrets.PAT }}
           submodules: recursive
 
+      - name: Update git submodules
+        working-directory:
+        run: |
+          git submodule update --force --recursive --init --remote
+
       - name: Create & set .env file
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo SITE_URL="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> .env
           source .env
-          echo $SITE_URL
-
-      - name: Update git submodules
-        working-directory:
-        run: |
-          git submodule update --force --recursive --init --remote
 
       - name: Set absolute working directory path
         id: dir
