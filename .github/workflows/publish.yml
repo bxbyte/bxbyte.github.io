@@ -44,6 +44,7 @@ jobs:
           echo REPO="${{ github.repository }}" >> ${{ env.websitePath }}/.env
           echo REPO_URL="${{ github.server_url }}/${{ github.repository }}" >> ${{ env.websitePath }}/.env
           echo REPO_OWNER="${{ github.repository_owner }}" >> ${{ env.websitePath }}/.env
+          echo SERVER_URL="${{ github.server_url }}" >> ${{ env.websitePath }}/.env
 
       - name: Set absolute working directory path
         id: dir
