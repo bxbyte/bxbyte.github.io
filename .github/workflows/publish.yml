@@ -42,7 +42,7 @@ jobs:
         run: |
           echo SITE_URL="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> ${{ env.websitePath }}/.env
           echo REPO="${{ github.repository }}" >> ${{ env.websitePath }}/.env
-          echo REPO_URL="${{ github.repositoryUrl }}" >> ${{ env.websitePath }}/.env
+          echo REPO_URL="${{ github.server_url }}/${{ github.repository }}" >> ${{ env.websitePath }}/.env
           echo REPO_OWNER="${{ github.repository_owner }}" >> ${{ env.websitePath }}/.env
 
       - name: Set absolute working directory path
