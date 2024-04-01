@@ -41,12 +41,11 @@ jobs:
         run: |
           git submodule update --force --recursive --init --remote
 
-      - name: Create & set .env file
+      - name: Create & set .env for build in ${{ env.websitePath }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo SITE_URL="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> .env
-          source .env
+          echo SITE_URL="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> ${{ env.websitePath }}/.env
 
       - name: Set absolute working directory path
         id: dir
