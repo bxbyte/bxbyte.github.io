@@ -1,14 +1,12 @@
-update: update.modules update.self
+push: push.modules push.self
 
-update.self:
+push.self:
 	git add .
 	git commit -m '$m'
 	git push
 
-update.modules:
+push.modules:
 	git submodule foreach --recursive "git add . && git commit -a -m '$m' && git push origin main"
-	# pull.modules
-	# reset.modules
 
 pull: pull.self pull.modules
 
