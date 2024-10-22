@@ -1,0 +1,213 @@
+---
+title: Roadmap de projet informatique
+filename: Roadmap
+date: 2024-09-26
+authors:
+  - mailletl
+type: pdf
+scale: 100
+---
+
+import '@/styles/pdf/article.scss'
+
+import { layout } from '$/html2pdf/styles'
+
+import skin from '@/styles/pdf/skin.module.scss'
+
+export const config = {
+	title: frontmatter.title,
+	author: 'Lucas Maillet',
+	class: 'A12',
+	ressource: 'R3.10a',
+}
+
+<div 
+   class:list={[layout.full, skin.noMarginContent]}
+   style="display: flex; flex-direction: column; gap: 1em"
+>
+   <div>
+      # {config.title}
+      {config.author} - {config.class}
+   </div>
+
+{' '}
+
+<img
+	src={(await import('./road.jpeg?url')).default}
+	style="height: calc(100%); width: 100%;"
+/>
+
+Ce document liste dans l'ordre chronologique les étapes d'un projet informatique,
+extraitent des cours et expériences de l'année précédente et de quelques recherches sur Internet.
+
+</div>
+
+<div
+   className={[skin.outline, 'setPage'].join(' ')}
+   bottom-left={config.author}
+   bottom-right={config.ressource}
+>
+
+## I. Cadrage
+
+### 1. Contextualiser le projet
+
+1. Identifier projet ouvrage ou produit
+2. Définir causalité et finalité
+3. Identifier les facteurs clés de succès et facteurs négatifs
+
+### 2. Définir les parties prenantes :
+
+- MOA ?
+  - Client ?
+  - Directeur de projet MOA ?
+- MOE ?
+  - Directeur de projet MOE ?
+  - Equipe projet
+    - Développeurs ?
+    - Chef de projet ?
+- COPIL ?
+- CODIR ?
+- DPO ou équivalent ?
+- Intervenants externes ?
+  - Nom de domaine ==> fournisseur DNS ?
+  - Serveur / Cloud ==> host ?
+  - Projet international (i18n, g11n, ...) ==> traducteur ?
+  - Etc
+
+### 3. Réaliser le CCM (si projet produit)
+
+1. Identifier les concurrents
+   - Concurrents directs / indirects ?
+   - Concurrents potentiels ?
+2. Collecter des données sur les utilisateurs
+   - Depuis l'OpenData ou des enquêtes
+   - Permet d'établir des profils types
+3. Coûts
+   - Coûts directs / indirects ?
+   - Ressources ?
+4. Estimer le ROI
+   - Modèle de revenu ?
+   - Investisseurs ?
+   - Clients ?
+
+### 4. Réaliser le CCF (si projet ouvrage)
+
+1. QQOQCP ?
+2. Identifier les besoins
+   1. Exprimer les besoins en fonctions d'usage
+      - [Schéma de la bête à corne](https://www.youtube.com/watch?v=N6CgqaXMphA)
+      - Définir les finalités, pas les solutions
+3. Réaliser l'analyse fonctionnel
+   1. Identifier les fonctions principales / contraintes
+      1. [Diagramme pieuvre](https://www.youtube.com/watch?v=N6CgqaXMphA)
+      2. Préciser les fonctions
+         - Critères (qu'est ce qui caractérise la fonction)
+         - Niveaux (valeurs / types à respecter)
+         - Flexibilités (marges d'approximation)
+      3. Ordonné les fonctions par importance
+
+### 5. Réaliser le CCT
+
+- Outils ?
+- Technos ?
+- Charte graphique ?
+- Languages ?
+- Nomenclatures ?
+- Normes ?
+- Etc
+
+## II. Préparatifs
+
+### 1. Réaliser le plan de gestion des contraintes / risques
+
+1. Identifier les contraintes et risques induits
+2. Organiser les risques
+   1. Estimer les probabilités et impact des risques
+   2. Réaliser une matrice de criticité
+3. Etablir un plan de mitigation
+4. Identifier une stratégie de mitigation pour chaque risques
+
+   - Récursivement jusqu'à:
+     - Acceptation
+     - Evitement
+     - Protection
+     - Reserves
+     - Transfert
+   - Logigramme du plan de mitigation
+
+5. Définir le modèle de développement
+
+6. Lister les tâches
+7. Modèle ? (cascade, spirale, RAD, agiles, SCRUM, ...)
+8. Définir les rôles (ex : Product owner, ....)
+
+### 2. Plannification
+
+1. Identifier les contraintes de délais
+2. Estimer les charges des tâches
+   - Méthode DELPHI
+   - Méthode de la répartition proportionnelle
+   - Methode COCOMO
+3. Déterminer les contraintes / flexibilités temporelles
+   - Diagramme de GANTT
+   - Graphe MPM
+
+### 3. Mise en place des outils de collaboration
+
+- Github / Gitlab
+- Discord
+- Trelo / Notion / Jira
+- Etc
+
+## III. Conception
+
+### 1. Rédiger le dossier de conception
+
+1. Spécifier les cas d'utilisations
+   - Logigrammes des processus
+   - Diagrammes séquencielles
+   - Diagrammes des cas d'utilisations
+2. Concevoir l'architecture
+   - Diagramme de classes simplifié / complet du modèle
+   - Modèle entité-association de la BDD (si BDD)
+3. Illustrater les cas d'utilisations
+   - Diagrammes séquentielles
+   - Diagrammes d'objets
+
+### 2. Réaliser le PIA
+
+1. Spécifier les types de données (nécessaires, personnelles, sensibles)
+2. Justifier les usages des données
+3. Spécifier les dates de conservation de données
+
+### 3. Réaliser les IHMs
+
+1. Définir les personnas
+2. Définir les critères ergonomiques
+3. Concevoir les maquettes
+   1. Réaliser les wireframes
+      - Pour les cas d'utilisations
+      1. Grouper les fonctionnalités
+      2. Appliquer les critères ergonomiques aux fonctionnalités
+      - Pour les formulaires de consentement
+      1. Lister les données et spécifier leur utilisations
+      2. Appliquer les critères RGPD
+   2. Appliquer la charte graphique
+
+### 4. Réaliser le Lean Canvas (si investisseur)
+
+1. Respecter la charte graphique
+2. Présenter l'intêret du projet :
+   - Problèmes
+   - Solutions
+   - Alternatives
+   - Avantages de la solution
+   - Proposition de valeur
+   - Indicateurs clés
+   - Structure des coûts
+   - Sources de revenus
+   - Segment de clientèle
+   - Canaux
+
+</div>

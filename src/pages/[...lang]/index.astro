@@ -1,0 +1,139 @@
+---
+import { useLocalContents } from '@/libs/i18n'
+import locals from './_locals'
+import Main from '@/layouts/Main'
+import layoutStyles from '@/styles/layout.module.scss'
+import skinStyles from '@/styles/skin.module.scss'
+import { mainGradientUrl, secondaryGradientUrl, grainUrl } from '@/styles/theme'
+
+import GridArt from '@/components/tiles'
+
+import infos from '@/data/infos'
+import Timeline from '@/components/timeline'
+
+export const { getStaticPaths, getLocalContent } = useLocalContents(locals)
+const content = getLocalContent(Astro)
+---
+
+<Main>
+	<section id="welcome" class={layoutStyles.chunk}>
+		<div>
+			<h1>{infos.owner.name}</h1>
+			<h2>{content.welcome.status}</h2>
+			<h3>{content.welcome.what}</h3>
+			<p>{content.welcome.me}</p>
+		</div>
+		<svg viewBox="0 0 5 3" aria-hidden="true" mask={grainUrl}>
+			<rect x="0" y="0" width="1" height="3" fill={mainGradientUrl} opacity=".8"
+			></rect>
+			<rect
+				x="0"
+				y="2"
+				width="3"
+				height="1"
+				fill={secondaryGradientUrl}
+				opacity=".8"></rect>
+			<path d="M2,0h3l-1.5,1.5Z" fill={secondaryGradientUrl} opacity=".8"
+			></path>
+			<rect x="2" y="0" width="1" height="3" fill={mainGradientUrl} opacity=".8"
+			></rect>
+			<rect x="4" y="0" width="1" height="3" fill={mainGradientUrl} opacity=".8"
+			></rect>
+		</svg>
+	</section>
+
+	<section id="history" class={layoutStyles.chunk}>
+		<section>
+			<h1>{content.history.title}</h1>
+			<GridArt width={6} height={2} seed="hello worl" />
+			<p class={skinStyles.dropCap}>{content.history.description}</p>
+			<!-- <Surfaces.hash
+				pattern={{ stroke: theme.pageGrey }}
+				svg={{
+					width: '100%',
+					height: '100%',
+					'aria-hidden': 'true',
+				}}
+			/> -->
+		</section>
+		<section>
+			<Timeline items={content.history.timeline} />
+		</section>
+	</section>
+</Main>
+
+<style lang="scss">
+	@use '@/styles/layout.module.scss' as layout;
+
+	main {
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+	}
+
+	#welcome,
+	#history {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2em;
+	}
+
+	#welcome {
+		align-items: center;
+
+		div {
+			display: flex;
+			flex: 1;
+			flex-direction: column;
+			gap: 1em;
+			text-wrap: balance;
+
+			h1 {
+				display: inline-flex;
+				flex-direction: column;
+			}
+
+			h2 {
+				text-decoration: underline 0.1em solid theme.$page-accent;
+			}
+		}
+
+		svg {
+			margin: auto;
+			// box-sizing: border-box;
+			width: 80%;
+			height: 80%;
+			object-fit: cover;
+		}
+	}
+
+	#history {
+		& > section {
+			&:nth-child(1) {
+				display: flex;
+				position: sticky;
+				top: layout.$window-padding-y;
+				flex-direction: column;
+				gap: 1em;
+				height: fit-content;
+
+				svg {
+					// filter: grayscale(1);
+					width: 100%;
+					// height: 12em;
+					// object-fit: cover;
+
+					&:global(:nth-child(1)) {
+						border: 1px solid red;
+						height: 100%;
+					}
+				}
+			}
+
+			&:nth-child(2) {
+				box-sizing: border-box;
+				padding: 3em 0;
+			}
+		}
+	}
+</style>

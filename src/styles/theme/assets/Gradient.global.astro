@@ -1,0 +1,21 @@
+---
+import theme from '../theme.module.scss'
+
+export const mainGradientId = 'gradient-main'
+export const mainGradientUrl = `url(#${mainGradientId})`
+export const secondaryGradientId = 'gradient-secondary'
+export const secondaryGradientUrl = `url(#${secondaryGradientId})`
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1">
+	<defs>
+		<linearGradient id={mainGradientId} y2="100%">
+			<stop offset="10%" stop-color={theme.gradientMainColor1}></stop>
+			<stop offset="100%" stop-color={theme.gradientMainColor2}></stop>
+		</linearGradient>
+		<linearGradient id={secondaryGradientId} x2="100%" y1="100%">
+			<stop offset="10%" stop-color={theme.gradientSecondaryColor1}></stop>
+			<stop offset="100%" stop-color={theme.gradientSecondaryColor2}></stop>
+		</linearGradient>
+	</defs>
+</svg>

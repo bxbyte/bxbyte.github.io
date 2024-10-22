@@ -1,0 +1,53 @@
+---
+import styles from './styles.module.scss'
+
+import { md } from '@/libs/format'
+
+interface Props {
+	title: string
+	description: string
+	start: Date
+	end?: Date | any
+	locale?: string
+	metadata?: string
+}
+
+const { title, description, start, end, metadata } = Astro.props
+
+let { locale } = Astro.props
+locale ||= Astro.currentLocale
+
+function dateFormat(date: Date): string {
+	const formater = { year: 'numeric' } as Intl.DateTimeFormatOptions
+	if (date.getMonth() != 0) formater.month = 'long'
+	return date.toLocaleDateString(locale, formater)
+}
+---
+
+<li class={styles.timeItem}>
+	<section>
+		<p role="heading">{title}</p>
+		<p data-metadata={metadata}>
+			<time datetime={start.toISOString()}>{dateFormat(start)}</time>{
+				end && (
+					<Fragment>
+						-
+						{end instanceof Date ? (
+							<time datetime={end.toISOString()}>{dateFormat(end)}</time>
+						) : (
+							end
+						)}
+					</Fragment>
+				)
+			}
+		</p>
+		<Fragment set:html={md(description)} />
+		{
+			Astro.slots.has('default') && (
+				<div>
+					<slot />
+				</div>
+			)
+		}
+	</section>
+</li>

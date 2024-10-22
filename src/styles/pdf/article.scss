@@ -1,0 +1,85 @@
+@mixin margin {
+	font-size: 0.85em;
+}
+
+@mixin margin-left {
+}
+
+@mixin margin-right {
+	margin-right: var(--pagedjs-padding-right);
+}
+
+@mixin margin-top {
+	font-size: 0.85em;
+}
+
+@mixin margin-bottom {
+	margin-bottom: var(--pagedjs-padding-bottom);
+}
+
+// string-set
+
+.setPage {
+	string-set:
+		bottom-left attr(bottom-left),
+		bottom-right attr(bottom-right);
+}
+
+@page {
+	margin: 1.5cm;
+	padding: 1.5em;
+
+	@top-center {
+		content: string(h1);
+		@include margin;
+	}
+
+	@bottom-left {
+		margin-left: var(--pagedjs-padding-left);
+		content: string(bottom-left);
+		@include margin;
+	}
+
+	@bottom-right {
+		margin-right: var(--pagedjs-padding-right);
+		content: string(bottom-right);
+		@include margin;
+	}
+
+	@bottom-center {
+		// content: counter(page);
+		content: counter(page) ' / ' counter(pages);
+		@include margin;
+	}
+}
+
+.pagedjs_pages {
+	h1 {
+		string-set: h1 content(text);
+	}
+
+	a {
+		color: theme.$page-accent;
+	}
+}
+
+// $heading-styles: upper-roman, upper-roman, decimal, decimal, decimal, decimal;
+// $heading-indent: 6;
+// $heading-start: 2;
+
+// @for $i from $heading-start through $heading-indent {
+// 	#{'h' + $i} {
+// 		counter-increment: h#{$i};
+// 		// counter-increment: h#{$i};
+// 		counter-reset: h#{$i + 1} 1;
+
+// 		&::before {
+// 			$counters: ();
+
+// 			@for $j from $heading-start through $i {
+// 				$counters: $counters counter(h#{$j}, list.nth($heading-styles, $j)) '.';
+// 			}
+// 			content: $counters ' ';
+// 		}
+// 	}
+// }

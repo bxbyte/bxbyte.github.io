@@ -1,0 +1,14 @@
+---
+import authors from '@/data/authors.json'
+
+interface Props {
+	id: (typeof authors)[number]['id']
+}
+
+const { id } = Astro.props,
+	author = authors.find((a) => (a.id = id))
+
+if (!author) throw new Error('Author id noexistent')
+---
+
+<a href={author.social} title={`${author.name} social link`}>{author.name}</a>

@@ -1,0 +1,47 @@
+@use './theme/theme.scss' as _theme;
+
+.smallCaps {
+	font-size: 0.85em;
+	text-transform: uppercase;
+}
+
+// Paragraphes
+
+.dropCap::first-letter {
+	float: inline-start;
+	margin-right: 0.2ch;
+	font-weight: bold;
+	font-size: 3em;
+}
+
+// Inputs
+
+.clickable {
+	transition: transform 0.05s ease-in-out;
+
+	&:hover {
+		transform: scale(1.05);
+	}
+
+	&:focus {
+		transform: scale(0.95);
+	}
+}
+
+@mixin button {
+	@extend .clickable;
+	border-radius: 0.2em;
+	padding: 0.4em;
+	text-align: center;
+}
+
+.primaryButton {
+	background-color: _theme.$page-black;
+	color: _theme.$page-white;
+	@include button;
+}
+
+.secondaryButton {
+	border: 1px solid _theme.$page-black;
+	@include button;
+}

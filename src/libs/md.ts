@@ -1,0 +1,69 @@
+import * as html2pdfComponents from '$/html2pdf/layouts'
+import { getContainerRenderer } from '@astrojs/mdx'
+
+import { experimental_AstroContainer } from 'astro/container'
+import { loadRenderers } from 'astro:container'
+import { type CheerioAPI, load } from 'cheerio'
+import type { Element } from 'domhandler'
+
+import astroConfig from '!/astro.config'
+
+import type Toc from '@/components/navigation/Toc.astro'
+
+import type { PostHydrated } from '@/content'
+
+function processEl(
+	cheerio: CheerioAPI,
+	el: Element,
+	getTextEl = (el: Element) => el,
+): ComponentProps<typeof Toc>['items'][number] {
+	const textEl = getTextEl(el),
+		linkText = textEl.attribs['data-toc'] || cheerio(textEl).text()
+	el.attribs.id ||= linkText
+		.replace(/\s+/gm, '-')
+		.replace(/--+/gm, '-')
+		.toLowerCase()
+	return {
+		text: linkText,
+		href: `#${el.attribs.id}`,
+	}
+}
+
+function getCaptionItems(cheerio: CheerioAPI, selector: string) {
+	return [...cheerio(selector)].map((el) =>
+		processEl(cheerio, el as Element, (el) => el.next as Element),
+	)
+}
+
+export default async function renderMdx({ render }: PostHydrated) {
+	const { Content: astroContent } = await render(),
+		cheerio = load(
+			await (
+				await experimental_AstroContainer.create({
+					astroConfig,
+					renderers: await loadRenderers([getContainerRenderer()]),
+				})
+			).renderToString(astroContent, {
+				props: {
+					components: {
+						...html2pdfComponents,
+					},
+				},
+			}),
+		)
+
+	return {
+		toc: {
+			headings: [...cheerio(':is(h1,h2,h3,h4,h5,h6)')].map((el) =>
+				Object.assign(processEl(cheerio, el as Element), {
+					lvl: parseInt(
+						(el as Element).tagName.match(/\d/) as unknown as string,
+					),
+				}),
+			),
+			figures: getCaptionItems(cheerio, 'figure:has(figcaption) :is(img,svg)'),
+			tables: getCaptionItems(cheerio, 'figure:has(figcaption) table'),
+		},
+		rendered: cheerio.html(),
+	}
+}

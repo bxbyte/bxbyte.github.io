@@ -1,0 +1,69 @@
+---
+import { localPaths } from '@/libs/i18n'
+---
+
+<script
+	is:inline
+	id="locales"
+	type="application/json"
+	set:html={JSON.stringify(localPaths)}
+/>
+
+<script>
+	import { persistentAtom } from '@nanostores/persistent'
+
+	const locales = JSON.parse(
+			(document.querySelector('script#locales') as HTMLScriptElement).innerHTML,
+		),
+		pathLocals = Object.values(locales),
+		langRegexp = new RegExp(`(?<=^${window.location.origin})\/\\w*\/?`),
+		currentLocale = persistentAtom('locale', '/')
+
+	currentLocale.subscribe((localePath) => {
+		let newHref = window.location.href.replace(langRegexp, (path) => {
+			let newPath = localePath
+			return pathLocals.includes(path)
+				? newPath
+				: newPath + path.replace(/^\//, '')
+		})
+		if (newHref != window.location.href) window.location.href = newHref
+	})
+
+	class LangLink extends HTMLButtonElement {
+		constructor() {
+			super()
+			this.addEventListener('click', () =>
+				currentLocale.set(locales[this.dataset.local as string]),
+			)
+		}
+	}
+	customElements.define('lang-link', LangLink, { extends: 'button' })
+</script>
+
+<div>
+	{
+		Object.keys(localPaths).map((local) => (
+			<button
+				is="lang-link"
+				translate="no"
+				data-local={local}
+				class:list={[Astro.currentLocale == local && 'current']}
+			>
+				{local}
+			</button>
+		))
+	}
+</div>
+
+<style lang="scss">
+	div {
+		display: flex;
+		gap: 1ch;
+	}
+
+	button {
+		&.current {
+			text-decoration: 1px solid theme.$page-accent underline;
+		}
+	}
+</style>

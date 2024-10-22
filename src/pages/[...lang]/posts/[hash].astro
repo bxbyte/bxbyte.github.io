@@ -1,0 +1,212 @@
+---
+import { useLocalContents } from '@/libs/i18n'
+import { getPosts } from '@/content'
+
+import PDF from '$/html2pdf/print/'
+import Ariane from '@/components/navigation/Ariane.astro'
+import Main from '@/layouts/Main'
+import layoutStyles from '@/styles/layout.module.scss'
+import type { BlogPosting } from 'schema-dts'
+import Share from '@/components/navigation/Share.astro'
+import Toc from '@/components/navigation/Toc.astro'
+
+import './_page.scss'
+import postStyles from './_post.module.scss'
+
+import render from '@/libs/md'
+
+import type { PostHydrated } from '@/content'
+import { Image } from 'astro:assets'
+
+export const { getStaticPaths } = useLocalContents({}, async () => {
+	return (await getPosts()).map((post) => ({
+		params: { hash: post.hash },
+		props: { post },
+	}))
+})
+
+const { post } = Astro.props
+
+const PDF_CLASS_SELECTOR = 'pdf'
+
+interface Props {
+	post: PostHydrated
+}
+
+const {
+		post: { hash, data },
+	} = Astro.props,
+	{ cover, type, title, description, keywords, date } = data,
+	{ toc, rendered } = await render(Astro.props.post)
+
+var pdfData: Parameters<typeof PDF>[0] | undefined
+
+if (type == 'pdf')
+	pdfData = {
+		...data,
+		authors: data.authors && data.authors.map(({ name }) => name),
+		targetSelector: '.' + PDF_CLASS_SELECTOR,
+	}
+---
+
+<Main
+	class={layoutStyles.chunk}
+	head={{
+		title,
+		meta: {
+			description,
+			og: {
+				title,
+				description,
+				type: 'article',
+			},
+			keywords,
+		},
+		script: [
+			{
+				type: 'application/ld+json',
+				content: JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'BlogPosting',
+					headline: title,
+					datePublished: date.toDateString(),
+				} as BlogPosting),
+			},
+		],
+	}}
+>
+	<header>
+		<h1 transition:name={hash + '-t'}>{title}</h1>
+		{
+			cover && (
+				<Image
+					transition:name={hash + '-i'}
+					alt="Illustration cover"
+					src={cover}
+				/>
+			)
+		}
+		<div>
+			<Ariane
+				displayPath={Astro.url.pathname.replace(/[^/]*\/?$/, '') + title}
+			/>
+			<Share />
+		</div>
+		{description && <p transition:name={hash + '-d'}>{description}</p>}
+	</header>
+	{
+		pdfData ? (
+			<section class:list={['content', PDF_CLASS_SELECTOR]}>
+				<PDF {...pdfData}>
+					<Fragment set:html={rendered} />
+				</PDF>
+			</section>
+		) : (
+			<section class:list={['content', postStyles.post]}>
+				<Fragment set:html={rendered} />
+			</section>
+		)
+	}
+	<section class="rightbar">
+		{
+			toc.headings.length > 0 && (
+				<Toc name="Table of content" track items={toc.headings} />
+			)
+		}{
+			toc.figures.length > 0 && (
+				<Toc name="Table of figure" items={toc.figures} />
+			)
+		}{toc.tables.length > 0 && <Toc name="Table of table" items={toc.tables} />}
+	</section>
+</Main>
+
+<style lang="scss">
+	@use '@/styles/layout.module.scss' as layout;
+
+	main {
+		display: grid;
+		grid-template-rows: auto 1fr;
+		grid-template-columns: 0.8fr 0.2fr;
+		grid-template-areas: 'a a' 'c d';
+		gap: 2em;
+		padding-bottom: 2em;
+
+		@media (max-width: layout.$window-max-width * 0.85) {
+			& {
+				grid-template-columns: 1fr;
+				grid-template-areas: 'a' 'c';
+			}
+
+			.rightbar {
+				display: none;
+			}
+		}
+	}
+
+	header {
+		display: flex;
+		grid-area: a;
+		flex-direction: column;
+		gap: 2em;
+
+		img {
+			border-radius: 1em;
+			width: 100%;
+			height: 14em;
+			object-fit: cover;
+		}
+
+		& > div {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+		}
+	}
+
+	.content {
+		grid-area: c;
+	}
+
+	.rightbar {
+		$padding-top: 2em;
+		display: flex;
+		position: sticky;
+		top: calc(layout.$window-padding-y - $padding-top);
+		grid-area: d;
+		flex-direction: column;
+		gap: 1em;
+		border-top: 1px solid theme.$page-grey;
+		padding-top: $padding-top;
+		height: min-content;
+	}
+
+	.toc {
+		position: relative;
+		$border-size: 1px;
+
+		& > li {
+			font-variant: small-caps;
+			font-weight: bold;
+			text-transform: lowercase;
+		}
+
+		ul {
+			margin-top: 0.25em;
+			margin-left: 0.5em;
+			border-left: $border-size solid theme.$page-grey;
+
+			li {
+				margin-left: -$border-size;
+				border-left: $border-size solid theme.$page-grey;
+				padding-left: calc(0.4em * var(--lvl));
+
+				&:hover {
+					border-color: theme.$page-accent;
+					background: color-mix(in srgb, theme.$page-accent, transparent 90%);
+					color: theme.$page-accent;
+				}
+			}
+		}
+	}
+</style>

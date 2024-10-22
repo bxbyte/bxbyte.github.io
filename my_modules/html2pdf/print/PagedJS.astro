@@ -1,0 +1,159 @@
+---
+import { layout } from '../styles'
+import type { RawPageSize } from '../server/pagesize'
+
+export const IS_RENDERED_CLASSNAME = 'rendered'
+
+export interface Props {
+	targetSelector: string
+	size: RawPageSize
+	scale: number
+}
+
+const { targetSelector, size, scale } = { ...Astro.props }
+
+var param = {
+	doublePageClass: layout.double,
+	IS_RENDERED_CLASSNAME,
+	targetSelector,
+	size,
+	scale,
+}
+
+// prettier-ignore
+export type ScriptParams = typeof param & typeof param;
+---
+
+<!-- Inject parameter -->
+<script
+	is:inline
+	id="pagedjs-param"
+	type="application/json"
+	set:html={JSON.stringify(param)}
+/>
+
+<script>
+	import type { ScriptParams } from './PagedJS.astro'
+	import pagedUrl from '!/node_modules/pagedjs/dist/paged.esm?url'
+
+	const Paged = await import(/* @vite-ignore */ pagedUrl)
+
+	function waitReady() {
+		return new Promise((res) => {
+			if (
+				document.readyState === 'interactive' ||
+				document.readyState === 'complete'
+			)
+				return res(document.readyState)
+
+			document.addEventListener('readystatechange', () => {
+				if (document.readyState === 'interactive') res(document.readyState)
+			})
+		})
+	}
+
+	async function renderPagedDev({
+		size,
+		scale,
+		IS_RENDERED_CLASSNAME,
+		targetSelector,
+		doublePageClass,
+	}: ScriptParams) {
+		// Detect if the viewer is a printer
+		const isPrinted = window.matchMedia('print').matches
+
+		// Resize for printing
+		const pageStyleEl = document.head.appendChild(
+			document.createElement('style'),
+		)
+
+		pageStyleEl.textContent = (
+			isPrinted
+				? `	
+@page {
+	size: ${size.width * scale}${size.unit} ${size.height * scale}${size.unit};
+}
+
+.${IS_RENDERED_CLASSNAME} .pagedjs_page {
+	zoom: ${scale};
+}
+
+*:has(.${targetSelector}) {
+	display: initial !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.pagedjs_pages * {
+	--pagedjs-width: ${size.width}${size.unit} !important;
+	--pagedjs-width-left: var(--pagedjs-width);
+	--pagedjs-width-right: var(--pagedjs-width);
+	--pagedjs-pagebox-width: var(--pagedjs-width);
+	--pagedjs-height: ${size.height}${size.unit} !important;
+	--pagedjs-height-left: var(--pagedjs-height);
+	--pagedjs-height-right: var(--pagedjs-height);
+	--pagedjs-pagebox-height: var(--pagedjs-height);
+}`
+				: `
+@page {
+	size: ${size.width}${size.unit} ${size.height}${size.unit};
+}`
+		).replace(/\s+/gm, ' ')
+
+		// Paged.js loading
+		window.render = new Promise((res) => (window.resolveRender = res))
+
+		const previewer = new Paged.Previewer()
+
+		previewer.registerHandlers(
+			class extends Paged.Handler {
+				afterRendered() {
+					// Handle double page layout
+					document.querySelectorAll('.' + doublePageClass).forEach((el) => {
+						const clonedFigure = el.cloneNode(true),
+							rightPage = this.chunker.addPage()
+						rightPage.area.appendChild(clonedFigure)
+					})
+					document.documentElement.classList.toggle(IS_RENDERED_CLASSNAME, true)
+				}
+				afterPreview() {
+					window.resolveRender()
+				}
+			},
+		)
+		const template = document.querySelector(
+			targetSelector + '>template',
+		) as HTMLTemplateElement
+		if (isPrinted) {
+			// Get hidden elements (svg refs, ...)
+			const hiddenHTML = [...document.querySelectorAll(`[hidden]`)]
+				.map((el) => el.outerHTML)
+				.join('')
+			document.body.innerHTML = template.innerHTML
+			await previewer.preview()
+
+			// Reappend hidden element in the first page
+			;(document.querySelector('.pagedjs_page') as HTMLDivElement).innerHTML +=
+				hiddenHTML
+		} else {
+			await previewer.preview(
+				template.content,
+				undefined,
+				document.querySelector(targetSelector + '>div') as Element,
+			)
+		}
+	}
+
+	async function main() {
+		const paramEl = document.getElementById('pagedjs-param')
+
+		if (paramEl) {
+			await renderPagedDev(
+				JSON.parse((paramEl as any).textContent) as ScriptParams,
+			)
+		}
+	}
+
+	waitReady().then(main) // Render the first time loaded
+	document.addEventListener('astro:after-swap', main) // Render every other time
+</script>

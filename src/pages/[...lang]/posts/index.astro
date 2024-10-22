@@ -1,0 +1,67 @@
+---
+import Main from '@/layouts/Main'
+import layoutStyles from '@/styles/layout.module.scss'
+import { getPosts, type PostHydrated } from '@/content'
+import locals from './_locals'
+import { useLocalContents } from '@/libs/i18n'
+import { joinUrl } from '@/libs/format'
+import PostCard from '@/components/PostCard.astro'
+
+export const { getStaticPaths, getLocalContent } = useLocalContents(locals)
+const content = getLocalContent(Astro)
+
+const posts = await getPosts(),
+	postsPerMonth = Object.groupBy(posts, ({ data: { date } }) =>
+		date.toLocaleDateString(Astro.currentLocale, {
+			month: 'long',
+			year: 'numeric',
+		}),
+	) as Record<string, typeof posts>
+---
+
+<Main class={layoutStyles.chunk}>
+	<ul class="timeline">
+		{
+			Object.entries(postsPerMonth).map(([month, posts]) => (
+				<Fragment>
+					<li>
+						<time datetime={new Date(month).toISOString()}>{month}</time>
+					</li>
+					<ul>
+						{posts.map((post) => (
+							<li>
+								<PostCard post={post} />
+							</li>
+						))}
+					</ul>
+				</Fragment>
+			))
+		}
+	</ul>
+</Main>
+
+<style lang="scss">
+	.timeline {
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+
+		ul {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
+			gap: 2em;
+		}
+
+		li:has(time) {
+			font-size: 2em;
+			text-decoration: underline 1px solid currentColor;
+			text-underline-offset: 0.2em;
+			text-transform: capitalize;
+		}
+
+		li {
+			display: block;
+			break-inside: avoid;
+		}
+	}
+</style>

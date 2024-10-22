@@ -1,0 +1,69 @@
+/// WARNING : This module is @used automatically in every scss files / blocks
+
+@use 'sass:list';
+
+$light-theme-vars: ();
+$dark-theme-vars: ();
+
+/// Define a theme variable
+///
+/// @param {*} $name CSS variable name
+/// @param {*} $lightValue value for light theme
+/// @param {*} $darkValue [false] overwritten value for dark theme
+@function defineTheme($name, $lightValue, $darkValue: false) {
+	$light-theme-vars: list.append(
+		$light-theme-vars,
+		(--#{$name}, $lightValue)
+	) !global;
+
+	@if ($darkValue) {
+		$dark-theme-vars: list.append(
+			$dark-theme-vars,
+			(--#{$name}, $darkValue)
+		) !global;
+	}
+	@return var(--#{$name});
+}
+
+$gradient-main-color1: defineTheme(gradient-main-color1, #78dfdf, #be1c44);
+$gradient-main-color2: defineTheme(gradient-main-color2, #4437f7, #ff4800);
+
+$gradient-secondary-color1: defineTheme(
+	gradient-secondary-color1,
+	#45f07e,
+	#f80878
+);
+$gradient-secondary-color2: defineTheme(
+	gradient-secondary-color2,
+	#0cceff,
+	#f80814
+);
+
+/// Theme variable definitions
+
+$page-black: defineTheme(page-black, #000, #e0dede);
+$page-white: defineTheme(page-white, #fff, #131111);
+$page-grey: defineTheme(page-grey, #e6e5e5, #333030);
+$page-accent: defineTheme(page-accent, #5e64f4, #df082c);
+
+/// Theme implementation
+
+body {
+	background: $page-white;
+	color: $page-black;
+
+	@each $var in $light-theme-vars {
+		#{list.nth($var, 1)}: list.nth($var, 2);
+	}
+
+	&.dark {
+		@each $var in $dark-theme-vars {
+			#{list.nth($var, 1)}: list.nth($var, 2);
+		}
+
+		img,
+		image {
+			filter: brightness(0.8);
+		}
+	}
+}

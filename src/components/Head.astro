@@ -1,0 +1,40 @@
+---
+import infos from '@/data/infos'
+import merge from 'deepmerge'
+
+type MetaData_<T> = Record<string, string | string[] | T | undefined>
+interface MetaData extends MetaData_<MetaData> {}
+
+export interface Props {
+	title?: string
+	meta?: MetaData
+	link?: { rel: string; href: string; type?: string }[]
+	script?: { content?: string; src?: string; type?: string }[]
+}
+
+const { title, meta, link, script } = merge(infos.head, Astro.props) as Props
+
+function metaProp(meta: MetaData, propPrefix = ''): string {
+	if (propPrefix) propPrefix += ':'
+	return Object.entries(meta)
+		.filter(([_, content]) => typeof content !== 'undefined')
+		.map(([name, content]) =>
+			typeof content === 'string'
+				? `<meta name="${propPrefix + name}" content="${content}"/>`
+				: content instanceof Array
+					? `<meta name="${propPrefix + name}" content="${content.join(' ')}"/>`
+					: metaProp(content as MetaData, propPrefix + name),
+		)
+		.join('')
+}
+---
+
+<title>{title}</title>
+{link && link.map((attr) => <link {...attr} />)}
+{
+	script &&
+		script.map(({ content, ...attr }) => (
+			<script is:inline {...attr} set:html={content} />
+		))
+}
+{meta && <Fragment set:html={metaProp(meta)} />}

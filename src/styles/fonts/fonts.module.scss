@@ -1,0 +1,13 @@
+@use './fonts.scss';
+
+.fontRc {
+	@include fonts.font-rc;
+}
+
+.fontInter {
+	@include fonts.font-inter;
+}
+
+.fontFira {
+	@include fonts.font-fira;
+}

@@ -1,0 +1,74 @@
+// Margin
+
+// *:has(.noMarginContent) {
+:global(.pagedjs_sheet):has(.noMarginContent)
+	:global(.pagedjs_margin-content)::after {
+	content: '' !important;
+}
+
+// Boxes
+
+@mixin pageOutline {
+	--outline: 1px dashed #{theme.$page-grey};
+	position: relative;
+	z-index: 1;
+	container-type: size;
+
+	&::after,
+	&::before {
+		position: absolute;
+		z-index: -1;
+		content: '';
+	}
+
+	&::before {
+		inset: 0 var(--pagedjs-margin-right) 0 var(--pagedjs-margin-left);
+		border-right: var(--outline);
+		border-left: var(--outline);
+	}
+
+	&::after {
+		inset: var(--pagedjs-margin-top) 0 var(--pagedjs-margin-bottom) 0;
+		border-top: var(--outline);
+		border-bottom: var(--outline);
+	}
+}
+
+:global(.pagedjs_sheet):has(.outline) {
+	@include pageOutline;
+}
+
+:global(.pagedjs_sheet):has(.fullOutline) {
+	@include pageOutline;
+	& {
+		--outline: 1px solid #{theme.$page-grey};
+	}
+}
+
+// Remove outline when no margin
+@each $pseudo,
+	$sides in (('after', ('top', 'bottom')), ('before', ('left', 'right')))
+{
+	@each $side in $sides {
+		@container style(--pagedjs-margin-#{$side}: 0%) {
+			:global(.pagedjs_sheet):has(.outline)::#{$pseudo} {
+				border-#{$side}: none !important;
+			}
+		}
+	}
+}
+
+// Links
+
+.namedLink::after {
+	content: '(see ' target-text(attr(href url)) ')';
+}
+
+.pagedLink::after {
+	content: '(see page n° ' target-counter(attr(href url), page) ')';
+}
+
+.quote::before {
+	content: '“' target-text(attr(href url)) '”  (see page n° '
+		target-counter(attr(href url), page) ')';
+}

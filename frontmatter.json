@@ -1,0 +1,102 @@
+{
+	"$schema": "https://frontmatter.codes/frontmatter.schema.json",
+	"frontMatter.framework.id": "astro",
+	"frontMatter.preview.host": "http://localhost:4321",
+	"frontMatter.content.publicFolder": "[[workspace]]/src/content/posts",
+	"frontMatter.content.pageFolders": [
+		{
+			"title": "posts",
+			"path": "[[workspace]]/src/content/posts",
+			"previewPath": "/posts",
+			"contentTypes": ["posts"]
+		}
+	],
+	"frontMatter.taxonomy.contentTypes": [
+		{
+			"name": "posts",
+			"previewPath": "'posts'",
+			"pageBundle": false,
+			"template": "[[workspace]]/.frontmatter/templates/post.mdx",
+			"clearEmpty": true,
+			"fields": [
+				{
+					"title": "Title",
+					"name": "title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"title": "Description",
+					"name": "description",
+					"type": "string",
+					"required": true
+				},
+				{
+					"title": "Authors",
+					"name": "authors",
+					"dataFileId": "authors",
+					"multiple": true,
+					"dataFileKey": "alias",
+					"type": "dataFile",
+					"required": true
+				},
+				{
+					"title": "Publishing date",
+					"name": "date",
+					"type": "datetime",
+					"default": "{{now}}",
+					"isPublishDate": true,
+					"required": true
+				},
+				{
+					"title": "Cover image",
+					"name": "cover",
+					"type": "image",
+					"isPreviewImage": true,
+					"required": true
+				},
+				{
+					"title": "Keywords",
+					"name": "keywords",
+					"type": "string",
+					"multiple": true,
+					"required": true
+				},
+				{
+					"title": "Type",
+					"name": "type",
+					"type": "choice",
+					"choices": ["pdf", "post"],
+					"required": false
+				}
+			]
+		}
+	],
+	"frontMatter.data.files": [
+		{
+			"id": "authors",
+			"title": "Authors",
+			"file": "[[workspace]]/src/data/authors.json",
+			"schema": {
+				"title": "Author",
+				"type": "object",
+				"required": ["id", "name", "social"],
+				"properties": {
+					"id": {
+						"title": "Identifiant",
+						"type": "string"
+					},
+					"name": {
+						"title": "Name",
+						"type": "string"
+					},
+					"social": {
+						"title": "Social url",
+						"type": "string"
+					}
+				}
+			}
+		}
+	],
+	"frontMatter.git.enabled": true
+}

@@ -1,0 +1,38 @@
+---
+import TimeItem from './TimeItem.astro'
+import TimeList from './TimeList.astro'
+
+type TimeEntry = ComponentProps<typeof TimeItem> & {
+	items?: TimeEntry[]
+}
+
+export function sortTimeItem(
+	a: ComponentProps<typeof TimeItem>,
+	b: ComponentProps<typeof TimeItem>,
+) {
+	return b.start.getTime() - a.start.getTime()
+}
+
+interface Props extends ComponentProps<typeof TimeList> {
+	items: TimeEntry[]
+	locale?: string
+}
+
+let { items, ...props } = Astro.props
+items = items.sort(sortTimeItem)
+---
+
+<TimeList {...props}>
+	{
+		items.map(({ items, ...itemProps }) =>
+			items ? (
+				<TimeItem {...itemProps}>
+					<Astro.self {...props} items={items} />
+				</TimeItem>
+			) : (
+				<TimeItem locale={props.locale} {...itemProps} />
+			),
+		)
+	}
+	<slot />
+</TimeList>

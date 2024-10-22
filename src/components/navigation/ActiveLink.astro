@@ -1,0 +1,91 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+
+export interface Props extends HTMLAttributes<'a'> {
+	relation?: 'abs' | 'rel'
+	href: string
+}
+
+var { href, relation, ...props } = Astro.props,
+	isCurrentPage = false
+
+if (relation != undefined) {
+	href = getRelativeLocaleUrl(Astro.currentLocale as string, href)
+
+	if (relation == 'rel') {
+		href = href.replace(/\/$/, '')
+		isCurrentPage = Astro.url.pathname.startsWith(href)
+	} else {
+		isCurrentPage = Astro.url.pathname == href
+	}
+}
+---
+
+<script>
+	const absoluteLinks: Set<ActiveLink> = new Set(),
+		relativeLinks: Set<ActiveLink> = new Set()
+
+	class ActiveLink extends HTMLAnchorElement {
+		links!: Set<ActiveLink>
+		constructor() {
+			super()
+			if (this.dataset.relation == 'abs') (this.links = absoluteLinks).add(this)
+			else if (this.dataset.relation == 'rel')
+				(this.links = relativeLinks).add(this)
+		}
+
+		disconnectedCallback() {
+			if (this.links) this.links.delete(this)
+		}
+	}
+
+	customElements.define('active-link', ActiveLink, { extends: 'a' })
+
+	document.addEventListener('astro:after-swap', () => {
+		relativeLinks.forEach((el) =>
+			el.classList.toggle('active', window.location.href.startsWith(el.href)),
+		)
+		absoluteLinks.forEach((el) =>
+			el.classList.toggle(
+				'active',
+				el.href
+					.replace(/\/$/, '')
+					.endsWith(window.location.pathname.replace(/\/$/, '')),
+			),
+		)
+	})
+</script>
+
+<a
+	is="active-link"
+	data-relation={relation}
+	class:list={[isCurrentPage && 'active']}
+	href={href}
+	{...props}
+>
+	<slot />
+</a>
+
+<style lang="scss" is:global>
+	a[is='active-link'] {
+		$line-width: 0.05em;
+		$line-color: theme.$page-accent;
+
+		display: inline;
+		background: linear-gradient(
+			transparent calc(100% - $line-width),
+			$line-color $line-width,
+			$line-color 0%
+		);
+		background-position: calc(var(--x-factor) * 100%) 0;
+		background-size: 0 100%;
+		background-repeat: no-repeat;
+
+		&:hover,
+		&.active {
+			transition: background-size 0.1s ease-in-out;
+			background-size: 100% 100%;
+		}
+	}
+</style>

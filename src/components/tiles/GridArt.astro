@@ -1,0 +1,63 @@
+---
+import { patterns } from './Patterns.global.astro'
+import { getRandom } from '@/libs/random'
+import type { HTMLAttributes } from 'astro/types'
+import { mainGradientUrl, grainUrl } from '@/styles/theme'
+
+const patternValues = Object.values(patterns)
+
+interface Props extends HTMLAttributes<'svg'> {
+	width: number
+	height: number
+	seed: any
+}
+
+const { width, height, seed, ...props } = Astro.props,
+	random = getRandom(seed)
+
+function randomPattern() {
+	return patternValues[Math.round(random() * (patternValues.length - 1))]
+}
+
+const id = btoa(
+	(getRandom(seed + width + '/' + height)() * (1 << 16)).toString(16),
+)
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox={`0 0 ${width} ${height}`}
+	aria-hidden="true"
+	mask={grainUrl}
+	{...props}
+>
+	<defs>
+		<mask id={id}>
+			<rect width="100%" height="100%" fill="#fff"></rect>
+			{
+				Array.from({ length: width }, (_, x) =>
+					Array.from({ length: height }, (_, y) => ({ x, y })),
+				)
+					.flat()
+					.map((coord) => (
+						<rect
+							{...coord}
+							transform-origin={`${coord.x + 0.5} ${coord.y + 0.5}`}
+							fill={randomPattern()}
+						/>
+					))
+			}
+			<style
+				set:html={`
+				#${id} rect:not(:first-child) {
+					transform: scale(1.005);
+					width: 1px;
+					height: 1px;
+				}
+			`}
+			></style>
+		</mask>
+	</defs>
+	<rect mask={`url(#${id})`} width="100%" height="100%" fill={mainGradientUrl}
+	></rect>
+</svg>

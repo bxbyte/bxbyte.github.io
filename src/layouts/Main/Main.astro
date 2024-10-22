@@ -1,0 +1,156 @@
+---
+import layout from '@/styles/layout.module.scss'
+import locals from './locals'
+import ActiveLink from '@/components/navigation/ActiveLink.astro'
+import type { HTMLAttributes } from 'astro/types'
+import type Head from '@/components/Head.astro'
+import Skeleton from '@/layouts//Skeleton.astro'
+import LocalLinks from '@/components/navigation/LocalLinks.astro'
+import ThemeSwitch from '@/components/ThemeSwitch.astro'
+
+import { useLocalContents } from '@/libs/i18n'
+
+const FOOTER_ASCII_ART = `
+       ／l、
+      (°､ₒ︎ ７
+       ⎱ 、ﾞ~ヽ   ⎞
+ᘛ⁐̤ᕐᐷ  じしf_, )ノ
+`
+
+export interface Props extends HTMLAttributes<'main'> {
+	head?: LocalComponentProps<typeof Head>
+}
+
+export const { getStaticPaths, getLocalContent } = useLocalContents(locals)
+const content = getLocalContent(Astro)
+
+const { head, ...props } = Astro.props
+---
+
+<Skeleton>
+	<!-- Slot forwarding -->
+	<slot name="head" slot="head" />
+
+	<header transition:persist-props class={layout.chunk}>
+		<nav>
+			<ul>
+				{
+					content.navLinks.map(({ label, ...props }) => (
+						<li>
+							<ActiveLink {...props}>{label}</ActiveLink>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+		<div>
+			<LocalLinks />
+			<ThemeSwitch />
+		</div>
+	</header>
+	<main transition:animate="fade" {...props}>
+		<slot />
+	</main>
+	<footer transition:persist class={layout.chunk}>
+		<div>
+			{
+				content.footerLinkSections.map(({ name, links }) => (
+					<ul>
+						<li>{name}</li>
+						{links.map(({ label, ...props }) => (
+							<li>
+								<ActiveLink {...props}>{label}</ActiveLink>
+							</li>
+						))}
+					</ul>
+				))
+			}
+			<pre translate="no">{FOOTER_ASCII_ART}</pre>
+		</div>
+		<p>
+			{content.copyrigth.whenwho}
+			<ActiveLink href={content.copyrigth.license.href}
+				>{content.copyrigth.license.label}</ActiveLink
+			>
+		</p>
+	</footer>
+</Skeleton>
+
+<style lang="scss">
+	@use '@/styles/layout.module.scss' as layout;
+
+	body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		& > main {
+			flex: 1;
+		}
+
+		& > header {
+			justify-content: space-between;
+			backdrop-filter: blur(1em);
+			transition: transform 0.2s ease-in-out;
+			background: linear-gradient(
+				theme.$page-white,
+				color-mix(in srgb, theme.$page-white, transparent 40%)
+			);
+
+			&,
+			* {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				gap: 1em;
+			}
+
+			img {
+				height: 2em;
+			}
+		}
+
+		& > footer {
+			gap: 0.5em;
+			border-top: 1px solid theme.$page-grey;
+
+			&,
+			ul {
+				display: flex;
+				flex-direction: column;
+			}
+
+			ul {
+				& > *:first-child {
+					margin-bottom: 0.5em;
+					font-weight: 500;
+					text-underline-offset: 0.2em;
+				}
+			}
+
+			div {
+				display: flex;
+				position: relative;
+				flex-flow: row wrap;
+				gap: 1em;
+			}
+
+			pre {
+				right: 0;
+				bottom: 0;
+				opacity: 0.4;
+				margin-top: auto;
+				margin-left: auto;
+			}
+
+			& > p {
+				align-self: end;
+
+				a {
+					color: theme.$page-accent;
+					--x-factor: 1;
+				}
+			}
+		}
+	}
+</style>

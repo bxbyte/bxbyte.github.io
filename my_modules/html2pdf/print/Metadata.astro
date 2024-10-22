@@ -1,0 +1,15 @@
+---
+import type Renderer from '../server/renderer'
+
+export type Props = Omit<Parameters<(typeof Renderer)['render']>[0], 'url'>
+
+export const METADATA_ID = 'metadata'
+---
+
+<!-- Metadata -->
+<script
+	is:inline
+	type="application/json"
+	id={METADATA_ID}
+	set:html={JSON.stringify(Astro.props)}
+/>

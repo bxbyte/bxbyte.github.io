@@ -1,0 +1,70 @@
+---
+import { Icon } from 'astro-icon/components'
+
+const platforms = [
+	{
+		name: 'Twitter',
+		icon: 'mdi:twitter',
+		url: `http://www.twitter.com/share?url=${Astro.url.href}`,
+	},
+	{
+		name: 'Facebook',
+		icon: 'mdi:facebook',
+		url: `https://www.facebook.com/sharer/sharer.php?u=${Astro.url.href}`,
+	},
+	{
+		name: 'Email',
+		icon: 'mdi:email',
+		url: `mailto:?subject=Check this out&body=Go see ${Astro.url.href}`,
+	},
+]
+---
+
+<ul>
+	<li>Share on</li>
+	{
+		platforms.map(({ name, icon, url }) => (
+			<li title={name}>
+				<a href={url} target="_blank">
+					<Icon name={icon} />
+				</a>
+			</li>
+		))
+	}
+	<li>
+		<a onclick={`navigator.clipboard.writeText("${Astro.url.href}")`}
+			><Icon name="mdi:share-variant" /></a
+		>
+	</li>
+</ul>
+
+<style lang="scss">
+	ul {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5em;
+	}
+
+	li {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5em;
+
+		&:not(:last-child, :first-child)::after {
+			display: inline-block;
+			content: '/';
+		}
+	}
+
+	svg {
+		margin-bottom: -0.3em;
+		width: 1.3em;
+		height: 1.3em;
+
+		&:hover {
+			color: theme.$page-accent;
+		}
+	}
+</style>

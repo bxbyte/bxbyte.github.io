@@ -1,0 +1,50 @@
+---
+import '@/styles/Global.astro'
+import type { HTMLAttributes } from 'astro/types'
+import Head from '@/components/Head.astro'
+import { ClientRouter } from 'astro:transitions'
+import type { AstroInstance } from 'astro'
+
+export interface Props extends HTMLAttributes<'body'> {
+	head?: ComponentProps<typeof Head>
+}
+
+let globalComponents = (await Promise.all(
+	Object.values(import.meta.glob('@/**/*.global.astro')).map((v) => v()),
+)) as AstroInstance[]
+
+const { head, ...props } = Astro.props
+---
+
+<!doctype html>
+<html lang={Astro.currentLocale}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<Head {...head} />
+		<ClientRouter />
+		<slot name="head" />
+	</head>
+	<body {...props}>
+		{
+			globalComponents && (
+				<div hidden>
+					{globalComponents.map((c) => (
+						<c.default />
+					))}
+				</div>
+			)
+		}
+		<slot />
+	</body>
+</html>
+
+<style lang="scss">
+	/// Fix for displaying svg refs
+	[hidden] {
+		display: block;
+		position: absolute;
+		top: 0;
+		height: 0;
+	}
+</style>

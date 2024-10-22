@@ -1,0 +1,10 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import styles from './styles.module.scss'
+
+interface Props extends HTMLAttributes<'ul'> {}
+---
+
+<ul class={styles.timeList} {...Astro.props}>
+	<slot />
+</ul>

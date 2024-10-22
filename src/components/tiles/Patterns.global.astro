@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+export const gridId = 'pattern-grid'
+export const corner1Id = 'pattern-corner1'
+export const corner2Id = 'pattern-corner2'
+export const crossId = 'pattern-cross'
+export const patternIds = [gridId, corner1Id, corner2Id, crossId] as const
+export const patterns = Object.fromEntries(
+	patternIds.map((id) => [id, `url(#${id})`]),
+) as { [k in (typeof patternIds)[number]]: string }
+
+const patternAttributes = {
+	width: '50%',
+	height: '50%',
+	viewBox: '0 0 10 10',
+} as HTMLAttributes<'pattern'>
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	fill="none"
+	stroke-width=".12em"
+	stroke="#000"
+	stroke-linecap="square"
+	viewBox="0 0 1 1"
+>
+	<defs>
+		<pattern id={gridId} {...patternAttributes}>
+			<path d="M5,0v10 M0,5h10"></path>
+		</pattern>
+		<pattern id={corner1Id} {...patternAttributes}>
+			<circle cx="0" cy="0" r="5"></circle>
+			<circle cx="10" cy="10" r="5"></circle>
+		</pattern>
+		<pattern id={corner2Id} {...patternAttributes}>
+			<circle cx="0" cy="10" r="5"></circle>
+			<circle cx="10" cy="0" r="5"></circle>
+		</pattern>
+		<pattern id={crossId} {...patternAttributes}>
+			<circle cx="0" cy="0" r="5"></circle>
+			<circle cx="10" cy="10" r="5"></circle>
+			<circle cx="0" cy="10" r="5"></circle>
+			<circle cx="10" cy="0" r="5"></circle>
+		</pattern>
+	</defs>
+</svg>

@@ -1,0 +1,83 @@
+$dot-size: 0.35em;
+$dot-space: 0.2em;
+$gap-y: 2em;
+$border-width: 1px;
+$dot-radius: 25%;
+$last-dot-border-width: 1px;
+
+.timeList {
+	--pad-left: 2em;
+
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	gap: $gap-y;
+	padding-left: calc(var(--pad-left) * 2);
+
+	&::before,
+	&::after {
+		position: absolute;
+		content: '';
+	}
+
+	&::before {
+		top: calc($dot-size + $dot-space);
+		left: calc(var(--pad-left) + $border-width / -2);
+		border-left: $border-width solid theme.$page-black;
+		height: calc(100% - $dot-size - $dot-space * 2);
+	}
+
+	// &::after {
+	// 	top: calc(100% - $dot-size - $dot-space);
+	// 	left: calc(var(--pad-left) + $dot-size / -2);
+	// 	outline: $dot-space solid theme.$page-white;
+	// 	border: $last-dot-border-width solid theme.$page-black;
+	// 	border-radius: $dot-radius;
+	// 	background: theme.$page-white;
+	// 	width: calc($dot-size - $last-dot-border-width * 2);
+	// 	height: calc($dot-size - $last-dot-border-width * 2);
+	// }
+}
+
+.timeItem {
+	p {
+		&[role='heading'] {
+			position: relative;
+			font-weight: bold;
+
+			&::before {
+				position: absolute;
+				top: 50%;
+				left: calc(-1 * var(--pad-left) - $dot-size / 2);
+				transform: translateY(-50%);
+				outline: $dot-space solid theme.$page-white;
+				border-radius: $dot-radius;
+				background-color: theme.$page-black;
+				width: $dot-size;
+				height: $dot-size;
+				content: '';
+			}
+		}
+
+		&:has(time) {
+			opacity: 0.7;
+			width: fit-content;
+			font-size: 0.8em;
+			text-transform: capitalize;
+
+			&[data-metadata]::after {
+				margin-left: -0.5ch;
+				content: ', ' attr(data-metadata);
+				text-transform: none;
+			}
+		}
+	}
+
+	& > section > div {
+		margin-top: $gap-y;
+	}
+
+	:global(ul > li) {
+		list-style: disc inside;
+	}
+}

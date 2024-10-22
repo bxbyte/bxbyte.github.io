@@ -1,0 +1,21 @@
+.post {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+
+	h1 {
+		font-size: 3em;
+	}
+
+	h2 {
+		font-size: 2em;
+	}
+
+	h3 {
+		font-size: 1.5em;
+	}
+
+	p {
+		line-height: 1.3em;
+	}
+}
