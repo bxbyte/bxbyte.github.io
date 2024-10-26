@@ -24,7 +24,7 @@ export default async (
 					...setupParam,
 				})
 
-				if (process.env.NODE_ENV === 'development') {
+				if (import.meta.env.DEV) {
 					logger.debug('Loading toolbar...')
 					addDevToolbarApp({
 						id: 'PDF',

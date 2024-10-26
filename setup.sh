@@ -3,7 +3,7 @@
 
 currentDir=$(pwd)
 
-# Directiry where binaries are installed
+# Directory where binaries are installed
 binDir=".bin"
 mkdir "$binDir"
 

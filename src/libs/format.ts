@@ -2,7 +2,7 @@ import markdownit from 'markdown-it'
 
 import type ActiveLink from '@/components/navigation/ActiveLink.astro'
 
-import type { LocalContent } from '@/libs/i18n'
+import type { LocaleContent } from '@/libs/i18n'
 
 const mdCtx = markdownit({ html: true, breaks: false })
 
@@ -11,7 +11,7 @@ export function md(mdString: string): string {
 }
 
 export type LocalLink = ComponentProps<typeof ActiveLink> & {
-	label: LocalContent | string
+	label: LocaleContent | string
 }
 
 export function join<T>(arr: T[], delimiter = ', ', endDelimiter = ' & ') {

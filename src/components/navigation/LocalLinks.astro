@@ -1,12 +1,12 @@
 ---
-import { localPaths } from '@/libs/i18n'
+import { localePaths } from '@/libs/i18n'
 ---
 
 <script
 	is:inline
 	id="locales"
 	type="application/json"
-	set:html={JSON.stringify(localPaths)}
+	set:html={JSON.stringify(localePaths)}
 />
 
 <script>
@@ -33,7 +33,7 @@ import { localPaths } from '@/libs/i18n'
 		constructor() {
 			super()
 			this.addEventListener('click', () =>
-				currentLocale.set(locales[this.dataset.local as string]),
+				currentLocale.set(locales[this.dataset.locale as string]),
 			)
 		}
 	}
@@ -42,14 +42,14 @@ import { localPaths } from '@/libs/i18n'
 
 <div>
 	{
-		Object.keys(localPaths).map((local) => (
+		Object.keys(localePaths).map((locale) => (
 			<button
 				is="lang-link"
 				translate="no"
-				data-local={local}
-				class:list={[Astro.currentLocale == local && 'current']}
+				data-locale={locale}
+				class:list={[Astro.currentLocale == locale && 'current']}
 			>
-				{local}
+				{locale}
 			</button>
 		))
 	}

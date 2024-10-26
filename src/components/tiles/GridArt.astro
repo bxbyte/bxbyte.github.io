@@ -12,16 +12,14 @@ interface Props extends HTMLAttributes<'svg'> {
 	seed: any
 }
 
-const { width, height, seed, ...props } = Astro.props,
+const { width, height, seed, class: class_, ...props } = Astro.props,
 	random = getRandom(seed)
 
 function randomPattern() {
 	return patternValues[Math.round(random() * (patternValues.length - 1))]
 }
 
-const id = btoa(
-	(getRandom(seed + width + '/' + height)() * (1 << 16)).toString(16),
-)
+const id = (getRandom(seed + width + '/' + height)() * (1 << 16)).toString(32)
 ---
 
 <svg
@@ -29,6 +27,7 @@ const id = btoa(
 	viewBox={`0 0 ${width} ${height}`}
 	aria-hidden="true"
 	mask={grainUrl}
+	class:list={['gridart', class_]}
 	{...props}
 >
 	<defs>
@@ -47,17 +46,16 @@ const id = btoa(
 						/>
 					))
 			}
-			<style
-				set:html={`
-				#${id} rect:not(:first-child) {
-					transform: scale(1.005);
-					width: 1px;
-					height: 1px;
-				}
-			`}
-			></style>
 		</mask>
 	</defs>
 	<rect mask={`url(#${id})`} width="100%" height="100%" fill={mainGradientUrl}
 	></rect>
 </svg>
+
+<style lang="scss">
+	.gridart mask > rect:not(:first-child) {
+		transform: scale(1.005);
+		width: 1px;
+		height: 1px;
+	}
+</style>

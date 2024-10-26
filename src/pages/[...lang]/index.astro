@@ -1,6 +1,6 @@
 ---
-import { useLocalContents } from '@/libs/i18n'
-import locals from './_locals'
+import { useLocaleContents } from '@/libs/i18n'
+import locals from './_locales'
 import Main from '@/layouts/Main'
 import layoutStyles from '@/styles/layout.module.scss'
 import skinStyles from '@/styles/skin.module.scss'
@@ -10,9 +10,12 @@ import GridArt from '@/components/tiles'
 
 import infos from '@/data/infos'
 import Timeline from '@/components/timeline'
+import { getPostsByLocale } from '@/content'
+import PostCard from '@/components/postcard'
 
-export const { getStaticPaths, getLocalContent } = useLocalContents(locals)
-const content = getLocalContent(Astro)
+export const { getStaticPaths, getLocaleContent } = useLocaleContents(locals)
+const content = getLocaleContent(Astro)
+const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
 ---
 
 <Main>
@@ -59,6 +62,24 @@ const content = getLocalContent(Astro)
 		<section>
 			<Timeline items={content.history.timeline} />
 		</section>
+	</section>
+	<section id="posts">
+		<h1>{content.posts.title}</h1>
+		<ul>
+			{
+				posts
+					.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+					.slice(0, 3)
+					.map((post) => (
+						<li>
+							<PostCard post={post} />
+						</li>
+					))
+			}
+			<li>
+				<a href="/posts">{content.posts.more}</a>
+			</li>
+		</ul>
 	</section>
 </Main>
 
@@ -133,6 +154,23 @@ const content = getLocalContent(Astro)
 			&:nth-child(2) {
 				box-sizing: border-box;
 				padding: 3em 0;
+			}
+		}
+	}
+
+	#posts {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+
+		ul {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(16em, 0.3fr));
+			gap: 2em;
+
+			li:last-of-type {
+				margin: auto;
+				padding: 2em;
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 ---
-import { useLocalContents } from '@/libs/i18n'
-import { getPosts } from '@/content'
+import { useLocaleContents } from '@/libs/i18n'
+import { getPostsByLocale } from '@/content'
 
 import PDF from '$/html2pdf/print/'
 import Ariane from '@/components/navigation/Ariane.astro'
@@ -18,11 +18,13 @@ import render from '@/libs/md'
 import type { PostHydrated } from '@/content'
 import { Image } from 'astro:assets'
 
-export const { getStaticPaths } = useLocalContents({}, async () => {
-	return (await getPosts()).map((post) => ({
-		params: { hash: post.hash },
-		props: { post },
-	}))
+export const { getStaticPaths } = useLocaleContents({}, async () => {
+	return Object.entries(await getPostsByLocale()).flatMap(([locale, posts]) =>
+		posts.map((post) => ({
+			params: { locale, hash: post.hash },
+			props: { post },
+		})),
+	)
 })
 
 const { post } = Astro.props

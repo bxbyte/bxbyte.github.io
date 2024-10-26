@@ -4,7 +4,7 @@ import Main from '@/layouts/Main'
 import PDF from '$/html2pdf/print'
 import pdfSkin from '@/styles/pdf/skin.module.scss'
 import { join, md } from '@/libs/format'
-import { useLocalContents } from '@/libs/i18n'
+import { useLocaleContents } from '@/libs/i18n'
 import Timeline from '@/components/timeline'
 import GridArt from '@/components/tiles'
 
@@ -14,7 +14,7 @@ interface Props {
 	job: JobProps
 }
 
-export const { getStaticPaths } = useLocalContents(
+export const { getStaticPaths } = useLocaleContents(
 	{},
 	async (): Promise<{ params: { id: string }; props: { job: JobProps } }[]> =>
 		(await getJobs()).map((job) => ({

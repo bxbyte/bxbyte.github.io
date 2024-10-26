@@ -1,47 +1,53 @@
-# Astro Starter Kit: Minimal
+# Here's my portfolio
 
-```sh
-npm create astro@latest -- --template minimal
+You'll find my resume, contact informations, posts, ...
+but also the first implementation of html2pdf, a simple
+astrojs plugin doing what his name say.
+
+## Setup
+
+Use the simple ``bun setup` command, and
+if needed specify a custom browser for pdf rendering
+with puppeter in html2pdf.
+
+## URL structure
+
+To the exception of special pages (404 error, ...),
+each page is prefixed by a `/[...lang]/` part, where lang
+is either nothing for the default locale english,
+or `/fr/` for the french locale. The fallback is of course on the default locale.
+
+## Source code structure
+
 ```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+├ .trash/               Local trash folder
+├ .bin/                 Local binaries folder (for html2pdf)
+│
+└ src/                  Portfolio source code
+  │
+  ├ **/*.global.astro   Files named like that are imported
+  │                      in the head of the skeletton
+  │
+  ├ data/               Every pieces of informations that need to be
+  │                      easely accessable for update
+  │
+  ├ content/            Content collections
+  │ │
+  │ ├ posts/            Posts (article, project, ...),
+  | | |                 each posts is linked to other locale version of itsef
+  | | |                 if their filepath without the locale is identical
+  │ │ │
+  │ │ ├ **/*.mdx        English posts
+  │ │ │  **/*.en.mdx
+  │ │ │  **/en/**/*.mdx
+  │ │ │
+  │ │ └ **/*.fr.mdx     French posts
+  │ │    **/fr/**/*.mdx
+  │ │
+  │ └ jobs
+  │   ├ _default.ts     Global default content of each jobs (general infos)
+  │   └ **/*.ts         A job application content (CV + motivation letter)
+  │
+  └ pages/              Pages definition
+    └ **/_locales.ts    Page content differienciated by locales
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

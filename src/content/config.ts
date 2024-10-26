@@ -49,7 +49,7 @@ export const collections = {
 			),
 	}),
 	jobs: defineCollection<JobProps[]>({
-		type: 'content_layer',
+		// type: 'content_layer',
 		loader: async () =>
 			await Promise.all(
 				Object.values(

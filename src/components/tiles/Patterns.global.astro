@@ -10,11 +10,12 @@ export const patterns = Object.fromEntries(
 	patternIds.map((id) => [id, `url(#${id})`]),
 ) as { [k in (typeof patternIds)[number]]: string }
 
-const patternAttributes = {
-	width: '50%',
-	height: '50%',
-	viewBox: '0 0 10 10',
-} as HTMLAttributes<'pattern'>
+const partternOctaves = 2,
+	patternAttributes = {
+		width: `${100 / partternOctaves}%`,
+		height: `${100 / partternOctaves}%`,
+		viewBox: '0 0 10 10',
+	} as HTMLAttributes<'pattern'>
 ---
 
 <svg
@@ -23,7 +24,6 @@ const patternAttributes = {
 	stroke-width=".12em"
 	stroke="#000"
 	stroke-linecap="square"
-	viewBox="0 0 1 1"
 >
 	<defs>
 		<pattern id={gridId} {...patternAttributes}>

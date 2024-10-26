@@ -1,9 +1,18 @@
 import { type CollectionEntry, getCollection, getEntries } from 'astro:content'
 import { createHash } from 'crypto'
 
+import { defaultLocale, locales } from '@/libs/i18n'
+
 import type { AuthorData, JobProps, PostData } from './config'
 
 export type * from './config'
+
+const LOCALS_PATH_REGEXP = Object.fromEntries(
+	locales.map((locale) => [
+		locale,
+		new RegExp(`\\/${locale}\\/|\\.${locale}\\..*$`),
+	]),
+) as { [locale in Locales]: RegExp }
 
 type PostEntry = Omit<CollectionEntry<'posts'>, 'data'> & {
 	data: PostData
@@ -11,6 +20,7 @@ type PostEntry = Omit<CollectionEntry<'posts'>, 'data'> & {
 
 export type PostHydrated = Omit<CollectionEntry<'posts'>, 'data'> & {
 	hash: string
+	locale: Locales
 	data: Omit<PostData, 'authors'> & {
 		authors?: AuthorData[]
 	}
@@ -18,7 +28,7 @@ export type PostHydrated = Omit<CollectionEntry<'posts'>, 'data'> & {
 
 function getHash(value: string) {
 	return encodeURIComponent(
-		createHash('sha256').update(value).digest('base64').slice(0, 8),
+		createHash('sha256').update(value).digest('hex').slice(0, 16),
 	)
 }
 
@@ -26,19 +36,57 @@ export function unDatafied<T>({ data }: { data: T }): T {
 	return data
 }
 
-export async function getPosts(): Promise<PostHydrated[]> {
-	return await Promise.all(
-		(await getCollection('posts')).map(async (post: PostEntry) => ({
-			...post,
-			hash: getHash(post.slug),
-			data: {
-				...post.data,
-				authors: post.data.authors
-					? (await getEntries(post.data.authors)).map(unDatafied<AuthorData>)
-					: undefined,
-			},
-		})),
+export async function getPostsByLocale(): Promise<{
+	[locale in Locales]: PostHydrated[]
+}> {
+	const posts = await Promise.all(
+		(await getCollection('posts')).map(async (post: PostEntry) => {
+			const localeRegexp = (
+				Object.entries(LOCALS_PATH_REGEXP) as [Locales, RegExp][]
+			)
+				.map((t) => t[1].test(post.filePath) && t)
+				.filter(Boolean)[0]
+
+			var locale: Locales = defaultLocale,
+				toHash: string = post.filePath
+
+			if (localeRegexp) {
+				locale = localeRegexp[0]
+				toHash = post.filePath.replace(localeRegexp[1], '')
+			}
+
+			return {
+				...post,
+				hash: getHash(toHash),
+				locale,
+				data: {
+					...post.data,
+					authors: post.data.authors
+						? (await getEntries(post.data.authors)).map(unDatafied<AuthorData>)
+						: undefined,
+				},
+			}
+		}),
 	)
+
+	let postByHash = (
+		Object.values(Object.groupBy(posts, ({ hash }) => hash)) as PostHydrated[][]
+	).map((posts) => Object.fromEntries(posts.map((post) => [post.locale, post])))
+
+	let postByLocal = Object.fromEntries(
+		locales.map((locale) => [
+			locale,
+			postByHash.map(
+				(posts) =>
+					// Local selection order: current locale > default locale > only locale
+					posts[locale] || posts[defaultLocale] || Object.values(posts)[0],
+			),
+		]),
+	) as {
+		[locale in Locales]: PostHydrated[]
+	}
+
+	return postByLocal
 }
 
 export async function getJobs(): Promise<JobProps[]> {

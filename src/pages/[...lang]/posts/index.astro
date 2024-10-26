@@ -1,41 +1,50 @@
 ---
 import Main from '@/layouts/Main'
 import layoutStyles from '@/styles/layout.module.scss'
-import { getPosts, type PostHydrated } from '@/content'
-import locals from './_locals'
-import { useLocalContents } from '@/libs/i18n'
-import { joinUrl } from '@/libs/format'
-import PostCard from '@/components/PostCard.astro'
+import { getPostsByLocale } from '@/content'
+import locals from './_locales'
+import { useLocaleContents } from '@/libs/i18n'
+import PostCard from '@/components/postcard'
 
-export const { getStaticPaths, getLocalContent } = useLocalContents(locals)
-const content = getLocalContent(Astro)
+export const { getStaticPaths, getLocaleContent } = useLocaleContents(locals)
+const content = getLocaleContent(Astro)
 
-const posts = await getPosts(),
-	postsPerMonth = Object.groupBy(posts, ({ data: { date } }) =>
-		date.toLocaleDateString(Astro.currentLocale, {
-			month: 'long',
-			year: 'numeric',
-		}),
-	) as Record<string, typeof posts>
+const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
+
+function formatDate(date: Date) {
+	return date.toLocaleDateString(Astro.currentLocale, {
+		month: 'long',
+		year: 'numeric',
+	})
+}
+
+const postsPerMonth = Object.groupBy(posts, ({ data: { date } }) =>
+	formatDate(date),
+) as Record<string, typeof posts>
 ---
 
 <Main class={layoutStyles.chunk}>
 	<ul class="timeline">
 		{
-			Object.entries(postsPerMonth).map(([month, posts]) => (
-				<Fragment>
-					<li>
-						<time datetime={new Date(month).toISOString()}>{month}</time>
-					</li>
-					<ul>
-						{posts.map((post) => (
-							<li>
-								<PostCard post={post} />
-							</li>
-						))}
-					</ul>
-				</Fragment>
-			))
+			Object.entries(postsPerMonth)
+				.map(
+					([month, posts]) => [new Date(month), posts] as [Date, typeof posts],
+				)
+				.sort(([a], [b]) => b.getTime() - a.getTime())
+				.map(([month, posts]) => (
+					<Fragment>
+						<li>
+							<time datetime={month.toISOString()}>{formatDate(month)}</time>
+						</li>
+						<ul>
+							{posts.map((post) => (
+								<li>
+									<PostCard post={post} />
+								</li>
+							))}
+						</ul>
+					</Fragment>
+				))
 		}
 	</ul>
 </Main>
@@ -49,6 +58,7 @@ const posts = await getPosts(),
 		ul {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
+			grid-auto-rows: minmax(16em, 1fr);
 			gap: 2em;
 		}
 
@@ -60,7 +70,7 @@ const posts = await getPosts(),
 		}
 
 		li {
-			display: block;
+			// display: block;
 			break-inside: avoid;
 		}
 	}

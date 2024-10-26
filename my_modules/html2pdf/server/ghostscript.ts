@@ -42,7 +42,7 @@ export class GhostScript {
 
 	setMetadata(param: {
 		title?: string
-		local?: string
+		locale?: string
 		description?: string
 		authors?: string | string[]
 		creator?: string | string[]
@@ -57,7 +57,7 @@ export class GhostScript {
 				param?.authors && `/Author (${stringOrList(param.authors)})`,
 				param?.creator && `/Creator (${stringOrList(param.creator)})`,
 				param?.keywords && `/Keywords (${stringOrList(param.keywords)})`,
-				param?.local && `/Lang (${param.local})`,
+				param?.locale && `/Lang (${param.locale})`,
 			]
 				.filter(Boolean)
 				.join('\n')}

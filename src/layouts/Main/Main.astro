@@ -8,7 +8,7 @@ import Skeleton from '@/layouts//Skeleton.astro'
 import LocalLinks from '@/components/navigation/LocalLinks.astro'
 import ThemeSwitch from '@/components/ThemeSwitch.astro'
 
-import { useLocalContents } from '@/libs/i18n'
+import { useLocaleContents } from '@/libs/i18n'
 
 const FOOTER_ASCII_ART = `
        ／l、
@@ -21,8 +21,8 @@ export interface Props extends HTMLAttributes<'main'> {
 	head?: LocalComponentProps<typeof Head>
 }
 
-export const { getStaticPaths, getLocalContent } = useLocalContents(locals)
-const content = getLocalContent(Astro)
+export const { getStaticPaths, getLocaleContent } = useLocaleContents(locals)
+const content = getLocaleContent(Astro)
 
 const { head, ...props } = Astro.props
 ---

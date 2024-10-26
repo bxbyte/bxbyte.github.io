@@ -4,10 +4,11 @@ import preact from '@astrojs/preact'
 import { transformerNotationDiff } from '@shikijs/transformers'
 
 import icon from 'astro-icon'
-import { type AstroUserConfig, defineConfig } from 'astro/config'
+import { type AstroUserConfig, defineConfig, envField } from 'astro/config'
 import { SassString } from 'sass-embedded'
 
 import PDF from './my_modules/html2pdf'
+import { localesConfig } from './src/libs/i18n/config'
 
 const pseudoConfig = {
 	experimental: { contentIntellisense: true },
@@ -16,11 +17,7 @@ const pseudoConfig = {
 	image: {
 		domains: ['astro.build'],
 	},
-	i18n: {
-		defaultLocale: 'en',
-		locales: ['en', 'fr'],
-		fallback: { fr: 'en' },
-	},
+	i18n: localesConfig,
 	vite: {
 		optimizeDeps: {
 			noDiscovery: true,
@@ -66,6 +63,30 @@ const pseudoConfig = {
 		mdx(),
 		await PDF(pkg.config),
 	],
+	env: {
+		schema: {
+			REPOSITERY_PAGE: envField.string({
+				context: 'server',
+				access: 'public',
+				default: '',
+			}),
+			REPOSITERY_URL: envField.string({
+				context: 'server',
+				access: 'public',
+				default: 'https:',
+			}),
+			REPOSITERY_OWNER: envField.string({
+				context: 'server',
+				access: 'public',
+				default: '',
+			}),
+			SERVER_URL: envField.string({
+				context: 'server',
+				access: 'public',
+				default: '',
+			}),
+		},
+	},
 } as const satisfies AstroUserConfig
 
 // https://astro.build/config
