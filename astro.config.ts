@@ -73,7 +73,7 @@ const pseudoConfig = {
 			REPOSITERY_URL: envField.string({
 				context: 'server',
 				access: 'public',
-				default: 'https:',
+				default: '',
 			}),
 			REPOSITERY_OWNER: envField.string({
 				context: 'server',

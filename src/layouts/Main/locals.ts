@@ -1,3 +1,5 @@
+import { REPOSITERY_OWNER, REPOSITERY_URL } from 'astro:env/server'
+
 import infos from '@/data/infos'
 import type { LocalLink } from '@/libs/format'
 
@@ -25,7 +27,7 @@ export default {
 				},
 				{
 					label: { fr: 'Depôt Github', en: 'Github Repositery' },
-					href: process.env.SERVER_URL || 'noServerUrlFound',
+					href: REPOSITERY_URL,
 				},
 			] satisfies LocalLink[],
 		},
@@ -38,7 +40,7 @@ export default {
 				},
 				{
 					label: 'Github',
-					href: `https://github.com/bxbyte`,
+					href: `https://github.com/${REPOSITERY_OWNER}`,
 				},
 			] satisfies LocalLink[],
 		},

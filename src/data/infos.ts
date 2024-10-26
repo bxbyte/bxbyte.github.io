@@ -16,6 +16,7 @@ export default {
 	owner: OWNER,
 	formspreeId: 'mdoqjapd',
 	head: {
+		// Insert in all page head for referrencing
 		title: `${OWNER.name} Portfolio`,
 		link: [
 			{ rel: 'icon', type: 'image/svg+xml', href: logo },
