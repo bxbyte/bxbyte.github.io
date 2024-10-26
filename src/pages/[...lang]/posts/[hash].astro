@@ -13,7 +13,7 @@ import Toc from '@/components/navigation/Toc.astro'
 import './_page.scss'
 import postStyles from './_post.module.scss'
 
-import render from '@/libs/md'
+import renderPostMdx from '@/libs/md'
 
 import type { PostHydrated } from '@/content'
 import { Image } from 'astro:assets'
@@ -39,13 +39,13 @@ const {
 		post: { hash, data },
 	} = Astro.props,
 	{ cover, type, title, description, keywords, date } = data,
-	{ toc, rendered } = await render(Astro.props.post)
+	{ toc, rendered, rawFrontmatter } = await renderPostMdx(Astro.props.post)
 
 var pdfData: Parameters<typeof PDF>[0] | undefined
 
 if (type == 'pdf')
 	pdfData = {
-		...data,
+		...rawFrontmatter,
 		authors: data.authors && data.authors.map(({ name }) => name),
 		targetSelector: '.' + PDF_CLASS_SELECTOR,
 	}

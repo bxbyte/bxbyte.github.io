@@ -35,8 +35,9 @@ function getCaptionItems(cheerio: CheerioAPI, selector: string) {
 	)
 }
 
-export default async function renderMdx({ render }: PostHydrated) {
-	const { Content: astroContent } = await render(),
+export default async function renderPostMdx({ render }: PostHydrated) {
+	const { Content: astroContent, remarkPluginFrontmatter: rawFrontmatter } =
+			await render(),
 		cheerio = load(
 			await (
 				await experimental_AstroContainer.create({
@@ -65,5 +66,6 @@ export default async function renderMdx({ render }: PostHydrated) {
 			tables: getCaptionItems(cheerio, 'figure:has(figcaption) table'),
 		},
 		rendered: cheerio.html(),
+		rawFrontmatter,
 	}
 }

@@ -6,7 +6,7 @@ astrojs plugin doing what his name say.
 
 ## Setup
 
-Use the simple ``bun setup` command, and
+Use the simple `bun setup` command, and
 if needed specify a custom browser for pdf rendering
 with puppeter in html2pdf.
 
