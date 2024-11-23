@@ -1,12 +1,13 @@
 ---
+import type { HTMLAttributes } from 'astro/types'
 import ActiveLink from './ActiveLink.astro'
 
-interface Props {
+interface Props extends HTMLAttributes<'nav'> {
 	path?: string
 	displayPath?: string
 }
 
-let { path, displayPath } = { path: Astro.url.pathname, ...Astro.props }
+let { path = Astro.url.pathname, displayPath, ...props } = Astro.props
 displayPath ||= path
 
 let pathChunk = path.split('/').filter(Boolean),
@@ -24,7 +25,7 @@ if (pathChunk.length != displayPathChunk.length)
 	)
 ---
 
-<nav>
+<nav {...props}>
 	<ul>
 		<li>
 			<ActiveLink href="/" relation="abs">home</ActiveLink>
@@ -49,7 +50,7 @@ if (pathChunk.length != displayPathChunk.length)
 
 	ul {
 		$gap: 0.5em;
-		color: theme.$page-black;
+		color: theme.$color-black;
 		@extend .smallCaps;
 
 		&,

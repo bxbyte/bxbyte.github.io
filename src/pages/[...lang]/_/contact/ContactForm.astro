@@ -1,0 +1,80 @@
+---
+import skin from '@/styles/skin.module.scss'
+---
+
+<script>
+	import { FORMSPREE_ID } from 'astro:env/client'
+
+	class ContactForm extends HTMLFormElement {
+		connectedCallback() {
+			this.addEventListener('submit', async (ev) => {
+				await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Accept: 'application/json',
+					},
+					body: JSON.stringify(Object.fromEntries(new FormData(this))),
+				})
+			})
+		}
+	}
+
+	customElements.define('contact-form', ContactForm, { extends: 'form' })
+</script>
+
+<form is="contact-form" onsubmit="return false">
+	<div>
+		<div class={skin.inputLabel}>
+			<input id="name" type="text" name="name" required={true} placeholder="" />
+			<label for="name">Name</label>
+		</div>
+		<div class={skin.inputLabel}>
+			<input
+				id="email"
+				type="email"
+				name="email"
+				required={true}
+				placeholder=""
+			/>
+			<label for="email">E-mail</label>
+		</div>
+	</div>
+	<div class={skin.inputLabel}>
+		<input
+			id="subject"
+			type="text"
+			name="subject"
+			required={true}
+			placeholder=""
+		/>
+		<label for="subject">Subject</label>
+	</div>
+	<div class={skin.inputLabel}>
+		<textarea
+			id="message"
+			name="message"
+			required={true}
+			placeholder=""
+			rows="8"></textarea>
+		<label for="message">Message</label>
+	</div>
+	<div>
+		<button type="submit" class={skin.primaryButton}> Send Message </button>
+		<button type="reset" class={skin.secondaryButton}> Clear All </button>
+	</div>
+</form>
+
+<style>
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+
+		div {
+			display: flex;
+			flex-direction: row;
+			gap: 1em;
+		}
+	}
+</style>

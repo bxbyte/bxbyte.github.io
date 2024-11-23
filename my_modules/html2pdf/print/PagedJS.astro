@@ -10,7 +10,7 @@ export interface Props {
 	scale: number
 }
 
-const { targetSelector, size, scale } = { ...Astro.props }
+const { targetSelector, fitSelector, size, scale } = Astro.props
 
 var param = {
 	doublePageClass: layout.double,
@@ -21,7 +21,7 @@ var param = {
 }
 
 // prettier-ignore
-export type ScriptParams = typeof param & typeof param;
+export type ScriptParams = typeof param;
 ---
 
 <!-- Inject parameter -->
@@ -52,7 +52,35 @@ export type ScriptParams = typeof param & typeof param;
 		})
 	}
 
-	async function renderPagedDev({
+	function fitPagesToWindow(
+		parentElement: HTMLElement,
+		pages: { element: HTMLDivElement }[],
+	) {
+		new ResizeObserver(() => {
+			const parentWidth = parseFloat(
+				window.getComputedStyle(parentElement).getPropertyValue('width'),
+			)
+			pages.forEach(({ element }) => {
+				let sheet = element.firstElementChild as HTMLDivElement,
+					scale = sheet.clientWidth / parentWidth
+				if (scale > 1) {
+					sheet.style.transform = `scale(${1 / scale})`
+					sheet.style.transformOrigin = 'top left'
+					let bbox = sheet.getBoundingClientRect()
+					element.style.width = bbox.width + 'px'
+					element.style.height = bbox.height + 'px'
+				} else {
+					sheet.style.transform =
+						sheet.style.transformOrigin =
+						element.style.width =
+						element.style.height =
+							''
+				}
+			})
+		}).observe(parentElement)
+	}
+
+	async function renderPage({
 		size,
 		scale,
 		IS_RENDERED_CLASSNAME,
@@ -116,7 +144,13 @@ export type ScriptParams = typeof param & typeof param;
 					})
 					document.documentElement.classList.toggle(IS_RENDERED_CLASSNAME, true)
 				}
-				afterPreview() {
+				afterPreview(pages: { element: HTMLDivElement }[]) {
+					if (!isPrinted) {
+						fitPagesToWindow(
+							document.querySelector(targetSelector) as HTMLElement,
+							pages,
+						)
+					}
 					window.resolveRender()
 				}
 			},
@@ -148,9 +182,7 @@ export type ScriptParams = typeof param & typeof param;
 		const paramEl = document.getElementById('pagedjs-param')
 
 		if (paramEl) {
-			await renderPagedDev(
-				JSON.parse((paramEl as any).textContent) as ScriptParams,
-			)
+			await renderPage(JSON.parse((paramEl as any).textContent) as ScriptParams)
 		}
 	}
 

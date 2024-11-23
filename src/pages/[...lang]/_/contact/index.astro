@@ -1,0 +1,16 @@
+---
+import { Section } from '@/components/sections'
+import { getLocaleContent } from '@/libs/i18n'
+import ContactForm from './ContactForm.astro'
+import locales from './locales'
+
+const content = getLocaleContent(locales, Astro)
+---
+
+<Section id="contact" layout="col2">
+	<div>
+		<h1>{content.title}</h1>
+		<p>{content.content}</p>
+	</div>
+	<ContactForm />
+</Section>

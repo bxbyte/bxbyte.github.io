@@ -41,18 +41,19 @@ export async function getPostsByLocale(): Promise<{
 }> {
 	const posts = await Promise.all(
 		(await getCollection('posts')).map(async (post: PostEntry) => {
-			const localeRegexp = (
-				Object.entries(LOCALS_PATH_REGEXP) as [Locales, RegExp][]
-			)
-				.map((t) => t[1].test(post.filePath) && t)
-				.filter(Boolean)[0]
+			const filePath = (post as any).filePath as string,
+				localeRegexp = (
+					Object.entries(LOCALS_PATH_REGEXP) as [Locales, RegExp][]
+				)
+					.map((t) => t[1].test(filePath) && t)
+					.filter(Boolean)[0]
 
-			var locale: Locales = defaultLocale,
-				toHash: string = post.filePath
+			var locale = defaultLocale as Locales,
+				toHash: string = filePath
 
 			if (localeRegexp) {
 				locale = localeRegexp[0]
-				toHash = post.filePath.replace(localeRegexp[1], '')
+				toHash = filePath.replace(localeRegexp[1], '')
 			}
 
 			return {

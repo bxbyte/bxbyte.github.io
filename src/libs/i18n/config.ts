@@ -3,8 +3,8 @@ export type LocaleContent = { [locale in Locales]: any }
 
 export const localeDefs = {
 		// Language traduction in other language by locale
-		fr: { en: 'french 🇫🇷' },
-		en: { fr: 'anglais 🇬🇧' },
+		fr: { en: '🇫🇷' },
+		en: { fr: '🇬🇧' },
 	} as const,
 	locales = Object.keys(localeDefs) as Locales[],
 	localesConfig = {

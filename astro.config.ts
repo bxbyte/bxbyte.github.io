@@ -1,6 +1,5 @@
 import pkg from './package.json'
 import mdx from '@astrojs/mdx'
-import preact from '@astrojs/preact'
 import { transformerNotationDiff } from '@shikijs/transformers'
 
 import icon from 'astro-icon'
@@ -33,11 +32,13 @@ const pseudoConfig = {
 					api: 'modern-compiler',
 					additionalData: "@use '@/styles/theme/theme.scss';",
 					functions: {
-						'svg-encode($svg)': function ([svg]: [SassString]) {
+						'svg($svg)': function ([svg]: [SassString]) {
 							return new SassString(
 								`data:image/svg+xml;base64,${btoa(
-									svg.toString().replace(/\s+/gm, ' ').replace(/"/gm, ''),
-									// .replace(/^\s*["']|["']\s*$/gm, ''),
+									// `data:image/svg+xml;base64,${btoa(
+									svg.asList
+										.map((v) => v.toString().replace(/^\s*["']|["']\s*$/gm, ''))
+										.join(''),
 								)}`,
 							)
 						},
@@ -57,7 +58,6 @@ const pseudoConfig = {
 		},
 	},
 	integrations: [
-		preact(),
 		// rename({ rename: {} }),
 		icon(),
 		mdx(),
@@ -65,25 +65,35 @@ const pseudoConfig = {
 	],
 	env: {
 		schema: {
-			REPOSITERY_PAGE: envField.string({
-				context: 'server',
+			FORMSPREE_ID: envField.string({
+				context: 'client',
 				access: 'public',
-				default: '',
+				default: 'mdoqjapd',
+			}),
+			REPOSITERY: envField.string({
+				context: 'client',
+				access: 'public',
+				default: 'bxbyte/bxbyte.github.io',
+			}),
+			REPOSITERY_PAGE: envField.string({
+				context: 'client',
+				access: 'public',
+				default: 'bxbyte/bxbyte.github.io',
 			}),
 			REPOSITERY_URL: envField.string({
-				context: 'server',
+				context: 'client',
 				access: 'public',
-				default: '',
+				default: 'https://github.com/bxbyte/bxbyte.github.io',
 			}),
 			REPOSITERY_OWNER: envField.string({
 				context: 'server',
 				access: 'public',
-				default: '',
+				default: 'bxbyte',
 			}),
 			SERVER_URL: envField.string({
 				context: 'server',
 				access: 'public',
-				default: '',
+				default: 'https://lucas-maillet.com',
 			}),
 		},
 	},

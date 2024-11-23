@@ -53,7 +53,7 @@ function cleanLocale<T>(
 	return localeContent as any
 }
 
-export function getLocalContent<T extends Object>(
+export function getLocaleContent<T extends Object>(
 	localeContent: T,
 	astro: { currentLocale?: string },
 ): UnNestedLocalContent<T> {

@@ -1,0 +1,52 @@
+---
+import { localePaths } from '@/libs/i18n'
+---
+
+<script
+	is:inline
+	id="locales"
+	type="application/json"
+	set:html={JSON.stringify(localePaths)}
+/>
+
+<script>
+	import { currentLocale, locales } from './client'
+
+	class LangLink extends HTMLButtonElement {
+		connectedCallback() {
+			this.addEventListener('click', () =>
+				currentLocale.set(locales[this.dataset.locale as string]),
+			)
+		}
+	}
+
+	customElements.define('lang-link', LangLink, { extends: 'button' })
+</script>
+
+<div>
+	{
+		Object.keys(localePaths).map((locale) => (
+			<button
+				is="lang-link"
+				translate="no"
+				data-locale={locale}
+				class:list={[Astro.currentLocale == locale && 'current']}
+			>
+				{locale}
+			</button>
+		))
+	}
+</div>
+
+<style lang="scss">
+	div {
+		display: flex;
+		gap: 1ch;
+	}
+
+	button {
+		&.current {
+			text-decoration: 1px solid theme.$color-accent underline;
+		}
+	}
+</style>

@@ -70,7 +70,7 @@ if (relation != undefined) {
 <style lang="scss" is:global>
 	a[is='active-link'] {
 		$line-width: 0.05em;
-		$line-color: theme.$page-accent;
+		$line-color: theme.$color-accent;
 
 		display: inline;
 		background: linear-gradient(
@@ -78,9 +78,10 @@ if (relation != undefined) {
 			$line-color $line-width,
 			$line-color 0%
 		);
-		background-position: calc(var(--x-factor) * 100%) 0;
+		background-position: calc(var(--x-) * 100%) 0;
 		background-size: 0 100%;
 		background-repeat: no-repeat;
+		height: fit-content;
 
 		&:hover,
 		&.active {

@@ -1,4 +1,4 @@
-import { file } from 'astro/loaders'
+import { file, glob } from 'astro/loaders'
 import {
 	type ImageFunction,
 	defineCollection,
@@ -40,7 +40,10 @@ export const collections = {
 		schema: AuthorData,
 	}),
 	posts: defineCollection({
-		type: 'content',
+		loader: glob({
+			pattern: ['./posts/**/*.mdx', '!./posts/**/_*.mdx'],
+			base: import.meta.dirname,
+		}),
 		schema: ({ image }: { image: ImageFunction }) =>
 			PostData.and(
 				z.object({
@@ -49,7 +52,6 @@ export const collections = {
 			),
 	}),
 	jobs: defineCollection<JobProps[]>({
-		// type: 'content_layer',
 		loader: async () =>
 			await Promise.all(
 				Object.values(

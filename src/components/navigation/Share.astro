@@ -1,5 +1,14 @@
 ---
+import { getLocaleContent } from '@/libs/i18n'
 import { Icon } from 'astro-icon/components'
+
+const content = getLocaleContent(
+	{
+		fr: 'Partager sur',
+		en: 'Share on',
+	},
+	Astro,
+)
 
 const platforms = [
 	{
@@ -21,7 +30,7 @@ const platforms = [
 ---
 
 <ul>
-	<li>Share on</li>
+	<li>{content}</li>
 	{
 		platforms.map(({ name, icon, url }) => (
 			<li title={name}>
@@ -64,7 +73,7 @@ const platforms = [
 		height: 1.3em;
 
 		&:hover {
-			color: theme.$page-accent;
+			color: theme.$color-accent;
 		}
 	}
 </style>

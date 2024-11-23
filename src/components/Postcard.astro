@@ -1,0 +1,145 @@
+---
+import type { PostHydrated } from '@/content'
+import GridArt from '@/components/tiles'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { localeDefs, getLocaleContent } from '@/libs/i18n'
+import { Image } from 'astro:assets'
+import { gradients } from '@/styles/theme'
+
+interface Props {
+	post: PostHydrated
+}
+
+const content = getLocaleContent(
+	{
+		actionCall: {
+			fr: 'Lire plus',
+			en: 'Read more',
+		},
+		localOnly: {
+			fr: (lang: string) => `${lang} seulement`,
+			en: (lang: string) => `${lang} only`,
+		},
+	},
+	Astro,
+)
+
+const MAX_DESCRIPTION_CHAR_LENGHT = 60,
+	MAX_DESCRIPTION_REGEXP = new RegExp(
+		`^.{1,${MAX_DESCRIPTION_CHAR_LENGHT}}\\w+`,
+	)
+
+function formatDescription(description: string) {
+	return description.length < MAX_DESCRIPTION_CHAR_LENGHT
+		? description
+		: description.match(MAX_DESCRIPTION_REGEXP) + '...'
+}
+
+const {
+	post: {
+		hash,
+		locale,
+		data: { title, description, cover },
+	},
+} = Astro.props
+
+const localOnlyAttr =
+	Astro.currentLocale != locale
+		? {
+				'data-local': content.localOnly(
+					(localeDefs[locale] as any)[Astro.currentLocale as any],
+				),
+			}
+		: {}
+---
+
+<a href={getRelativeLocaleUrl(Astro.currentLocale as string, '/posts/' + hash)}>
+	<section>
+		<div>
+			{
+				cover ? (
+					<Image src={cover} alt="cover" class="cover" />
+				) : (
+					<GridArt
+						preserveAspectRatio="xMidYMin slice"
+						width={3}
+						height={2}
+						seed={hash}
+						class="cover"
+					/>
+				)
+			}
+		</div>
+		<p role="heading">{title}</p>
+		{description && <p>{formatDescription(description)}</p>}
+		<p {...localOnlyAttr}><span>{content.actionCall}</span></p>
+	</section>
+</a>
+
+<style lang="scss">
+	section {
+		display: flex;
+		position: relative;
+		flex-direction: column;
+		gap: 1em;
+		backdrop-filter: blur(1em);
+		border: 1px solid theme.$color-grey;
+		padding: 1em;
+		width: calc(100% - 2em);
+		height: calc(100% - 2em);
+
+		&::after {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			padding: 0.2em 0.4em;
+			content: attr(data-locale);
+		}
+
+		& > div {
+			overflow: hidden;
+
+			& > * {
+				transition: transform 0.1s ease-in-out;
+			}
+
+			& > img {
+				filter: grayscale(1);
+			}
+		}
+		&:hover > div > * {
+			transform: scale(1.1);
+		}
+
+		p {
+			&[role='heading'] {
+				display: inline-flex;
+				justify-content: space-between;
+				font-weight: bold;
+				text-wrap: balance;
+			}
+
+			&:last-child {
+				display: flex;
+				justify-content: space-between;
+				align-items: end;
+
+				span {
+					text-decoration: underline solid 1px currentColor;
+				}
+
+				&[data-local]::after {
+					content: ' * ' attr(data-local);
+					font-size: 0.8em;
+				}
+			}
+		}
+
+		.cover {
+			aspect-ratio: 2;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+</style>

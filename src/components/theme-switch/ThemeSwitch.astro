@@ -1,0 +1,63 @@
+---
+import clientUrl from './client?url'
+const N_SEGMENTS = 6
+---
+
+<script is:inline type="module" src={clientUrl}></script>
+
+<button is="switch-theme">
+	<svg viewBox="0 0 100 100">
+		<defs>
+			<path id="sun-segment" d="M-40,0 H-30 z">
+				<animateTransform
+					attributeName="transform"
+					type="translate"
+					values="0;5;0"
+					dur="5s"
+					additive="sum"
+					repeatCount="indefinite"></animateTransform>
+				<animateTransform
+					attributeName="transform"
+					type="rotate"
+					values="0;360"
+					dur="10s"
+					additive="sum"
+					repeatCount="indefinite"></animateTransform>
+			</path>
+		</defs>
+		<circle cx="50" cy="50" r="20"></circle>
+		{
+			Array.from({ length: N_SEGMENTS }).map((_, i) => (
+				<use
+					xlink:href="#sun-segment"
+					x="50"
+					y="50"
+					transform-origin="50 50"
+					transform={`rotate(${(360 / N_SEGMENTS) * i})`}
+				/>
+			))
+		}
+	</svg>
+</button>
+
+<style lang="scss">
+	button {
+		display: flex;
+		align-items: center;
+	}
+	svg {
+		width: 1.5em;
+		height: 1.5em;
+		stroke-width: 0.4em;
+
+		&:not(defs) > {
+			circle {
+				fill: theme.$color-accent;
+			}
+
+			use {
+				stroke: currentColor;
+			}
+		}
+	}
+</style>

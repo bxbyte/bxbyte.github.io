@@ -40,21 +40,3 @@ const props = props_ as Props & typeof DEFAULT_PROPS & { size: RawPageSize }
 	<slot />
 </template>
 <div></div>
-
-<style lang="scss" is:global>
-	@media screen, pagedjs-ignore {
-		.pagedjs_pages {
-			display: flex;
-			flex-flow: row wrap;
-			justify-content: center;
-			align-items: center;
-			gap: 2em;
-			padding: 2em;
-		}
-
-		.pagedjs_page {
-			border: 1px solid theme.$page-grey;
-			background-color: theme.$page-white;
-		}
-	}
-</style>

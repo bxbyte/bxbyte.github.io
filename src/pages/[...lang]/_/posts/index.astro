@@ -1,0 +1,35 @@
+---
+import { Section } from '@/components/sections'
+import { getLocaleContent } from '@/libs/i18n'
+import locales from './locales'
+import PostCard from '@/components/Postcard.astro'
+import { getPostsByLocale } from '@/content'
+
+const content = getLocaleContent(locales, Astro)
+const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
+---
+
+<Section id="posts">
+	<h1>{content.title}</h1>
+	<ul>
+		{
+			posts
+				.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+				.slice(0, 4)
+				.map((post) => (
+					<li>
+						<PostCard post={post} />
+					</li>
+				))
+		}
+	</ul>
+</Section>
+
+<style>
+	ul {
+		display: grid;
+		grid-auto-flow: column;
+		gap: 2em;
+		padding: 1em 0;
+	}
+</style>

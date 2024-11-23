@@ -49,7 +49,7 @@ const defaultJob = {
 			'Minéralogie',
 			'Cuisine',
 			'Bricolage',
-			'Design',
+			'Design 2D/3D',
 			'Informatique',
 		],
 	},
@@ -82,18 +82,19 @@ type PartialRecursive<T extends object> = {
 declare global {
 	type Job = {
 		id: string
-		name: string
-		coorp: {
-			name: string
-			location: string
-			logo: string
-		}
-		letter: {
+		letter?: {
+			coorp: {
+				name: string
+				location: string
+				logo: string
+				resp?: string
+			}
 			object: string
 			from: string
 			content: string
 		}
 		cv: {
+			object: string
 			description: string
 			skills: string[][]
 			techs: string[][]

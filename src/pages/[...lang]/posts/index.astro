@@ -2,11 +2,20 @@
 import Main from '@/layouts/Main'
 import layoutStyles from '@/styles/layout.module.scss'
 import { getPostsByLocale } from '@/content'
-import locals from './_locales'
+import { Section } from '@/components/sections'
 import { useLocaleContents } from '@/libs/i18n'
-import PostCard from '@/components/postcard'
+import PostCard from '@/components/Postcard.astro'
 
-export const { getStaticPaths, getLocaleContent } = useLocaleContents(locals)
+export const { getStaticPaths, getLocaleContent } = useLocaleContents({
+	what: {
+		fr: 'Vous trouverez ici mes posts',
+		en: "You'll find here my posts",
+	},
+	readMore: {
+		en: 'Read more',
+		fr: 'Voir plus',
+	},
+})
 const content = getLocaleContent(Astro)
 
 const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
@@ -24,29 +33,32 @@ const postsPerMonth = Object.groupBy(posts, ({ data: { date } }) =>
 ---
 
 <Main class={layoutStyles.chunk}>
-	<ul class="timeline">
-		{
-			Object.entries(postsPerMonth)
-				.map(
-					([month, posts]) => [new Date(month), posts] as [Date, typeof posts],
-				)
-				.sort(([a], [b]) => b.getTime() - a.getTime())
-				.map(([month, posts]) => (
-					<Fragment>
-						<li>
-							<time datetime={month.toISOString()}>{formatDate(month)}</time>
-						</li>
-						<ul>
-							{posts.map((post) => (
-								<li>
-									<PostCard post={post} />
-								</li>
-							))}
-						</ul>
-					</Fragment>
-				))
-		}
-	</ul>
+	<Section>
+		<ul class="timeline">
+			{
+				Object.entries(postsPerMonth)
+					.map(
+						([month, posts]) =>
+							[new Date(month), posts] as [Date, typeof posts],
+					)
+					.sort(([a], [b]) => b.getTime() - a.getTime())
+					.map(([month, posts]) => (
+						<Fragment>
+							<li>
+								<time datetime={month.toISOString()}>{formatDate(month)}</time>
+							</li>
+							<ul>
+								{posts.map((post) => (
+									<li>
+										<PostCard post={post} />
+									</li>
+								))}
+							</ul>
+						</Fragment>
+					))
+			}
+		</ul>
+	</Section>
 </Main>
 
 <style lang="scss">
@@ -64,8 +76,6 @@ const postsPerMonth = Object.groupBy(posts, ({ data: { date } }) =>
 
 		li:has(time) {
 			font-size: 2em;
-			text-decoration: underline 1px solid currentColor;
-			text-underline-offset: 0.2em;
 			text-transform: capitalize;
 		}
 

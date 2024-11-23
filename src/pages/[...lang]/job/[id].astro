@@ -28,15 +28,9 @@ const { job } = Astro.props
 
 <Main>
 	<div id="pdf">
-		<PDF
-			targetSelector="#pdf"
-			size="a4"
-			title={job.coorp.name}
-			scale={4}
-			authors={job.me.name}
-		>
+		<PDF targetSelector="#pdf" size="a4" scale={5} authors={job.me.name}>
 			<section id="cv" class={pdfSkin.fullOutline}>
-				<div id="picture" aria-flowto="header">
+				<section id="picture" aria-flowto="header">
 					<GridArt
 						style="position:absolute;align-self: end; width: 100%; height: 100%"
 						width={3}
@@ -44,14 +38,14 @@ const { job } = Astro.props
 						seed="sdf"
 					/>
 					<img src={job.me.img} alt="" />
-				</div>
+				</section>
 				<section
 					id="header"
 					aria-flowto="leftbar"
 					style="display: flex;flex-direction: column;gap: .5em;"
 				>
 					<h1>{job.me.name}</h1>
-					<h2>{job.name}</h2>
+					<h2>{job.cv.object}</h2>
 					<Fragment set:html={md(job.cv.description)} />
 				</section>
 				<section id="leftbar" aria-flowto="content" style="overflow: hidden;">
@@ -62,7 +56,7 @@ const { job } = Astro.props
 								job.me.contacts.map(({ icon, value, link }) => (
 									<li>
 										<a href={link}>
-											<Icon name={icon} /> {value}
+											<Icon name={icon} aria-hidden="true" /> {value}
 										</a>
 									</li>
 								))
@@ -110,7 +104,7 @@ const { job } = Astro.props
 						/>
 					</section>
 					<section>
-						<h2>Projets</h2>
+						<h2>Projets relevants</h2>
 						<Timeline
 							locale="fr"
 							items={job.cv.experiences}
@@ -119,42 +113,61 @@ const { job } = Astro.props
 					</section>
 				</div>
 			</section>
-
-			<div id="letter" class={pdfSkin.full}>
-				<section id="me">
-					<ul>
-						<li><strong>{job.me.name}</strong></li>
-						<li>{job.me.address}</li>
-						<li>{job.me.city}</li>
-						<li><a href={job.me.tel.link}>{job.me.tel.value}</a></li>
-						<li><a href={job.me.email.link}>{job.me.email.value}</a></li>
-					</ul>
-				</section>
-				<section id="coorp">
-					<u>
-						<li><strong>{job.coorp.name}</strong></li>
-						<li>{job.coorp.location}</li>
-					</u>
-					<img src={job.coorp.logo} />
-				</section>
-				<p id="when">
-					Fait à {job.letter.from}, le {
-						new Date().toLocaleDateString('fr', {
-							year: 'numeric',
-							month: '2-digit',
-							day: 'numeric',
-						})
-					}
-				</p>
-				<p id="obj"><strong>Objet: {job.letter.object}</strong></p>
-				<div id="text">
-					<Fragment set:html={md(job.letter.content)} />
-				</div>
-				<section id="signature">
-					<p>{job.me.name}</p>
-					<img />
-				</section>
-			</div>
+			{
+				job.letter && (
+					<div id="letter" class={pdfSkin.full}>
+						<section id="me">
+							<ul>
+								<li>
+									<strong>{job.me.name}</strong>
+								</li>
+								<li>{job.me.address}</li>
+								<li>{job.me.city}</li>
+								<li>
+									<a href={job.me.tel.link}>{job.me.tel.value}</a>
+								</li>
+								<li>
+									<a href={job.me.email.link}>{job.me.email.value}</a>
+								</li>
+							</ul>
+						</section>
+						<section id="coorp">
+							<div>
+								<ul>
+									<li>
+										<strong>{job.letter.coorp.name}</strong>
+									</li>
+									<li>{job.letter.coorp.location}</li>
+								</ul>
+								<img src={job.letter.coorp.logo} />
+							</div>
+							{job.letter.coorp.resp && (
+								<p>À destination de {job.letter.coorp.resp}</p>
+							)}
+						</section>
+						<p id="when">
+							Fait à {job.letter.from}, le
+							<time datetime={new Date().toISOString()}>
+								{new Date().toLocaleDateString('fr', {
+									year: 'numeric',
+									month: '2-digit',
+									day: 'numeric',
+								})}
+							</time>
+						</p>
+						<p id="obj">
+							<strong>Objet: {job.letter.object}</strong>
+						</p>
+						<div id="text">
+							<Fragment set:html={md(job.letter.content)} />
+						</div>
+						<section id="signature">
+							<p>{job.me.name}</p>
+							<img />
+						</section>
+					</div>
+				)
+			}
 		</PDF>
 	</div>
 </Main>
@@ -164,8 +177,24 @@ const { job } = Astro.props
 
 	@page {
 		margin: 0.5in;
+		background-color: theme.$color-white;
 		padding: 1em;
 		font-size: 11pt;
+	}
+
+	@media screen, pagedjs-ignore {
+		:global(.pagedjs_pages) {
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: center;
+			align-items: center;
+			gap: 2em;
+			padding: 2em;
+		}
+
+		:global(.pagedjs_page) {
+			border: 1px solid theme.$color-grey;
+		}
 	}
 </style>
 
@@ -174,7 +203,7 @@ const { job } = Astro.props
 
 	$border-radius: 1em;
 	$border-padding: 1em;
-	$border: 1px solid theme.$page-grey;
+	$border: 1px solid theme.$color-grey;
 	$grid-rows: 13em auto;
 	$grid-cols: 13em auto;
 
@@ -251,7 +280,11 @@ const { job } = Astro.props
 		}
 
 		#picture {
+			display: grid;
+			grid-template-area: a;
+
 			& > * {
+				grid-area: a;
 				filter: grayscale(1);
 				border-radius: calc($border-radius - $border-padding / 2);
 				width: 100%;
@@ -332,10 +365,19 @@ const { job } = Astro.props
 
 		#coorp {
 			display: flex;
-			gap: 1em;
+			flex-direction: column;
+			align-items: end;
+			gap: 2em;
 
-			img {
-				height: 2.4em;
+			div {
+				display: flex;
+				grid-template-columns: auto auto;
+				gap: 1em;
+
+				img {
+					$n-lines: 2;
+					height: calc($n-lines * 1.2em);
+				}
 			}
 		}
 

@@ -23,17 +23,17 @@ $last-dot-border-width: 1px;
 	&::before {
 		top: calc($dot-size + $dot-space);
 		left: calc(var(--pad-left) + $border-width / -2);
-		border-left: $border-width solid theme.$page-black;
+		border-left: $border-width solid theme.$color-black;
 		height: calc(100% - $dot-size - $dot-space * 2);
 	}
 
 	// &::after {
 	// 	top: calc(100% - $dot-size - $dot-space);
 	// 	left: calc(var(--pad-left) + $dot-size / -2);
-	// 	outline: $dot-space solid theme.$page-white;
-	// 	border: $last-dot-border-width solid theme.$page-black;
+	// 	outline: $dot-space solid theme.$color-white;
+	// 	border: $last-dot-border-width solid theme.$color-black;
 	// 	border-radius: $dot-radius;
-	// 	background: theme.$page-white;
+	// 	background: theme.$color-white;
 	// 	width: calc($dot-size - $last-dot-border-width * 2);
 	// 	height: calc($dot-size - $last-dot-border-width * 2);
 	// }
@@ -50,9 +50,9 @@ $last-dot-border-width: 1px;
 				top: 50%;
 				left: calc(-1 * var(--pad-left) - $dot-size / 2);
 				transform: translateY(-50%);
-				outline: $dot-space solid theme.$page-white;
+				outline: $dot-space solid theme.$color-white;
 				border-radius: $dot-radius;
-				background-color: theme.$page-black;
+				background-color: theme.$color-black;
 				width: $dot-size;
 				height: $dot-size;
 				content: '';

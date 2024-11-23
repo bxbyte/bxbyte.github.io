@@ -5,10 +5,12 @@ import ActiveLink from '@/components/navigation/ActiveLink.astro'
 import type { HTMLAttributes } from 'astro/types'
 import type Head from '@/components/Head.astro'
 import Skeleton from '@/layouts//Skeleton.astro'
-import LocalLinks from '@/components/navigation/LocalLinks.astro'
-import ThemeSwitch from '@/components/ThemeSwitch.astro'
+
+import LocaleSwitch from '@/components/locale-switch'
+import ThemeSwitch from '@/components/theme-switch'
 
 import { useLocaleContents } from '@/libs/i18n'
+import { Block } from '@/components/sections'
 
 const FOOTER_ASCII_ART = `
        ／l、
@@ -31,7 +33,7 @@ const { head, ...props } = Astro.props
 	<!-- Slot forwarding -->
 	<slot name="head" slot="head" />
 
-	<header transition:persist-props class={layout.chunk}>
+	<Block tag="header" transition:persist-props>
 		<nav>
 			<ul>
 				{
@@ -44,14 +46,16 @@ const { head, ...props } = Astro.props
 			</ul>
 		</nav>
 		<div>
-			<LocalLinks />
+			<LocaleSwitch />
 			<ThemeSwitch />
 		</div>
-	</header>
+	</Block>
+
 	<main transition:animate="fade" {...props}>
 		<slot />
 	</main>
-	<footer transition:persist class={layout.chunk}>
+
+	<Block tag="footer" transition:persist class={layout.chunk}>
 		<div>
 			{
 				content.footerLinkSections.map(({ name, links }) => (
@@ -73,7 +77,7 @@ const { head, ...props } = Astro.props
 				>{content.copyrigth.license.label}</ActiveLink
 			>
 		</p>
-	</footer>
+	</Block>
 </Skeleton>
 
 <style lang="scss">
@@ -86,6 +90,7 @@ const { head, ...props } = Astro.props
 
 		& > main {
 			flex: 1;
+			width: 100%;
 		}
 
 		& > header {
@@ -93,9 +98,10 @@ const { head, ...props } = Astro.props
 			backdrop-filter: blur(1em);
 			transition: transform 0.2s ease-in-out;
 			background: linear-gradient(
-				theme.$page-white,
-				color-mix(in srgb, theme.$page-white, transparent 40%)
+				theme.$color-white,
+				color-mix(in srgb, theme.$color-white, transparent 40%)
 			);
+			user-select: none;
 
 			&,
 			* {
@@ -112,7 +118,8 @@ const { head, ...props } = Astro.props
 
 		& > footer {
 			gap: 0.5em;
-			border-top: 1px solid theme.$page-grey;
+			border-top: 1px solid theme.$color-grey;
+			user-select: none;
 
 			&,
 			ul {
@@ -147,7 +154,7 @@ const { head, ...props } = Astro.props
 				align-self: end;
 
 				a {
-					color: theme.$page-accent;
+					color: theme.$color-accent;
 					--x-factor: 1;
 				}
 			}

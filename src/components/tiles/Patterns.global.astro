@@ -1,16 +1,21 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
 
-export const gridId = 'pattern-grid'
-export const corner1Id = 'pattern-corner1'
-export const corner2Id = 'pattern-corner2'
-export const crossId = 'pattern-cross'
-export const patternIds = [gridId, corner1Id, corner2Id, crossId] as const
-export const patterns = Object.fromEntries(
-	patternIds.map((id) => [id, `url(#${id})`]),
-) as { [k in (typeof patternIds)[number]]: string }
+import { urlIdCollection } from '@/libs/urlid'
 
-const partternOctaves = 2,
+export const patterns = urlIdCollection(
+	{
+		grid: 'grid',
+		corner1: 'corner1',
+		corner2: 'corner2',
+		cross: 'cross',
+	} as const,
+	'pattern',
+)
+
+export const patternIds = Object.values(patterns)
+
+const partternOctaves = 1,
 	patternAttributes = {
 		width: `${100 / partternOctaves}%`,
 		height: `${100 / partternOctaves}%`,
@@ -26,18 +31,18 @@ const partternOctaves = 2,
 	stroke-linecap="square"
 >
 	<defs>
-		<pattern id={gridId} {...patternAttributes}>
+		<pattern id={patterns.grid.id} {...patternAttributes}>
 			<path d="M5,0v10 M0,5h10"></path>
 		</pattern>
-		<pattern id={corner1Id} {...patternAttributes}>
+		<pattern id={patterns.corner1.id} {...patternAttributes}>
 			<circle cx="0" cy="0" r="5"></circle>
 			<circle cx="10" cy="10" r="5"></circle>
 		</pattern>
-		<pattern id={corner2Id} {...patternAttributes}>
+		<pattern id={patterns.corner2.id} {...patternAttributes}>
 			<circle cx="0" cy="10" r="5"></circle>
 			<circle cx="10" cy="0" r="5"></circle>
 		</pattern>
-		<pattern id={crossId} {...patternAttributes}>
+		<pattern id={patterns.cross.id} {...patternAttributes}>
 			<circle cx="0" cy="0" r="5"></circle>
 			<circle cx="10" cy="10" r="5"></circle>
 			<circle cx="0" cy="10" r="5"></circle>

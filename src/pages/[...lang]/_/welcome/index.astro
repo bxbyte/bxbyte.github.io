@@ -1,0 +1,34 @@
+---
+import { Section } from '@/components/sections'
+import { getLocaleContent } from '@/libs/i18n'
+import locales from './locales'
+import { gradients, grainUrl } from '@/styles/theme'
+import infos from '@/data/infos'
+
+const content = getLocaleContent(locales, Astro)
+---
+
+<Section id="welcome" layout="col2">
+	<div>
+		<h1>{infos.owner.name}</h1>
+		<h2>{content.status}</h2>
+		<h3>{content.what}</h3>
+		<p>{content.me}</p>
+	</div>
+	<svg viewBox="0 0 5 3" aria-hidden="true" mask={grainUrl}>
+		<rect x="0" y="0" width="1" height="3" fill={gradients.main} opacity=".8"
+		></rect>
+		<rect
+			x="0"
+			y="2"
+			width="3"
+			height="1"
+			fill={gradients.secondary}
+			opacity=".8"></rect>
+		<path d="M2,0h3l-1.5,1.5Z" fill={gradients.secondary} opacity=".8"></path>
+		<rect x="2" y="0" width="1" height="3" fill={gradients.main} opacity=".8"
+		></rect>
+		<rect x="4" y="0" width="1" height="3" fill={gradients.main} opacity=".8"
+		></rect>
+	</svg>
+</Section>

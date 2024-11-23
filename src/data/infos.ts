@@ -14,7 +14,6 @@ const OWNER = {
 
 export default {
 	owner: OWNER,
-	formspreeId: 'mdoqjapd',
 	head: {
 		// Insert in all page head for referrencing
 		title: `${OWNER.name} Portfolio`,

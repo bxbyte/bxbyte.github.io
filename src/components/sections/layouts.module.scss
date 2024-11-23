@@ -1,0 +1,19 @@
+@use '@/styles/layout.module.scss';
+
+.grid-layout {
+	@media screen and (max-width: (layout.$window-max-width * 0.6)) {
+		grid-template-columns: 1fr !important;
+		grid-template-areas: 'a' 'b' !important;
+	}
+}
+
+.col2 > section {
+	@extend .grid-layout;
+
+	display: grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 1fr 1fr;
+	justify-content: center;
+	align-items: center;
+	gap: 2em;
+}

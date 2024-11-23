@@ -15,8 +15,8 @@
 	font: inherit;
 
 	&::selection {
-		background-color: theme.$page-accent;
-		color: theme.$page-white;
+		background-color: theme.$color-accent;
+		color: theme.$color-white;
 	}
 }
 

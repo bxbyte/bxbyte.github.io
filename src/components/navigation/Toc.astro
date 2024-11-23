@@ -5,7 +5,7 @@ interface Props {
 	items: ({ text: string; lvl?: number; href: string } | string)[]
 }
 
-const { name, items, track } = { track: false, ...Astro.props }
+const { name, items, track = false } = Astro.props
 ---
 
 <script>
@@ -138,23 +138,26 @@ const { name, items, track } = { track: false, ...Astro.props }
 		}
 
 		ul {
+			display: flex;
+			flex-direction: column;
+			gap: 0.2em;
 			margin-top: 0.25em;
-			border-left: $border-size solid theme.$page-grey;
+			border-left: $border-size solid theme.$color-grey;
 
 			li {
 				display: flex;
 				cursor: pointer;
 				margin-left: -$border-size;
-				border-left: $border-size solid theme.$page-grey;
+				border-left: $border-size solid theme.$color-grey;
 				padding-left: calc(0.5em * var(--lvl));
 
 				&:hover {
-					background: color-mix(in srgb, theme.$page-grey, transparent 50%);
+					background: color-mix(in srgb, theme.$color-grey, transparent 50%);
 				}
 
 				&.active {
-					border-color: theme.$page-accent;
-					color: theme.$page-accent;
+					border-color: theme.$color-accent;
+					color: theme.$color-accent;
 				}
 
 				a {
