@@ -1,0 +1,9 @@
+.content {
+	pre * {
+		color: var(--shiki-dark);
+
+		@at-root body:global(.light) & {
+			color: var(--shiki-light);
+		}
+	}
+}

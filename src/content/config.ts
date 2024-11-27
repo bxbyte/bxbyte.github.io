@@ -42,7 +42,7 @@ export const collections = {
 	posts: defineCollection({
 		loader: glob({
 			pattern: ['./posts/**/*.mdx', '!./posts/**/_*.mdx'],
-			base: import.meta.dirname,
+			base: (import.meta as any).dirname,
 		}),
 		schema: ({ image }: { image: ImageFunction }) =>
 			PostData.and(

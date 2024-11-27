@@ -4,6 +4,7 @@ import '@fontsource/fira-mono'
 ---
 
 <style is:global lang="scss">
+	@use 'sass:list';
 	@use '@/styles/fonts/fonts.scss';
 
 	* {
@@ -15,5 +16,23 @@ import '@fontsource/fira-mono'
 		color: inherit;
 		list-style: none;
 		text-decoration: none;
+	}
+
+	/// Theme implementation
+
+	body {
+		background: theme.$color-white;
+		min-height: 100vh;
+		color: theme.$color-black;
+
+		@each $var in theme.$theme-vars {
+			--#{list.nth($var, 1)}: #{list.nth($var, 2)};
+		}
+
+		&.light {
+			@each $var in theme.$theme-vars {
+				--#{list.nth($var, 1)}: #{list.nth($var, 3)};
+			}
+		}
 	}
 </style>

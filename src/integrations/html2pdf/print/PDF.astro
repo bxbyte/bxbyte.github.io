@@ -1,0 +1,42 @@
+---
+import PagedJS from './PagedJS.astro'
+import { DEFAULT_PAGE_SIZES, type RawPageSize } from '../server/pagesize'
+import Metadata from './Metadata.astro'
+
+export const IS_RENDERED_CLASSNAME = 'rendered'
+
+const DEFAULT_PROPS = {
+	size: 'a4' as keyof typeof DEFAULT_PAGE_SIZES | RawPageSize,
+	scale: 5 as number,
+	orientation: 'portrait' as 'landscape' | 'portrait',
+}
+
+// prettier-ignore
+export type Props = Omit<ComponentProps<typeof PagedJS> & ComponentProps<typeof Metadata>, keyof typeof DEFAULT_PROPS> &
+	{[k in keyof typeof DEFAULT_PROPS]?: (typeof DEFAULT_PROPS)[k]}
+
+const props_ = { ...DEFAULT_PROPS, ...Astro.props }
+
+// Page size preset
+if (typeof props_.size == 'string')
+	props_.size = DEFAULT_PAGE_SIZES[props_.size]
+
+// Switch page for orientation
+if (props_.orientation == 'landscape')
+	[props_.size.height, props_.size.width] = [
+		props_.size.width,
+		props_.size.height,
+	]
+
+const props = props_ as Props & typeof DEFAULT_PROPS & { size: RawPageSize }
+---
+
+<Fragment slot="head">
+	{import.meta.env.DEV && <Metadata {...props} />}
+	<PagedJS {...props} />
+</Fragment>
+
+<template>
+	<slot />
+</template>
+<div></div>

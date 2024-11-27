@@ -1,4 +1,5 @@
-import { REPOSITERY_OWNER, REPOSITERY_URL } from 'astro:env/server'
+import { REPOSITERY_URL } from 'astro:env/client'
+import { REPOSITERY_OWNER } from 'astro:env/server'
 
 import infos from '@/data/infos'
 import type { LocalLink } from '@/libs/format'

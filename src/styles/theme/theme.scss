@@ -2,24 +2,23 @@
 
 @use 'sass:list';
 
-$light-theme-vars: ();
-$dark-theme-vars: ();
+$theme-vars: ();
 
 /// Define a theme variable
 ///
 /// @param {*} $name CSS variable name
-/// @param {*} $lightValue value for light theme
-/// @param {*} $darkValue [false] overwritten value for dark theme
-@function defineTheme($name, $lightValue, $darkValue: false) {
-	$light-theme-vars: list.append(
-		$light-theme-vars,
-		(--#{$name}, $lightValue)
-	) !global;
-
+/// @param {*} $darkValue value for dark theme
+/// @param {*} $lightValue [false] overwritten value for light theme
+@function defineTheme($name, $darkValue, $lightValue: false) {
 	@if ($darkValue) {
-		$dark-theme-vars: list.append(
-			$dark-theme-vars,
-			(--#{$name}, $darkValue)
+		$theme-vars: list.append(
+			$theme-vars,
+			($name, $darkValue, $lightValue)
+		) !global;
+	} @else {
+		$theme-vars: list.append(
+			$theme-vars,
+			($name, $darkValue, $darkValue)
 		) !global;
 	}
 	@return var(--#{$name});
@@ -28,99 +27,61 @@ $dark-theme-vars: ();
 
 /// Accent Colors
 
-$color-accent: defineTheme(color-accent, #f15778, #f15778);
-$gradient-main-color1: defineTheme(gradient-main-color1, #6b41df, #1df0a9);
-$gradient-main-color2: defineTheme(gradient-main-color2, #86b8f7, #baeee3);
-// $gradient-main-color1: defineTheme(gradient-main-color1, #ba6e51, #f0b199);
-// $gradient-main-color2: defineTheme(gradient-main-color2, #eed3ba, #a39470);
+$color-accent: defineTheme(color-accent, #a8fcb3, #6b41df);
+$gradient-main-color1: defineTheme(gradient-main-color1, #1df0a9, #6b41df);
+$gradient-main-color2: defineTheme(gradient-main-color2, #a8fcb3, #86b8f7);
 $gradient-secondary-color1: defineTheme(
 	gradient-secondary-color1,
-	#f0471d,
-	#f10f40
+	#f10f40,
+	#f0471d
 );
 $gradient-secondary-color2: defineTheme(
 	gradient-secondary-color2,
-	#eebae5,
-	#faeda1
+	#faeda1,
+	#eebae5
 );
-
-// $color-accent: defineTheme(color-accent, #5e64f4, #df082c);
-// $gradient-main-color1: defineTheme(gradient-main-color1, #78dfdf, #be1c44);
-// $gradient-main-color2: defineTheme(gradient-main-color2, #4437f7, #ff4800);
-// $gradient-secondary-color1: defineTheme(
-// 	gradient-secondary-color1,
-// 	#45f07e,
-// 	#f80878
-// );
-// $gradient-secondary-color2: defineTheme(
-// 	gradient-secondary-color2,
-// 	#0cceff,
-// 	#f80814
-// );
 
 /// Shade of grey
 
-$color-black: defineTheme(color-black, #000, #e0dede);
-$color-white: defineTheme(color-white, #fff, #131111);
-$color-grey: defineTheme(color-grey, #e6e5e5, #333030);
+$color-black: defineTheme(color-black, #e0dede, #000);
+$color-white: defineTheme(color-white, #131111, #f8f8f8);
+$color-grey: defineTheme(color-grey, #333030, #e6e5e5);
 $color-shadow: defineTheme(color-shadow, #00000023);
-$bool-is-dark: defineTheme(bool-is-dark, 0, 1);
+$bool-is-dark: defineTheme(bool-is-dark, 1, 0);
 
 /// Textures
 
 // prettier-ignore
-$texture-checkboard: defineTheme(
-	texture-checkboard, 
-	// url(svg(
-	// 	'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-	// 		'<g fill="' #0000001c '">'
-	// 			'<rect x="0" y="0" width="2" height="2"/>'
-	// 			'<rect x="2" y="2" width="2" height="2"/>'
-	// 		'</g>'
-	// 	'</svg>'
-	// )),
-	// url(svg(
-	// 	'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-	// 		'<g fill="' #ffffff1c '">'
-	// 			'<rect x="0" y="0" width="2" height="2"/>'
-	// 			'<rect x="2" y="2" width="2" height="2"/>'
-	// 		'</g>'
-	// 	'</svg>'
-	// ))
-	url(svg(
-		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-			'<g stroke="' #0000001c '" stroke-width=".3">'
-				'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
-			'</g>'
-		'</svg>'
-	)),
-	url(svg(
-		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-			'<g stroke="' #ffffff1c '" stroke-width=".3">'
-				'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
-			'</g>'
-		'</svg>'
-	))
-);
-
-/// Theme implementation
-
-body {
-	background: $color-white;
-	color: $color-black;
-
-	@each $var in $light-theme-vars {
-		#{list.nth($var, 1)}: list.nth($var, 2);
-	}
-
-	&.dark {
-		@each $var in $dark-theme-vars {
-			#{list.nth($var, 1)}: list.nth($var, 2);
-		}
-
-		img,
-		image {
-			filter: brightness(0.8);
-		}
-	}
-}
+// $texture-checkboard: defineTheme(
+// 	texture-checkboard,
+// 	// url(svg(
+// 	// 	'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
+// 	// 		'<g fill="' #0000001c '">'
+// 	// 			'<rect x="0" y="0" width="2" height="2"/>'
+// 	// 			'<rect x="2" y="2" width="2" height="2"/>'
+// 	// 		'</g>'
+// 	// 	'</svg>'
+// 	// )),
+// 	// url(svg(
+// 	// 	'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
+// 	// 		'<g fill="' #ffffff1c '">'
+// 	// 			'<rect x="0" y="0" width="2" height="2"/>'
+// 	// 			'<rect x="2" y="2" width="2" height="2"/>'
+// 	// 		'</g>'
+// 	// 	'</svg>'
+// 	// ))
+// 	url(svg(
+// 		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
+// 			'<g stroke="' #0000001c '" stroke-width=".3">'
+// 				'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
+// 			'</g>'
+// 		'</svg>'
+// 	)),
+// 	url(svg(
+// 		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
+// 			'<g stroke="' #ffffff1c '" stroke-width=".3">'
+// 				'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
+// 			'</g>'
+// 		'</svg>'
+// 	))
+// );

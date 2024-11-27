@@ -1,5 +1,5 @@
 ---
-import theme from '../theme.module.scss'
+import themes from '../theme.module.scss'
 
 import { urlIdCollection } from '@/libs/urlid'
 
@@ -15,12 +15,14 @@ export const gradients = urlIdCollection(
 <svg xmlns="http://www.w3.org/2000/svg">
 	<defs>
 		<linearGradient id={gradients.main.id} y2="100%">
-			<stop offset="10%" stop-color={theme.gradientMainColor1}></stop>
-			<stop offset="100%" stop-color={theme.gradientMainColor2}></stop>
+			<stop offset="10%" stop-color={themes['gradient-main-color1']}></stop>
+			<stop offset="100%" stop-color={themes['gradient-main-color2']}></stop>
 		</linearGradient>
 		<linearGradient id={gradients.secondary.id} x2="100%" y1="100%">
-			<stop offset="10%" stop-color={theme.gradientSecondaryColor1}></stop>
-			<stop offset="100%" stop-color={theme.gradientSecondaryColor2}></stop>
+			<stop offset="10%" stop-color={themes['gradient-secondary-color1']}
+			></stop>
+			<stop offset="100%" stop-color={themes['gradient-secondary-color2']}
+			></stop>
 		</linearGradient>
 	</defs>
 </svg>

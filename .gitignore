@@ -1,7 +1,5 @@
 # Local binaries
 .bin/
-# Local trash
-.trash/
 
 # build output
 dist/

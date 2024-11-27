@@ -1,24 +1,24 @@
 import { persistentAtom } from '@nanostores/persistent'
 
-export const isDarkTheme = persistentAtom('theme', false, {
+export const isLightTheme = persistentAtom('theme', false, {
 	encode: JSON.stringify,
 	decode: JSON.parse,
 })
 
 function setDarkTheme(state: boolean) {
-	document.body.classList.toggle('dark', state)
+	document.body.classList.toggle('light', state)
 }
 
-isDarkTheme.subscribe(setDarkTheme)
+isLightTheme.subscribe(setDarkTheme)
 document.addEventListener('astro:after-swap', () =>
-	setDarkTheme(isDarkTheme.value),
+	setDarkTheme(isLightTheme.value),
 )
 
 class SwitchTheme extends HTMLButtonElement {
 	constructor() {
 		super()
 		this.addEventListener('click', () => {
-			isDarkTheme.set(!isDarkTheme.get())
+			isLightTheme.set(!isLightTheme.get())
 		})
 	}
 }

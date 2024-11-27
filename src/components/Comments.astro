@@ -8,7 +8,7 @@ const { discussion } = Astro.props
 
 <script>
 	import { REPOSITERY } from 'astro:env/client'
-	import { isDarkTheme } from '@/components/theme-switch/client'
+	import { isLightTheme } from '@/components/theme-switch/client'
 	import { currentLocale } from '@/components/locale-switch/client'
 
 	const enum Giscus {
@@ -23,6 +23,10 @@ const { discussion } = Astro.props
 		clearEvents!: Function
 
 		connectedCallback() {
+			this.addEventListener('load', () => {
+				this.style.removeProperty('opacity')
+			})
+
 			// Set up session and clear the session param on load
 			const url = new URL(location.href)
 			let session = url.searchParams.get('giscus') || ''
@@ -46,7 +50,7 @@ const { discussion } = Astro.props
 			this.params = {
 				origin: cleanedLocation,
 				session,
-				theme: this.getThemeName(isDarkTheme.value),
+				theme: this.getThemeName(isLightTheme.value),
 				reactionsEnabled: '0',
 				emitMetadata: '0',
 				inputPosition: 'bottom',
@@ -60,7 +64,7 @@ const { discussion } = Astro.props
 			window.addEventListener('message', messageCallback)
 
 			// Update iframe theme on change
-			const removeThemeListener = isDarkTheme.listen((isDark) => {
+			const removeThemeListener = isLightTheme.listen((isDark) => {
 				;(this.contentWindow as Window).postMessage(
 					{
 						giscus: {
@@ -140,18 +144,25 @@ const { discussion } = Astro.props
 		}
 
 		getThemeName(isDark: boolean): string {
-			return isDark ? 'dark' : 'light'
+			return isDark ? 'light' : 'dark'
 		}
 	}
 
 	customElements.define('giscus-frame', GiscusFrame, { extends: 'iframe' })
 </script>
 
-<iframe is="giscus-frame" data-discussion={discussion} loading="lazy"> </iframe>
+<iframe
+	is="giscus-frame"
+	style="opacity:0"
+	data-discussion={discussion}
+	loading="lazy"
+>
+	{/* Opacity will be removed after load to avoid white flash*/}
+</iframe>
 
 <style lang="scss">
 	[is='giscus-frame'] {
 		width: 100%;
-		color-scheme: light;
+		color-scheme: dark;
 	}
 </style>

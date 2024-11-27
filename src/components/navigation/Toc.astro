@@ -149,7 +149,6 @@ const { name, items, track = false } = Astro.props
 				cursor: pointer;
 				margin-left: -$border-size;
 				border-left: $border-size solid theme.$color-grey;
-				padding-left: calc(0.5em * var(--lvl));
 
 				&:hover {
 					background: color-mix(in srgb, theme.$color-grey, transparent 50%);
@@ -161,6 +160,7 @@ const { name, items, track = false } = Astro.props
 				}
 
 				a {
+					padding-left: calc(0.5em * var(--lvl));
 					width: 100%;
 				}
 			}

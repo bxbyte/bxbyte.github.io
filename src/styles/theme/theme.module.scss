@@ -1,11 +1,7 @@
+@use 'sass:list';
+
 :export {
-	gradientMainColor1: theme.$gradient-main-color1;
-	gradientMainColor2: theme.$gradient-main-color2;
-	gradientSecondaryColor1: theme.$gradient-secondary-color1;
-	gradientSecondaryColor2: theme.$gradient-secondary-color2;
-	pageBlack: theme.$color-black;
-	pageWhite: theme.$color-white;
-	pageGrey: theme.$color-grey;
-	pageAccent: theme.$color-accent;
-	pageShadow: theme.$color-shadow;
+	@each $var in theme.$theme-vars {
+		#{list.nth($var, 1)}: var(--#{list.nth($var, 1)});
+	}
 }

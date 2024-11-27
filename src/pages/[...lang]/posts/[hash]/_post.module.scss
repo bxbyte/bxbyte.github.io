@@ -15,7 +15,47 @@
 		font-size: 1.5em;
 	}
 
+	h4,
+	h5,
+	h6 {
+		--color-alpha: 60%;
+		color: color-mix(in srgb, currentColor var(--color-alpha), transparent);
+		font-size: 1em;
+	}
+
+	h5 {
+		padding-left: 1em;
+		--color-alpha: 50%;
+	}
+
+	h6 {
+		--color-alpha: 40%;
+		padding-left: 2em;
+	}
+
 	p {
 		line-height: 1.3em;
+	}
+
+	a {
+		text-decoration: underline solid 1px theme.$color-accent;
+	}
+
+	table {
+		border-collapse: collapse;
+
+		th,
+		td {
+			border-top: 0.1em solid theme.$color-grey;
+			padding: 0.25em 1em;
+
+			&:not(:first-child) {
+				border-left: 0.1em solid theme.$color-grey;
+			}
+		}
+
+		thead > tr:first-of-type th {
+			border-top: none;
+		}
 	}
 }

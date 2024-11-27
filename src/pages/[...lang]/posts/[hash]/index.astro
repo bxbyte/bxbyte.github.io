@@ -2,7 +2,7 @@
 import { useLocaleContents } from '@/libs/i18n'
 import { getPostsByLocale } from '@/content'
 
-import PDF from '$/html2pdf/print/'
+import PDF from '@/integrations/html2pdf/print'
 import { Block } from '@/components/sections'
 import Ariane from '@/components/navigation/Ariane.astro'
 import Main from '@/layouts/Main'
@@ -12,13 +12,16 @@ import Comments from '@/components/Comments.astro'
 
 import './_page.scss'
 import postStyles from './_post.module.scss'
+import contentStyles from './_content.module.scss'
 
 import renderPostMdx from '@/libs/post-renderer'
 
 import type { PostHydrated } from '@/content'
 import { Image } from 'astro:assets'
-import GridArt from '@/components/tiles'
-import { gradients } from '@/styles/theme'
+
+interface Props {
+	post: PostHydrated
+}
 
 export const { getStaticPaths, getLocaleContent } = useLocaleContents(
 	{
@@ -46,10 +49,6 @@ export const { getStaticPaths, getLocaleContent } = useLocaleContents(
 		)
 	},
 )
-
-interface Props {
-	post: PostHydrated
-}
 
 const {
 		post: { hash, data },
@@ -101,19 +100,11 @@ if (type == 'pdf')
 				displayPath={Astro.url.pathname.replace(/[^/]*\/?$/, '') + title}
 			/>
 			{
-				cover ? (
+				cover && (
 					<Image
 						transition:name={hash + '-i'}
 						alt="Illustration cover"
 						src={cover}
-					/>
-				) : (
-					<GridArt
-						preserveAspectRatio="xMidYMin slice"
-						width={8}
-						height={4}
-						seed={hash}
-						gradient={gradients.secondary}
 					/>
 				)
 			}
@@ -127,13 +118,13 @@ if (type == 'pdf')
 		</header>
 		{
 			pdfData ? (
-				<section class="pdf">
+				<section class:list={['pdf', contentStyles.content]}>
 					<PDF {...pdfData}>
 						<Fragment set:html={rendered} />
 					</PDF>
 				</section>
 			) : (
-				<section class={postStyles.post}>
+				<section class:list={[postStyles.post, contentStyles.content]}>
 					<Fragment set:html={rendered} />
 				</section>
 			)
@@ -183,16 +174,12 @@ if (type == 'pdf')
 				flex-direction: column;
 				gap: 1em;
 
-				img,
-				svg {
+				img {
+					filter: grayscale(1);
 					border-radius: 1em;
 					width: 100%;
 					height: 10em;
 					object-fit: cover;
-				}
-
-				img {
-					filter: grayscale(1);
 				}
 			}
 

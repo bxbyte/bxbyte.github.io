@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components'
 import Main from '@/layouts/Main'
-import PDF from '$/html2pdf/print'
+import PDF from '@/integrations/html2pdf/print'
 import pdfSkin from '@/styles/pdf/skin.module.scss'
 import { join, md } from '@/libs/format'
 import { useLocaleContents } from '@/libs/i18n'
@@ -281,7 +281,7 @@ const { job } = Astro.props
 
 		#picture {
 			display: grid;
-			grid-template-area: a;
+			grid-area: a;
 
 			& > * {
 				grid-area: a;

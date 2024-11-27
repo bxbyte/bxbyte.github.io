@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="50pt" height="50pt">
 	<defs>
-		<filter id="filter-light">
+		<filter id="filter-dark">
 			<feTurbulence
 				baseFrequency="1000"
 				numOctaves="2"
@@ -14,5 +14,5 @@
 		</filter>
 	</defs>
 	<rect width="100%" height="100%" opacity=".9"></rect>
-	<rect width="100%" height="100%" filter="url(#filter-light)"></rect>
+	<rect width="100%" height="100%" filter="url(#filter-dark)"></rect>
 </svg>

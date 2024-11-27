@@ -1,4 +1,3 @@
-import * as html2pdfComponents from '$/html2pdf/layouts'
 import { getContainerRenderer } from '@astrojs/mdx'
 
 import { experimental_AstroContainer } from 'astro/container'
@@ -12,6 +11,7 @@ import astroConfig from '!/astro.config'
 import type Toc from '@/components/navigation/Toc.astro'
 
 import type { PostHydrated } from '@/content'
+import * as html2pdfComponents from '@/integrations/html2pdf/layouts'
 
 function processEl(
 	cheerio: CheerioAPI,

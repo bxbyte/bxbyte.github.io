@@ -1,14 +1,18 @@
 ---
 import authors from '@/data/authors.json'
 
+import { getEntry } from 'astro:content'
+
 interface Props {
 	id: (typeof authors)[number]['id']
 }
 
 const { id } = Astro.props,
-	author = authors.find((a) => (a.id = id))
+	author = await getEntry('authors', id)
 
 if (!author) throw new Error('Author id noexistent')
 ---
 
-<a href={author.social} title={`${author.name} social link`}>{author.name}</a>
+<a href={author.data.social} title={`${author.data.name} social link`}
+	>{author.data.name}</a
+>

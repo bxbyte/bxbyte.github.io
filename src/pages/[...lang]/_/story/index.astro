@@ -15,8 +15,21 @@ const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
 <Section id="history" layout="col2">
 	<div>
 		<h1>{content.title}</h1>
-		<GridArt width={6} height={2} seed="hello " />
+		<GridArt
+			width={12}
+			height={4}
+			seed="hello "
+			style="border-radius: 0.5rem"
+		/>
 		<p class={skinStyles.dropCap}>{content.description}</p>
 	</div>
 	<Timeline items={content.timeline} />
 </Section>
+
+<style>
+	div {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+	}
+</style>

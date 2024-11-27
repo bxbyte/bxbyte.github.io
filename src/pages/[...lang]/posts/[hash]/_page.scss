@@ -84,11 +84,11 @@
 			line-height: 1.5em;
 
 			* {
-				color: var(--shiki-light);
+				color: var(--shiki-dark);
 			}
 
-			.dark & * {
-				color: var(--shiki-dark) !important;
+			.light & * {
+				color: var(--shiki-light) !important;
 			}
 
 			&::before {

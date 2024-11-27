@@ -1,5 +1,5 @@
 ---
-title: Implémentation d'un besoin client - FR
+title: Implémentation d'un besoin client
 description: Implémentation et étude d'algorithme de classification de dépèches
 cover: ../iut2.jpg
 date: 2023-10-00
@@ -20,22 +20,111 @@ réalisé en collaboration avec <Author id="thuillim"/>.
 L'exercice consistait d'abord à implémenter des algorithmes de classification d'articles,
 de sorte à les trier par catégorie (politique, culture, environnment et technologie, économie et sport).
 Nous devions ensuite optimiser ses algorithmes puis rédiger <a href={reportUrl}>le compte rendu ci-joint</a>
-afin de discuter des performances (en termes de taux de réussite et compléxité)
+afin de discuter des performances (en termes de taux de réussite et complexité)
 de nos implémentations.
 
-## Déroulement
+## Compte-rendu du travail
 
 ### Implémentations
 
-Après une rapide mise en place d'un repo Github,
+#### 1. Classification
+
+Après une rapide mise en place d'un dépot sur Github,
 nous avons partagé l'implémentation des différentes méthodes du premier algorithme.
 
-### Optimisation
+La première version attribuait un score en faisant la somme des poids des mots révelant
+des mots contenus dans une dépêches par catégorie, ces poids étant définis arbitrairement
+à la main. Pour évité d'écrire trop de variantes des mots dans la table de poids,
+la case était ignorée lors du traitement.
 
-Cette première esquisse faite
+##### Exemple de classification
+
+Prenons la phrase _"Révolution des méthodes de recyclages"_
+et la table de poids suivantes (table non exhaustive,
+avec seulement les mots dans la phrase ) :
+
+| Mots / Catégorie | politique | culture | env. & tech. | économie | sport |
+| :--------------- | :-------: | :-----: | :----------: | :------: | :---: |
+| révolution       |     0     |    0    |      3       |    0     |   0   |
+| méthodes         |     0     |    0    |      1       |    0     |   0   |
+| recyclage        |     0     |    0    |      4       |    0     |   0   |
+| ...              |    ...    |   ...   |     ...      |   ...    |  ...  |
+
+Le score total pour la catégorie _env. & tech._ est alors de 8 et de 0 pour
+les autres. De ce fait, ont peut classifier cette phrase dans la catégorie
+_env. & tech._.
+
+#### 2. Apprentissage automatique
+
+La suite logique était de généré automatiquement la table de poids,
+ce à l'aide d'une phase d'entrainement.
+Il "suffisait" d'établir une table à partir d'une liste d'articles pré-classés,
+où le poid de chaque mot était augmenter dans une catégorie à chaque fois
+qu'il était employés dans un article de cette catégorie.
+Il fallait ensuite retirer les mots "trop courants", i.d. ceux ayant un
+poid élevé pour chaque catégorie, comme les pronoms, déterminants, etc.
+
+#### 3. Optimisation
+
+Cette étape avait pour but d'optimiser les performances de notre algorithme,
+donc réduire son temps de calculs (et donc sa complexité) tout en augmentant
+la précision des résultats.
+
+##### Réduire la complexité
+
+En termes de complexité, nous avons du ré-implémenter certaine partie du code,
+comme celle responsable de la recherche d'un mot dans la table de poids,
+en utilisant cette fois un algorithme de recherche dichotomique,
+ce qui a grandement réduit le temps de recherche et donc de calculs.
+
+##### Augmenter la précision en modifiant le traitement
+
+Pour ce qui est des résultats, nous avons d'abord essayé de modifier
+les traitements sur les mots pour ignorer non-seulement la case,
+mais aussi bien le pluriel et d'autres variantes du mots en ignorant
+les voyelles, ce qui à légèrement augmenter la précision de nos résultats.
+
+Voici un exemple de traitement de mot, ou la transformation est noté $F(mot)$ :
+
+$$
+F("Révolutionnées") = F("révolutionné") = "rvltnn"
+$$
+
+#### 4. Poursuite possible
+
+Ayant terminé les phases précédentes avec de l'avance,
+nous avons pu proposé un autre algorithme de classification,
+basé sur la méthode KNN.
+
+Pour faire simple, on considère cette fois l'ensemble des poids
+par catégorie d'un article comme un tout, a.k.a. un vecteur.
+Ce vecteur permet d'évaluer une distance entre articles,
+on peut donc en déduire que plus les articles sont proches,
+plus ils ont de chances d'appartenir à la même catégorie.
+
+Mais en se rappelant que nos méthodes pour mesurer les
+poids de chaque catégories d'un articles sont loin d'être parfaite,
+il devient plus judicieux de choisir la catégorie majoritaire parmis
+les K plus proches voisins plutôt qu'en se basant sur le seul plus proche.
+
+Encore faut il déterminer ce nombre K de voisins,
+mais cet article est déjà assez long comme ça,
+mieux vaut-il que vous alliez lire cet
+[article sur la méthode KNN](https://fr.wikipedia.org/wiki/M%C3%A9thode_des_k_plus_proches_voisins).
 
 ### Analyse des performances
 
-Eu dolore nostrud ullamco amet adipisicing anim aliquip Lorem amet aliquip deserunt eiusmod aliqua sunt. Sint duis amet nisi mollit pariatur ullamco aliquip ullamco. Non nulla laborum deserunt id non ad cupidatat id qui occaecat labore reprehenderit reprehenderit est.
+En parralèle de l'implémation de la version avec KNN,
+nous avons rédigé un compte rendu (cf. pièce jointe)
+dans lequel nous proposions une analyse détaillée
+sur nos implémations et les performances que nous avions obtenus,
+ainsi que sur les évolutions possibles.
+
+### Entretien de Retour
+
+Etant l'un des premiers projet à l'IUT, nous avions un petit entretien
+pour avoir un retour du professeur sur nos travaux.
+Nous étions évalués par <Author id="lejeunea"/>
+qui a pu nous donnez un retour très positif.
 
 ## Retour global

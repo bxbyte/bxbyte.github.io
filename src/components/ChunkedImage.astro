@@ -1,0 +1,87 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import sharp from 'sharp'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
+import config from '!/astro.config'
+
+import { setDynamicPaths } from '@/integrations/assets'
+
+interface Props extends HTMLAttributes<'svg'> {
+	src: ImageMetadata
+	rows?: number
+	cols?: number
+	type?: 'webp' | 'png' | 'jpeg'
+}
+
+var {
+	src: { src },
+	rows = 4,
+	cols = 4,
+	type = 'webp',
+	...props
+} = Astro.props
+
+src = src.replace(/^\/@fs|\?[^?]*$/gm, '')
+if (import.meta.env.PROD)
+	src = join(process.cwd(), config.outDir || '/dist', src)
+
+const img = sharp(await readFile(src))
+
+var { width, height } = (await img.metadata()) as Record<string, number>
+width = ~~(width / cols)
+height = ~~(height / rows)
+
+const chunks = await setDynamicPaths(
+	async () =>
+		(
+			await Promise.all(
+				Array.from({ length: cols }, (_, x) =>
+					Promise.all(
+						Array.from({ length: rows }, async (_, y) => ({
+							value: await img
+								.clone()
+								.extract({
+									width,
+									height,
+									left: x * width,
+									top: y * height,
+								})
+								[type]()
+								.toBuffer(),
+							x,
+							y,
+						})),
+					),
+				),
+			)
+		).flat(),
+	type,
+	[src, type, rows, cols].join(), // Use this combinaison as cache key
+)
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox={`0 0 ${width * cols} ${height * rows}`}
+	{...props}
+>
+	{
+		chunks.map(({ href, x, y }) => (
+			// @prettier-ignore
+			<Fragment
+				set:html={`<image
+					x="${x * width}"
+					y="${y * height}"
+					xlink:href="${href}"
+				/>`}
+			/>
+		))
+	}
+</svg>
+
+<style>
+	svg :global(image) {
+		transform: scale(1.005);
+	}
+</style>

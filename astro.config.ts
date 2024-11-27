@@ -1,18 +1,25 @@
 import pkg from './package.json'
 import mdx from '@astrojs/mdx'
+import sitemap from '@astrojs/sitemap'
 import { transformerNotationDiff } from '@shikijs/transformers'
 
+import compressor from 'astro-compressor'
 import icon from 'astro-icon'
 import { type AstroUserConfig, defineConfig, envField } from 'astro/config'
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
+import { visualizer } from 'rollup-plugin-visualizer'
 import { SassString } from 'sass-embedded'
 
-import PDF from './my_modules/html2pdf'
+import assets from './src/integrations/assets'
+import html2pdf from './src/integrations/html2pdf'
 import { localesConfig } from './src/libs/i18n/config'
 
 const pseudoConfig = {
 	experimental: { contentIntellisense: true },
 	output: 'static',
 	scopedStyleStrategy: 'class',
+	build: { assets: '_', concurrency: 2 },
 	image: {
 		domains: ['astro.build'],
 	},
@@ -23,9 +30,15 @@ const pseudoConfig = {
 			include: undefined,
 		},
 		build: {
-			assetsInlineLimit: 512,
+			assetsInlineLimit: 128,
 			assetsDir: '_',
 		},
+		plugins: [
+			visualizer({
+				emitFile: true,
+				filename: 'stats.html',
+			}),
+		],
 		css: {
 			preprocessorOptions: {
 				scss: {
@@ -50,8 +63,8 @@ const pseudoConfig = {
 	markdown: {
 		shikiConfig: {
 			themes: {
-				dark: 'dark-plus',
 				light: 'github-light',
+				dark: 'dark-plus',
 			},
 			defaultColor: false,
 			transformers: [transformerNotationDiff() as any],
@@ -60,8 +73,21 @@ const pseudoConfig = {
 	integrations: [
 		// rename({ rename: {} }),
 		icon(),
-		mdx(),
-		await PDF(pkg.config),
+		mdx({
+			remarkPlugins: [remarkMath],
+			rehypePlugins: [
+				[
+					rehypeKatex,
+					{
+						output: 'mathml',
+					},
+				],
+			],
+		}),
+		sitemap(),
+		compressor({ gzip: true, brotli: true }),
+		await html2pdf(pkg.config),
+		assets('/_/'),
 	],
 	env: {
 		schema: {
@@ -100,8 +126,4 @@ const pseudoConfig = {
 } as const satisfies AstroUserConfig
 
 // https://astro.build/config
-export default defineConfig(pseudoConfig) as Omit<
-	AstroUserConfig,
-	keyof typeof pseudoConfig
-> &
-	typeof pseudoConfig
+export default defineConfig(pseudoConfig)
