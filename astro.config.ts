@@ -51,12 +51,11 @@ const pseudoConfig = {
 					functions: {
 						'svg($svg)': function ([svg]: [SassString]) {
 							return new SassString(
-								`data:image/svg+xml;base64,${btoa(
-									// `data:image/svg+xml;base64,${btoa(
+								`data:image/svg+xml;base64,${Buffer.from(
 									svg.asList
 										.map((v) => v.toString().replace(/^\s*["']|["']\s*$/gm, ''))
 										.join(''),
-								)}`,
+								).toString('base64')}`,
 							)
 						},
 					},
