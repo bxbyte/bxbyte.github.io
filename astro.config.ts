@@ -3,9 +3,12 @@ import mdx from '@astrojs/mdx'
 import sitemap from '@astrojs/sitemap'
 import { transformerNotationDiff } from '@shikijs/transformers'
 
+import type { AstroUserConfig } from 'astro'
+import compress from 'astro-compress'
 import compressor from 'astro-compressor'
 import icon from 'astro-icon'
-import { type AstroUserConfig, defineConfig, envField } from 'astro/config'
+import robotsTxt from 'astro-robots-txt'
+import { defineConfig, envField } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -34,10 +37,11 @@ const pseudoConfig = {
 			assetsDir: '_',
 		},
 		plugins: [
-			visualizer({
-				emitFile: true,
-				filename: 'stats.html',
-			}),
+			// visualizer({
+			// 	open: true,
+			// 	gzipSize: true,
+			// 	brotliSize: true,
+			// }),
 		],
 		css: {
 			preprocessorOptions: {
@@ -84,10 +88,12 @@ const pseudoConfig = {
 				],
 			],
 		}),
-		sitemap(),
-		compressor({ gzip: true, brotli: true }),
 		await html2pdf(pkg.config),
 		assets('/_/'),
+		robotsTxt(),
+		sitemap(),
+		compress(),
+		compressor({ gzip: true, brotli: true }),
 	],
 	env: {
 		schema: {
