@@ -2,10 +2,8 @@
 import { Section } from '@/components/sections'
 import { getLocaleContent } from '@/libs/i18n'
 import locales from './locales'
-import infos from '@/data/infos'
 import ChunkedImage from '@/components/ChunkedImage.astro'
 import backImg from './back.png'
-
 // import GridArt from '@/components/tiles'
 import { grainUrl } from '@/styles/theme'
 
@@ -13,32 +11,42 @@ const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="welcome">
-	<section class="hello">
-		<h1>
-			Welcome !
-			<br /> I'm <span style="font-size: 1.3em;">{infos.owner.name}</span>, I'm
-			a
-			<span>Computer Sciences student</span>
-			at the University of <span>Grenoble-Alpes</span>
-		</h1>
-	</section>
-	<section class="description">
-		<h3>{content.what}</h3>
-	</section>
-	<section class="action">
-		<!-- <button class={}></button> -->
-	</section>
+	<div slot="back">
+		<ChunkedImage
+			src={backImg}
+			rows={2}
+			cols={8}
+			preserveAspectRatio="xMidYMin slice"
+			sharpCallbacks={[
+				{ call: 'greyscale' },
+				{ call: 'webp', params: [{ quality: 1, alphaQuality: 0 }] },
+			]}
+		/>
+		<div
+			style={{
+				maskImage: [
+					'linear-gradient(#000 80%, #fff)',
+					grainUrl,
+					'linear-gradient(#fff, #fff)',
+				].join(),
+			}}
+		>
+			<!-- Used as a mask since the world's greatest browser engine
+			  can't fucking handle a backdrop blur on a real masked element -->
+		</div>
+	</div>
 
-	<ChunkedImage
-		slot="back"
-		src={backImg}
-		rows={4}
-		cols={16}
-		preserveAspectRatio="xMidYMin slice"
-		style={{
-			maskImage: [grainUrl, 'linear-gradient(#fff 80%, #000)'].join(),
-		}}
-	/>
+	<div class="hi">
+		<p>{content.hi}</p>
+		<h1>{content.iam}</h1>
+		<p>{content.status}</p>
+	</div>
+
+	<div class="infos">
+		<p>{content.what}</p>
+	</div>
+
+	<p class="footer">{content.easteregg}</p>
 </Section>
 
 <style lang="scss">
@@ -47,68 +55,66 @@ const content = getLocaleContent(locales, Astro)
 	:global(.back) {
 		display: flex;
 		align-items: flex-end;
+		user-select: none;
 
-		& > svg {
-			mask-mode: luminance;
-			mask-size: 50%;
-			mask-composite: intersect;
-			filter: grayscale(1) contrast(calc(0.75 + 1 * theme.$bool-is-dark))
-				brightness(calc(0.5 + (1 - theme.$bool-is-dark)));
-			height: 50%;
+		& > div {
+			& > div {
+				mask-mode: luminance;
+				mask-size: 80%;
+				mask-composite: add, exclude;
+				background-color: theme.$color-white;
+				height: 100%;
+			}
+
+			svg {
+				position: absolute;
+				bottom: 0;
+				filter: contrast(calc(0.75 + 1 * theme.$bool-is-dark))
+					brightness(calc(0.5 + (1 - theme.$bool-is-dark)));
+				width: 100%;
+				height: 50%;
+			}
 		}
 	}
 
 	:global(#welcome) {
 		display: grid;
-		grid-template-rows: auto auto 1fr;
 		grid-template-areas:
-			'h h h h'
-			'd d a a'
-			'f f f f';
-		gap: 2em;
+			'. .'
+			'. .'
+			'a a'
+			'b b'
+			'. f';
+		// display: flex;
+		// align-items: center;
+		clip-path: inset(0 0 0 0);
 		min-height: min(100vh, layout.$window-max-width / 1.33);
+	}
 
-		// & > * {
-		// 	outline: 1px solid theme.$color-black;
-		// 	outline-offset: -0.5px;
-		// 	padding: 1em;
-		// }
+	.hi {
+		grid-area: a;
+		font-size: 1.75rem;
 
-		.hello {
-			grid-area: h;
-			text-wrap: balance;
-			span {
-				// background-color: theme.$color-accent;
-				// color: theme.$color-white;
-				// font-size: 1.2em;
-			}
+		h1 {
+			font-size: 2em;
 		}
+	}
 
-		.description {
-			grid-area: d;
-		}
+	.infos {
+		grid-area: b;
+		backdrop-filter: blur(0.5rem) brightness(115%);
+		box-sizing: border-box;
+		margin: auto;
+		border: 1px solid theme.$color-dark-grey;
+		border-radius: 0.5rem;
+		padding: 0.75rem;
+		width: 100%;
+		height: fit-content;
+	}
 
-		.action {
-			grid-area: a;
-		}
-
-		.footer {
-			display: flex;
-			grid-area: f;
-			flex-direction: column;
-			align-items: center;
-			gap: 1em;
-
-			img {
-				filter: grayscale(1) contrast(0.8);
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-		}
-
-		div {
-			grid-area: a;
-		}
+	.footer {
+		grid-area: f;
+		margin: auto 0 0 auto;
+		color: theme.$color-black;
 	}
 </style>
