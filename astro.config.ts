@@ -11,7 +11,6 @@ import robotsTxt from 'astro-robots-txt'
 import { defineConfig, envField } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
-import { visualizer } from 'rollup-plugin-visualizer'
 import { SassString } from 'sass-embedded'
 
 import assets from './src/integrations/assets'
@@ -36,13 +35,6 @@ const pseudoConfig = {
 			assetsInlineLimit: 128,
 			assetsDir: '_',
 		},
-		plugins: [
-			// visualizer({
-			// 	open: true,
-			// 	gzipSize: true,
-			// 	brotliSize: true,
-			// }),
-		],
 		css: {
 			preprocessorOptions: {
 				scss: {
