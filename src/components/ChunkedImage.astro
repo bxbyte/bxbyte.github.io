@@ -1,17 +1,26 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
-import sharp from 'sharp'
+import { Image } from 'astro:assets'
+import sharp, { type Sharp } from 'sharp'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import config from '!/astro.config'
 
 import { setDynamicPaths } from '@/integrations/assets'
 
+type SharpMethod = {
+	[k in keyof Sharp as Sharp[k] extends Function ? k : never]: Sharp[k]
+}
+type SharpCall = {
+	[K in keyof SharpMethod]: { call: K; params?: Parameters<Sharp[K]> }
+}[keyof SharpMethod]
+
 interface Props extends HTMLAttributes<'svg'> {
 	src: ImageMetadata
 	rows?: number
 	cols?: number
 	type?: 'webp' | 'png' | 'jpeg'
+	sharpCallbacks?: SharpCall[]
 }
 
 var {
@@ -19,6 +28,7 @@ var {
 	rows = 4,
 	cols = 4,
 	type = 'webp',
+	sharpCallbacks,
 	...props
 } = Astro.props
 
@@ -26,7 +36,13 @@ src = src.replace(/^\/@fs|\?[^?]*$/gm, '')
 if (import.meta.env.PROD)
 	src = join(process.cwd(), config.outDir || '/dist', src)
 
-const img = sharp(await readFile(src))
+var img = sharp(await readFile(src))
+
+if (sharpCallbacks) {
+	sharpCallbacks.forEach(async ({ call, params }) => {
+		img = await (params ? (img[call] as any)(...params) : (img[call] as any)())
+	})
+}
 
 var { width, height } = (await img.metadata()) as Record<string, number>
 width = ~~(width / cols)
@@ -57,7 +73,7 @@ const chunks = await setDynamicPaths(
 			)
 		).flat(),
 	type,
-	[src, type, rows, cols].join(), // Use this combinaison as cache key
+	[src, type, rows, cols, sharpCallbacks], // Use this combinaison as cache key
 )
 ---
 
@@ -66,22 +82,28 @@ const chunks = await setDynamicPaths(
 	viewBox={`0 0 ${width * cols} ${height * rows}`}
 	{...props}
 >
-	{
-		chunks.map(({ href, x, y }) => (
-			// @prettier-ignore
-			<Fragment
-				set:html={`<image
-					x="${x * width}"
-					y="${y * height}"
-					xlink:href="${href}"
-				/>`}
-			/>
-		))
-	}
+	<g style={{ '--width': width, '--height': height }}>
+		{
+			chunks.map(({ href, x, y }) => (
+				<foreignObject style={{ '--x': x, '--y': y }}>
+					<Image src={href} width={width} height={height} alt={`${x}x${y}`} />
+				</foreignObject>
+			))
+		}</g
+	>
 </svg>
 
 <style>
-	svg :global(image) {
-		transform: scale(1.005);
+	svg {
+		foreignObject {
+			x: calc(var(--x) * var(--width) * 1px);
+			y: calc(var(--y) * var(--height) * 1px);
+			width: calc(var(--width) * 1px);
+			height: calc(var(--height) * 1px);
+
+			* {
+				text-align: center;
+			}
+		}
 	}
 </style>

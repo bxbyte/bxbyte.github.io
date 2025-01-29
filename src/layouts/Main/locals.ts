@@ -14,49 +14,56 @@ export default {
 			relation: 'rel',
 		},
 	] satisfies LocalLink[],
-	footerLinkSections: [
-		{
-			name: { fr: 'Infos de Site', en: 'Website Infos' },
-			links: [
-				{
-					label: { fr: "Condition d'utilisation", en: 'Terms of Service' },
-					href: '/tos',
-				},
-				{
-					label: { fr: 'Politique de Cookies', en: 'Privacy Policy' },
-					href: '/policy',
-				},
-				{
-					label: { fr: 'Depôt Github', en: 'Github Repositery' },
-					href: REPOSITERY_URL,
-				},
-			] satisfies LocalLink[],
-		},
-		{
-			name: { fr: 'Infos de Contact', en: 'Contact Infos' },
-			links: [
-				{
-					label: 'Email',
-					href: `mailto:${infos.owner.email}`,
-				},
-				{
-					label: 'Github',
-					href: `https://github.com/${REPOSITERY_OWNER}`,
-				},
-			] satisfies LocalLink[],
-		},
-	],
-	copyrigth: {
-		whenwho: {
-			fr: `© ${new Date().getFullYear()} Par ${infos.owner.name},`,
-			en: `© ${new Date().getFullYear()} By ${infos.owner.name},`,
-		},
-		license: {
-			label: {
-				fr: 'Tout Droits Reservés',
-				en: 'All Rights Reserved',
+	footer: {
+		links: [
+			{
+				name: { fr: 'Infos de Site', en: 'Website Infos' },
+				links: [
+					{
+						label: { fr: "Condition d'utilisation", en: 'Terms of Service' },
+						href: '/tos',
+					},
+					{
+						label: { fr: 'Politique de Cookies', en: 'Privacy Policy' },
+						href: '/policy',
+					},
+					{
+						label: { fr: 'Depôt Github', en: 'Github Repositery' },
+						href: REPOSITERY_URL,
+					},
+				] satisfies LocalLink[],
 			},
-			href: '/license',
-		} satisfies LocalLink,
+			{
+				name: { fr: 'Infos de Contact', en: 'Contact Infos' },
+				links: [
+					{
+						label: 'Github',
+						href: `https://github.com/${REPOSITERY_OWNER}`,
+					},
+					{
+						label: 'Email',
+						href: `mailto:${infos.owner.email}`,
+					},
+				] satisfies LocalLink[],
+			},
+		],
+		copyrigth: {
+			whenwho: {
+				fr: `© ${new Date().getFullYear()} Par ${infos.owner.name},`,
+				en: `© ${new Date().getFullYear()} By ${infos.owner.name},`,
+			},
+			license: {
+				label: {
+					fr: 'Tout Droits Reservés',
+					en: 'All Rights Reserved',
+				},
+				href: '/license',
+			} satisfies LocalLink,
+		},
+		asciiArt: `
+        ／l、
+       (°､ₒ︎ ７
+       ⎱ 、ﾞ~ヽ  ⎞
+ᘛ⁐̤ᕐᐷ  じしf_, )ノ`,
 	},
 }

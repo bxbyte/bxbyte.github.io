@@ -55,7 +55,7 @@ export const collections = {
 		loader: async () =>
 			await Promise.all(
 				Object.values(
-					import.meta.glob(['./jobs/**/*.ts', '!./jobs/**/_*.ts'], {
+					import.meta.glob(['jobs/**/*.ts', '!jobs/**/_*.ts'], {
 						import: 'default',
 					}),
 				).map(

@@ -27,7 +27,7 @@ $theme-vars: ();
 
 /// Accent Colors
 
-$color-accent: defineTheme(color-accent, #a8fcb3, #6b41df);
+$color-main: defineTheme(color-main, #a8fcb3, #6b41df);
 $gradient-main-color1: defineTheme(gradient-main-color1, #1df0a9, #6b41df);
 $gradient-main-color2: defineTheme(gradient-main-color2, #a8fcb3, #86b8f7);
 $gradient-secondary-color1: defineTheme(
@@ -46,6 +46,7 @@ $gradient-secondary-color2: defineTheme(
 $color-black: defineTheme(color-black, #e0dede, #000);
 $color-white: defineTheme(color-white, #131111, #f8f8f8);
 $color-grey: defineTheme(color-grey, #333030, #e6e5e5);
+$color-dark-grey: defineTheme(color-grey, #333030, #c4bdbd);
 $color-shadow: defineTheme(color-shadow, #00000023);
 $bool-is-dark: defineTheme(bool-is-dark, 1, 0);
 

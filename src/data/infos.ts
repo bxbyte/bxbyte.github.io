@@ -9,8 +9,8 @@ const OWNER = {
 	additionalName: 'bxbyte',
 	jobTitle: 'IT Student',
 	affiliation: 'IUT 2 Grenoble',
-	email: 'iut@lucas-maillet.com',
-} as Record<string, string> & Person
+	email: 'in@lucas-maillet.fr',
+} // as Person & Record<string, string>
 
 export default {
 	owner: OWNER,

@@ -6,10 +6,8 @@ import { Section } from '@/components/sections'
 import GridArt from '@/components/tiles'
 import Timeline from '@/components/timeline'
 import { getLocaleContent } from '@/libs/i18n'
-import { getPostsByLocale } from '@/content'
 
 const content = getLocaleContent(locales, Astro)
-const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
 ---
 
 <Section id="history" layout="col2">

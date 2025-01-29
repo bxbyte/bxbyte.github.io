@@ -2,22 +2,6 @@ $window-padding-y: 1em;
 $window-padding-x: 2em;
 $window-max-width: 1240px;
 
-// .chunk {
-// 	padding: $window-padding-y $window-padding-x;
-// 	width: calc(100% - 2 * $window-padding-x);
-// 	max-width: $window-max-width;
-// }
-
-// .col2 {
-// 	display: grid;
-// 	grid-template-columns: 1fr 1fr;
-// 	gap: 2em;
-
-// 	@media screen and (max-width: ($window-max-width * 0.6)) {
-// 		grid-template-columns: 1fr !important;
-// 	}
-// }
-
 .text {
 	display: flex;
 	flex-direction: column;

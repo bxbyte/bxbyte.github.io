@@ -12,13 +12,6 @@ import ThemeSwitch from '@/components/theme-switch'
 import { useLocaleContents } from '@/libs/i18n'
 import { Block } from '@/components/sections'
 
-const FOOTER_ASCII_ART = `
-       ／l、
-      (°､ₒ︎ ７
-       ⎱ 、ﾞ~ヽ   ⎞
-ᘛ⁐̤ᕐᐷ  じしf_, )ノ
-`
-
 export interface Props extends HTMLAttributes<'main'> {
 	head?: LocalComponentProps<typeof Head>
 }
@@ -58,7 +51,7 @@ const { head, ...props } = Astro.props
 	<Block tag="footer" transition:persist class={layout.chunk}>
 		<div>
 			{
-				content.footerLinkSections.map(({ name, links }) => (
+				content.footer.links.map(({ name, links }) => (
 					<ul>
 						<li>{name}</li>
 						{links.map(({ label, ...props }) => (
@@ -69,12 +62,12 @@ const { head, ...props } = Astro.props
 					</ul>
 				))
 			}
-			<pre translate="no">{FOOTER_ASCII_ART}</pre>
+			<pre translate="no">{content.footer.asciiArt}</pre>
 		</div>
 		<p>
-			{content.copyrigth.whenwho}
-			<ActiveLink href={content.copyrigth.license.href}
-				>{content.copyrigth.license.label}</ActiveLink
+			{content.footer.copyrigth.whenwho}
+			<ActiveLink href={content.footer.copyrigth.license.href}
+				>{content.footer.copyrigth.license.label}</ActiveLink
 			>
 		</p>
 	</Block>
@@ -154,7 +147,7 @@ const { head, ...props } = Astro.props
 				align-self: end;
 
 				a {
-					color: theme.$color-accent;
+					color: theme.$color-main;
 					--x-factor: 1;
 				}
 			}

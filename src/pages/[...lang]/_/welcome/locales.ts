@@ -1,21 +1,31 @@
 const content = {
+	hi: {
+		en: 'Welcome !',
+		fr: 'Bienvenue !',
+	},
+	iam: {
+		en: "I'm Lucas Maillet",
+		fr: 'Ici Lucas Maillet',
+	},
 	status: {
-		en: 'Computer Science Student',
-		fr: 'Etudiant en informatique',
+		en: 'Applicated computer science student at the University of Grenoble-Alpes',
+		fr: "Etudiant en BUT informatique de l'Université Grenoble-Alpes",
 	},
 	what: {
-		en: `Here's my portfolio, with all my project, posts, ... 
-				I hope you'll find what you're looking for !`,
-		fr: `Voici mon portfolio, avec tous mes projets, posts, ...
-				J'espère que vous aurez de quoi faire !`,
+		en: `
+			What's up ? Here's my portfolio with all my stuff: 
+			some infos on about myself, projects I've participated over the years,
+			contact informations, ... you get the idea.
+		`,
+		fr: `
+			Voici mon portfolio avec tout mes trucs et bidules : 
+			des infos sur moi, des projets auquel j'ai pu participer,
+			de quoi me contacter, ... bref un portfolio quoi.
+		`,
 	},
-	me: {
-		en: `I'm a junior in a computer science degree based in Grenoble, France.
-				I like coding, cooking, finding cool rocks and hiking from time to time.
-				While I'm not sure a 100% that I'll be capable, I inspire to work in research.`,
-		fr: `En bref, je suis en 2ème année de BUT Info à Grenoble.
-				J'aime coder, cuisiner, collectionner des jolis cailloux et randonner de temps en temps.
-				Bien que je ne sois pas sûr à 100% d'en être capable, j'espère travailler plus tard dans la recherche `,
+	easteregg: {
+		fr: "🗻 Parc Nat' de Belledone",
+		en: "🗻 Belledone's park",
 	},
 }
 

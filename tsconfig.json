@@ -1,10 +1,11 @@
 {
-	"extends": "astro/tsconfigs/strict",
-	"include": [".astro/types.d.ts", "**/*", ".trash/imgchunk"],
+	"extends": "astro/tsconfigs/base",
+	"include": [".astro/types.d.ts", "**/*"],
 	"exclude": ["dist", "node_modules"],
 	"compilerOptions": {
 		"jsxImportSource": "astro",
 		"skipLibCheck": true,
+		"strictNullChecks": true,
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["src/*"],

@@ -38,7 +38,7 @@ function getCaptionItems(cheerio: CheerioAPI, selector: string) {
 
 export default async function renderPostMdx(post: PostHydrated) {
 	const { Content: astroContent, remarkPluginFrontmatter: rawFrontmatter } =
-			await render(post),
+			await render(post as any),
 		cheerio = load(
 			await (
 				await experimental_AstroContainer.create({

@@ -9,16 +9,16 @@ export const patterns = urlIdCollection(
 		corner1: 'corner1',
 		corner2: 'corner2',
 		cross: 'cross',
-	} as const,
+	},
 	'pattern',
 )
 
 export const patternIds = Object.values(patterns)
 
-const partternOctaves = 1,
-	patternAttributes = {
-		width: `${100 / partternOctaves}%`,
-		height: `${100 / partternOctaves}%`,
+const octaves = 1,
+	commonAttributes = {
+		width: `${100 / octaves}%`,
+		height: `${100 / octaves}%`,
 		viewBox: '0 0 10 10',
 	} as HTMLAttributes<'pattern'>
 ---
@@ -31,18 +31,18 @@ const partternOctaves = 1,
 	stroke-linecap="square"
 >
 	<defs>
-		<pattern id={patterns.grid.id} {...patternAttributes}>
+		<pattern id={patterns.grid.id} {...commonAttributes}>
 			<path d="M5,0v10 M0,5h10"></path>
 		</pattern>
-		<pattern id={patterns.corner1.id} {...patternAttributes}>
+		<pattern id={patterns.corner1.id} {...commonAttributes}>
 			<circle cx="0" cy="0" r="5"></circle>
 			<circle cx="10" cy="10" r="5"></circle>
 		</pattern>
-		<pattern id={patterns.corner2.id} {...patternAttributes}>
+		<pattern id={patterns.corner2.id} {...commonAttributes}>
 			<circle cx="0" cy="10" r="5"></circle>
 			<circle cx="10" cy="0" r="5"></circle>
 		</pattern>
-		<pattern id={patterns.cross.id} {...patternAttributes}>
+		<pattern id={patterns.cross.id} {...commonAttributes}>
 			<circle cx="0" cy="0" r="5"></circle>
 			<circle cx="10" cy="10" r="5"></circle>
 			<circle cx="0" cy="10" r="5"></circle>

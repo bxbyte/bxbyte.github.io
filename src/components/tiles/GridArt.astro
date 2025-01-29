@@ -22,11 +22,10 @@ const {
 	} = Astro.props,
 	random = getRandom(seed)
 
-function randomPattern() {
-	return patternValues[Math.round(random() * (patternValues.length - 1))]
-}
-
-const id = (getRandom(seed + width + '/' + height)() * (1 << 16)).toString(32)
+const id = (
+	getRandom(seed + '/' + width + '/' + height)() *
+	(1 << 16)
+).toString(32)
 ---
 
 <svg
@@ -56,7 +55,9 @@ const id = (getRandom(seed + width + '/' + height)() * (1 << 16)).toString(32)
 									return rotationAxis.join()
 								})(),
 							}}
-							fill={randomPattern()}
+							fill={
+								patternValues[Math.round(random() * (patternValues.length - 1))]
+							}
 						/>
 					))
 			}
@@ -68,6 +69,7 @@ const id = (getRandom(seed + width + '/' + height)() * (1 << 16)).toString(32)
 <style lang="scss">
 	svg {
 		& mask > rect:not(:first-child) {
+			// --default-transform: scale(0.9);
 			--default-transform: scale(1.01);
 			transform: var(--default-transform);
 			transform-origin: calc((var(--x) + 0.5) * 1px)
@@ -75,8 +77,6 @@ const id = (getRandom(seed + width + '/' + height)() * (1 << 16)).toString(32)
 			fill-opacity: 1;
 			transition: transform 0.5s ease-in-out;
 			transition-delay: calc(
-				// sqrt(pow(var(--x), 2) + pow(var(--y), 2)) /
-				// 	(var(--width) + var(--height)) * 0.5s
 				(var(--x) + var(--y)) / (var(--width) + var(--height)) * 0.5s
 			);
 			width: 1px;

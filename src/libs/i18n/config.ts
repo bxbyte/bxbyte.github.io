@@ -8,8 +8,8 @@ export const localeDefs = {
 	} as const,
 	locales = Object.keys(localeDefs) as Locales[],
 	localesConfig = {
-		defaultLocale: 'en' satisfies Locales,
+		defaultLocale: 'en',
 		locales,
 		fallback: { fr: 'en' } satisfies { [locale in Locales]?: Locales },
-	},
+	} as const,
 	defaultLocale = localesConfig.defaultLocale
