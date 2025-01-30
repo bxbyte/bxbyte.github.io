@@ -20,37 +20,29 @@ interface Props extends HTMLAttributes<'svg'> {
 	rows?: number
 	cols?: number
 	type?: 'webp' | 'png' | 'jpeg'
-	sharpCallbacks?: SharpCall[]
+	sharpCallback?: (img: Sharp) => Promise<Sharp> | Sharp
 }
 
 var {
-	src: { src },
+	src: { src, width, height },
 	rows = 4,
-	cols = 4,
+	cols = 8,
 	type = 'webp',
-	sharpCallbacks,
+	sharpCallback = (v) => v,
 	...props
 } = Astro.props
+
+width = ~~(width / cols)
+height = ~~(height / rows)
 
 src = src.replace(/^\/@fs|\?[^?]*$/gm, '')
 if (import.meta.env.PROD)
 	src = join(process.cwd(), config.outDir || '/dist', src)
 
-var img = sharp(await readFile(src))
-
-if (sharpCallbacks) {
-	sharpCallbacks.forEach(async ({ call, params }) => {
-		img = await (params ? (img[call] as any)(...params) : (img[call] as any)())
-	})
-}
-
-var { width, height } = (await img.metadata()) as Record<string, number>
-width = ~~(width / cols)
-height = ~~(height / rows)
-
 const chunks = await setDynamicPaths(
-	async () =>
-		(
+	async () => {
+		const img = await sharpCallback(sharp(await readFile(src)))
+		return (
 			await Promise.all(
 				Array.from({ length: cols }, (_, x) =>
 					Promise.all(
@@ -71,9 +63,10 @@ const chunks = await setDynamicPaths(
 					),
 				),
 			)
-		).flat(),
+		).flat()
+	},
 	type,
-	[src, type, rows, cols, sharpCallbacks], // Use this combinaison as cache key
+	[src, type, width, height, sharpCallback.toString()], // Use this combinaison as cache key
 )
 ---
 

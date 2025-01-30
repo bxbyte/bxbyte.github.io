@@ -4,8 +4,8 @@ import { getLocaleContent } from '@/libs/i18n'
 import locales from './locales'
 import ChunkedImage from '@/components/ChunkedImage.astro'
 import backImg from './back.png'
-// import GridArt from '@/components/tiles'
 import { grainUrl } from '@/styles/theme'
+import sharp from 'sharp'
 
 const content = getLocaleContent(locales, Astro)
 ---
@@ -17,10 +17,10 @@ const content = getLocaleContent(locales, Astro)
 			rows={2}
 			cols={8}
 			preserveAspectRatio="xMidYMin slice"
-			sharpCallbacks={[
-				{ call: 'greyscale' },
-				{ call: 'webp', params: [{ quality: 1, alphaQuality: 0 }] },
-			]}
+			sharpCallback={(img) =>
+				img
+					.greyscale() /* Turn to B/W image */
+					.webp({ quality: 1, alphaQuality: 0 }) /* Reduce the image size */}
 		/>
 		<div
 			style={{
@@ -31,8 +31,6 @@ const content = getLocaleContent(locales, Astro)
 				].join(),
 			}}
 		>
-			<!-- Used as a mask since the world's greatest browser engine
-			  can't fucking handle a backdrop blur on a real masked element -->
 		</div>
 	</div>
 
@@ -58,6 +56,8 @@ const content = getLocaleContent(locales, Astro)
 		user-select: none;
 
 		& > div {
+			overflow: hidden;
+
 			& > div {
 				mask-mode: luminance;
 				mask-size: 80%;
