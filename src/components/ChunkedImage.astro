@@ -6,7 +6,7 @@ import { readFile } from 'fs/promises'
 import { join } from 'path'
 import config from '!/astro.config'
 
-import { setDynamicPaths } from '@/integrations/assets'
+import { computeAssets } from '@/integrations/assets'
 
 type SharpMethod = {
 	[k in keyof Sharp as Sharp[k] extends Function ? k : never]: Sharp[k]
@@ -39,7 +39,7 @@ src = src.replace(/^\/@fs|\?[^?]*$/gm, '')
 if (import.meta.env.PROD)
 	src = join(process.cwd(), config.outDir || '/dist', src)
 
-const chunks = await setDynamicPaths(
+const chunks = await computeAssets(
 	async () => {
 		const img = await sharpCallback(sharp(await readFile(src)))
 		return (
