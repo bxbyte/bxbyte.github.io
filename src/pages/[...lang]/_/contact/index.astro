@@ -1,6 +1,6 @@
 ---
-import { Section } from '@/components/sections'
-import { getLocaleContent } from '@/libs/i18n'
+import { Section } from '@/layouts'
+import { getLocaleContent } from '@/modules/i18n/content'
 import ContactForm from './ContactForm.astro'
 import locales from './locales'
 
@@ -9,7 +9,7 @@ const content = getLocaleContent(locales, Astro)
 
 <Section id="contact" layout="col2">
 	<div>
-		<h2>{content.still}</h2>
+		<p style="font-size: 1.75rem;">{content.still}</p>
 		<h1>{content.title}</h1>
 		<p>{content.content}</p>
 	</div>

@@ -1,0 +1,43 @@
+@use 'sass:list';
+
+$theme-variables: ();
+
+/// Define a theme variable
+///
+/// @param {*} $name CSS variable name
+/// @param {*} $dark-value value for dark theme
+/// @param {*} $light-value [false] overwritten value for light theme
+@function define($name, $dark-value, $light-value: false) {
+	@if ($dark-value) {
+		$theme-variables: list.append(
+			$theme-variables,
+			($name, $dark-value, $light-value)
+		) !global;
+	} @else {
+		$theme-variables: list.append(
+			$theme-variables,
+			($name, $dark-value, $dark-value)
+		) !global;
+	}
+	@return var(--#{$name});
+}
+
+// Implement variables
+@mixin implement-variables {
+	@each $var in $theme-variables {
+		--#{list.nth($var, 1)}: #{list.nth($var, 2)};
+	}
+
+	&.light {
+		@each $var in $theme-variables {
+			--#{list.nth($var, 1)}: #{list.nth($var, 3)};
+		}
+	}
+}
+
+// Export variables for external usage
+@mixin export-variables {
+	@each $var in $theme-variables {
+		#{list.nth($var, 1)}: var(--#{list.nth($var, 1)});
+	}
+}

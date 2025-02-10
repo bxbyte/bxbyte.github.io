@@ -11,11 +11,11 @@ import robotsTxt from 'astro-robots-txt'
 import { defineConfig, envField } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
-import { SassString } from 'sass-embedded'
 
-import assets from './src/integrations/assets'
-import html2pdf from './src/integrations/html2pdf'
-import { localesConfig } from './src/libs/i18n/config'
+import compute from './src/modules/compute'
+import html2pdf from './src/modules/html2pdf'
+import i18n from './src/modules/i18n'
+import theme from './src/modules/theme'
 
 const pseudoConfig = {
 	experimental: { contentIntellisense: true },
@@ -25,7 +25,6 @@ const pseudoConfig = {
 	image: {
 		domains: ['astro.build'],
 	},
-	i18n: localesConfig,
 	vite: {
 		optimizeDeps: {
 			noDiscovery: true,
@@ -35,37 +34,16 @@ const pseudoConfig = {
 			assetsInlineLimit: 128,
 			assetsDir: '_',
 		},
-		css: {
-			preprocessorOptions: {
-				scss: {
-					api: 'modern-compiler',
-					additionalData: "@use '@/styles/theme/theme.scss';",
-					functions: {
-						'svg($svg)': function ([svg]: [SassString]) {
-							return new SassString(
-								`data:image/svg+xml;base64,${Buffer.from(
-									svg.asList
-										.map((v) => v.toString().replace(/^\s*["']|["']\s*$/gm, ''))
-										.join(''),
-								).toString('base64')}`,
-							)
-						},
-					},
-				},
-			},
-		},
 	},
 	markdown: {
 		shikiConfig: {
-			themes: {
-				light: 'github-light',
-				dark: 'dark-plus',
-			},
-			defaultColor: false,
 			transformers: [transformerNotationDiff() as any],
 		},
 	},
 	integrations: [
+		i18n,
+		theme,
+		compute('/_/'),
 		// rename({ rename: {} }),
 		icon(),
 		mdx({
@@ -80,7 +58,7 @@ const pseudoConfig = {
 			],
 		}),
 		await html2pdf(pkg.config),
-		assets('/_/'),
+		// assets('/_/'),
 		robotsTxt(),
 		sitemap(),
 		compress(),

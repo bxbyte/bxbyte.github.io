@@ -1,0 +1,59 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import { p } from '@/modules/component/server'
+
+type Props = HTMLAttributes<'a'> & {
+	label?: string
+	direction?: 'left' | 'center' | 'right'
+	defaultActive?: boolean
+}
+
+const {
+	label,
+	direction = 'left',
+	defaultActive = false,
+	...rawProps
+} = Astro.props
+
+const props = p(rawProps)
+	.with('class', defaultActive && 'active')
+	.with('class', direction && direction != 'left' && direction)
+	.end()
+---
+
+<a {...props}>
+	{label}
+	<slot />
+</a>
+
+<style lang="scss">
+	a {
+		--x: 0;
+		$line-width: 0.05em;
+		$line-color: theme.$color-main;
+		box-decoration-break: clone;
+		gap: 1em;
+		background: linear-gradient(
+			transparent calc(100% - $line-width),
+			$line-color $line-width,
+			$line-color 0%
+		);
+		background-position: calc(var(--x) * 100%) 0;
+		background-size: 0 100%;
+		background-repeat: no-repeat;
+
+		&.center {
+			--x: 0.5;
+		}
+
+		&.right {
+			--x: 1;
+		}
+
+		&:hover,
+		&.active {
+			transition: background-size 0.1s ease-in-out;
+			background-size: 100% 100%;
+		}
+	}
+</style>

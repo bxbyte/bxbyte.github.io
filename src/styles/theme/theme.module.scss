@@ -1,7 +1,7 @@
-@use 'sass:list';
+// @use 'sass:list';
 
-:export {
-	@each $var in theme.$theme-vars {
-		#{list.nth($var, 1)}: var(--#{list.nth($var, 1)});
-	}
-}
+// :export {
+// 	@each $var in theme.$theme-vars {
+// 		#{list.nth($var, 1)}: var(--#{list.nth($var, 1)});
+// 	}
+// }

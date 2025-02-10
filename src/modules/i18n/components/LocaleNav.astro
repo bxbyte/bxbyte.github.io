@@ -1,0 +1,41 @@
+---
+import { Ref } from '@/components/ui'
+import { locales } from '../config'
+---
+
+<script>
+	import { $locale } from '../store'
+	import { define } from '@/modules/component/client'
+
+	define('locale-link', { extends: 'a' })(
+		class extends HTMLAnchorElement {
+			connectedCallback() {
+				this.addEventListener('click', () =>
+					$locale.set(this.dataset.locale as i18n.Locales),
+				)
+			}
+		},
+	)
+</script>
+
+<nav>
+	{
+		locales.map((locale) => (
+			<Ref
+				is="locale-link"
+				translate="no"
+				data-locale={locale}
+				defaultActive={Astro.currentLocale == locale}
+				label={locale}
+			/>
+		))
+	}
+</nav>
+
+<style lang="scss">
+	nav {
+		display: flex;
+		align-items: center;
+		gap: 1ch;
+	}
+</style>

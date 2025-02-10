@@ -1,26 +1,22 @@
 ---
 import styles from './styles.module.scss'
 
-import { md } from '@/libs/format'
+import md from '@/libs/server/md'
 
 interface Props {
 	title: string
 	description: string
 	start: Date
 	end?: Date | any
-	locale?: string
 	metadata?: string
 }
 
 const { title, description, start, end, metadata } = Astro.props
 
-let { locale } = Astro.props
-locale ||= Astro.currentLocale
-
 function dateFormat(date: Date): string {
 	const formater = { year: 'numeric' } as Intl.DateTimeFormatOptions
 	if (date.getMonth() != 0) formater.month = 'long'
-	return date.toLocaleDateString(locale, formater)
+	return date.toLocaleDateString(Astro.currentLocale, formater)
 }
 ---
 

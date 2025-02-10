@@ -6,13 +6,13 @@ $dot-radius: 25%;
 $last-dot-border-width: 1px;
 
 .timeList {
-	--pad-left: 2em;
+	--pad-left: 1.5em;
 
 	display: flex;
 	position: relative;
 	flex-direction: column;
 	gap: $gap-y;
-	padding-left: calc(var(--pad-left) * 2);
+	padding-left: calc(var(--pad-left));
 
 	&::before,
 	&::after {
@@ -22,14 +22,14 @@ $last-dot-border-width: 1px;
 
 	&::before {
 		top: calc($dot-size + $dot-space);
-		left: calc(var(--pad-left) + $border-width / -2);
+		left: calc($border-width / -2);
 		border-left: $border-width solid theme.$color-black;
 		height: calc(100% - $dot-size - $dot-space * 2);
 	}
 
 	// &::after {
 	// 	top: calc(100% - $dot-size - $dot-space);
-	// 	left: calc(var(--pad-left) + $dot-size / -2);
+	// 	left: calc($dot-size / -2);
 	// 	outline: $dot-space solid theme.$color-white;
 	// 	border: $last-dot-border-width solid theme.$color-black;
 	// 	border-radius: $dot-radius;

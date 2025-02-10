@@ -1,0 +1,56 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import { newId } from '@/modules/component/server'
+
+type Props<T extends 'input' | 'textarea' = 'input'> = HTMLAttributes<T> & {
+	el?: T
+	name?: string
+	placeholder?: string
+}
+
+const id = newId()
+const { el: Element = 'input', name, placeholder, ...props } = Astro.props
+---
+
+<div>
+	<Element {...props} class={props.class} id={id} name={name} placeholder="" />
+	<label for={id}>{placeholder}</label>
+</div>
+
+<style lang="scss">
+	[class^='astro-'] {
+		$label-size: 0.8em;
+		$input-padding: 0.5em;
+
+		position: relative;
+		width: 100%;
+
+		&:not(:has(*:placeholder-shown)) label,
+		&:has(*:focus) label {
+			top: $input-padding;
+			opacity: 0.8;
+			font-size: $label-size;
+		}
+
+		label {
+			position: absolute;
+			top: calc($input-padding + $label-size / 2);
+			left: $input-padding;
+			opacity: 0.5;
+			transition: 0.1s ease-in-out;
+			transition-property: top, left, opacity, font-size;
+			width: fit-content;
+			pointer-events: none;
+			color: #{theme.$color-black};
+		}
+
+		input,
+		textarea {
+			border: 1px solid #{theme.$color-grey};
+			border-radius: 0.2em;
+			padding: calc($label-size + $input-padding) $input-padding $input-padding
+				$input-padding;
+			width: calc(100% - $input-padding * 2);
+		}
+	}
+</style>

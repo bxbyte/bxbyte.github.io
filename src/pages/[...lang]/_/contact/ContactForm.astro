@@ -1,5 +1,5 @@
 ---
-import skin from '@/styles/skin.module.scss'
+import { Button, Field } from '@/components/ui'
 ---
 
 <script>
@@ -7,7 +7,7 @@ import skin from '@/styles/skin.module.scss'
 
 	class ContactForm extends HTMLFormElement {
 		connectedCallback() {
-			this.addEventListener('submit', async (ev) => {
+			this.addEventListener('submit', async () => {
 				await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
 					method: 'POST',
 					headers: {
@@ -25,43 +25,14 @@ import skin from '@/styles/skin.module.scss'
 
 <form is="contact-form" onsubmit="return false">
 	<div>
-		<div class={skin.inputLabel}>
-			<input id="name" type="text" name="name" required={true} placeholder="" />
-			<label for="name">Name</label>
-		</div>
-		<div class={skin.inputLabel}>
-			<input
-				id="email"
-				type="email"
-				name="email"
-				required={true}
-				placeholder=""
-			/>
-			<label for="email">E-mail</label>
-		</div>
+		<Field name="name" required placeholder="Name" />
+		<Field name="email" type="email" required placeholder="Email" />
 	</div>
-	<div class={skin.inputLabel}>
-		<input
-			id="subject"
-			type="text"
-			name="subject"
-			required={true}
-			placeholder=""
-		/>
-		<label for="subject">Subject</label>
-	</div>
-	<div class={skin.inputLabel}>
-		<textarea
-			id="message"
-			name="message"
-			required={true}
-			placeholder=""
-			rows="8"></textarea>
-		<label for="message">Message</label>
-	</div>
+	<Field name="subject" required placeholder="Subject" />
+	<Field el="textarea" name="message" required placeholder="Message" rows="8" />
 	<div>
-		<button type="submit" class={skin.primaryButton}> Send Message </button>
-		<button type="reset" class={skin.secondaryButton}> Clear All </button>
+		<Button type="submit"> Send Message </Button>
+		<Button variant="secondary" type="reset"> Clear All </Button>
 	</div>
 </form>
 

@@ -1,11 +1,10 @@
 ---
 import locales from './locales'
-import skinStyles from '@/styles/skin.module.scss'
-import { Section } from '@/components/sections'
+import { Section } from '@/layouts'
 
 import GridArt from '@/components/tiles'
 import Timeline from '@/components/timeline'
-import { getLocaleContent } from '@/libs/i18n'
+import { getLocaleContent } from '@/modules/i18n/content'
 
 const content = getLocaleContent(locales, Astro)
 ---
@@ -19,7 +18,7 @@ const content = getLocaleContent(locales, Astro)
 			seed="hello "
 			style="border-radius: 0.5rem"
 		/>
-		<p class={skinStyles.dropCap}>{content.description}</p>
+		<p>{content.description}</p>
 	</div>
 	<Timeline items={content.timeline} />
 </Section>

@@ -1,0 +1,68 @@
+---
+function randomInt(min: number, max: number) {
+	return min + Math.round(Math.random() * (max - min))
+}
+
+function divideMaze(
+	maze: boolean[][],
+	cell: {
+		x: number
+		dx: number
+		y: number
+		dy: number
+	},
+) {
+	if (cell.dx - cell.x <= 1) return
+	if (cell.dy - cell.y <= 1) return
+
+	const xcut = randomInt(cell.x + 1, cell.dx - 1)
+	const ycut = randomInt(cell.y + 1, cell.dy - 1)
+
+	// Draw y-axis cut
+	for (let x = cell.x; x <= cell.dx; x++) {
+		maze[ycut][x] = true
+	}
+	// Draw x-axis cut
+	for (let y = cell.y; y <= cell.dy; y++) {
+		maze[y][xcut] = true
+	}
+
+	// Add holes
+	maze[ycut][randomInt(cell.x + 1, xcut - 1)] = false
+	maze[ycut][randomInt(xcut + 1, cell.dx - 1)] = false
+	maze[randomInt(cell.y + 1, ycut - 1)][xcut] = false
+	maze[randomInt(ycut + 1, cell.dy - 1)][xcut] = false
+
+	// maze.forEach((row) => {
+	// 	row.forEach((v) => process.stdout.write(v ? ' ' : 'x'))
+	// 	process.stdout.write('\n')
+	// })
+	// process.stdout.write('\n')
+
+	// Recursive calls on subcells
+	divideMaze(maze, { ...cell, dx: xcut - 1, dy: ycut - 1 }) // NW
+	divideMaze(maze, { ...cell, x: xcut + 1, dy: ycut - 1 }) // NE
+	divideMaze(maze, { ...cell, dx: xcut - 1, y: ycut + 1 }) // SW
+	divideMaze(maze, { ...cell, x: xcut + 1, y: ycut + 1 }) // SE
+}
+
+function generateMazeGrid(width: number, height: number) {
+	// const cvs = createCanvas(width, height)
+	const maze: boolean[][] = Array.from({ length: height }, () =>
+		new Array(width).fill(false),
+	)
+	divideMaze(maze, {
+		x: 1,
+		dx: width - 2,
+		y: 1,
+		dy: height - 2,
+	})
+
+	maze.forEach((row) => {
+		row.forEach((v) => process.stdout.write(v ? ' ' : 'x'))
+		process.stdout.write('\n')
+	})
+}
+
+generateMazeGrid(40, 20)
+---

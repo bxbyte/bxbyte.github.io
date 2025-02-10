@@ -1,7 +1,5 @@
 import type { Blog, Person } from 'schema-dts'
 
-import type Head from '@/components/Head.astro'
-
 import logo from '@/assets/logo.svg?url'
 
 const OWNER = {
@@ -45,5 +43,5 @@ export default {
 				} as Blog),
 			},
 		],
-	} as ComponentProps<typeof Head>,
+	},
 }

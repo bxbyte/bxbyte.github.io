@@ -1,0 +1,168 @@
+---
+interface Props {
+	discussion: string
+}
+
+const { discussion } = Astro.props
+---
+
+<script>
+	import { REPOSITERY } from 'astro:env/client'
+	import { $theme } from '@/modules/theme/store'
+	import { $locale } from '@/modules/i18n/store'
+
+	const enum Giscus {
+		SESSION_KEY = 'giscus-session',
+		ORIGIN = 'https://giscus.app',
+		SUGGESTION = `Please consider reporting this error at https://github.com/giscus/giscus/issues/new.`,
+	}
+
+	class GiscusFrame extends HTMLIFrameElement {
+		params!: Record<string, string>
+		savedSession!: string | null
+		clearEvents!: Function
+
+		connectedCallback() {
+			this.addEventListener('load', () => {
+				this.style.removeProperty('opacity')
+			})
+
+			// Set up session and clear the session param on load
+			const url = new URL(location.href)
+			let session = url.searchParams.get('giscus') || ''
+			this.savedSession = localStorage.getItem(Giscus.SESSION_KEY)
+			url.searchParams.delete('giscus')
+			url.hash = ''
+			const cleanedLocation = url.toString()
+
+			if (session) {
+				localStorage.setItem(Giscus.SESSION_KEY, JSON.stringify(session))
+				history.replaceState(undefined, document.title, cleanedLocation)
+			} else if (this.savedSession) {
+				try {
+					session = JSON.parse(this.savedSession)
+				} catch (e) {
+					localStorage.removeItem(Giscus.SESSION_KEY)
+					throw e
+				}
+			}
+
+			this.params = {
+				origin: cleanedLocation,
+				session,
+				theme: this.getThemeName($theme.value),
+				reactionsEnabled: '0',
+				emitMetadata: '0',
+				inputPosition: 'bottom',
+				repo: REPOSITERY,
+				strict: '0',
+				term: this.dataset.discussion,
+			} as Record<string, string>
+
+			// Check messages from the iframe
+			const messageCallback = this.messageCallback.bind(this)
+			window.addEventListener('message', messageCallback)
+
+			// Update iframe theme on change
+			const removeThemeListener = $theme.listen((isDark) => {
+				;(this.contentWindow as Window).postMessage(
+					{
+						giscus: {
+							setConfig: {
+								theme: this.getThemeName(isDark),
+							},
+						},
+					},
+					'https://giscus.app',
+				)
+			})
+
+			this.clearEvents = () => {
+				window.removeEventListener('message', messageCallback)
+				removeThemeListener()
+			}
+
+			this.load()
+		}
+
+		disconnectedCallback() {
+			this.clearEvents()
+		}
+
+		messageCallback(event: MessageEvent<any>) {
+			if (event.origin !== Giscus.ORIGIN) return
+
+			const { data } = event
+			if (!(typeof data === 'object' && data.giscus)) return
+
+			if (data.giscus.resizeHeight) {
+				this.style.height = `${data.giscus.resizeHeight}px`
+			}
+
+			if (data.giscus.signOut) {
+				localStorage.removeItem(Giscus.SESSION_KEY)
+				console.warn('User has logged out. Session has been cleared.')
+				this.signOut()
+				return
+			}
+
+			if (!data.giscus.error) return
+			const message = data.giscus.error
+			if (
+				message.includes('Bad credentials') ||
+				message.includes('Invalid state value') ||
+				message.includes('State has expired')
+			) {
+				// Might be because token is expired or other causes
+				if (localStorage.getItem(Giscus.SESSION_KEY) !== null) {
+					localStorage.removeItem(Giscus.SESSION_KEY)
+					console.error(`${message}. Session has been cleared.`)
+					this.signOut()
+				} else if (!this.savedSession) {
+					console.error(
+						`${message}. No session is stored initially. ${Giscus.SUGGESTION}`,
+					)
+				}
+			} else if (message.includes('Discussion not found')) {
+				console.error(
+					`[giscus] ${message}. A new discussion will be created if a comment/reaction is submitted.`,
+				)
+			} else if (message.includes('API rate limit exceeded')) {
+				console.error(message)
+			} else {
+				console.error(`${message}. ${Giscus.SUGGESTION}`)
+			}
+		}
+
+		signOut() {
+			delete this.params.session
+			this.load()
+		}
+
+		load() {
+			this.src = `${Giscus.ORIGIN}/${$locale.value}/widget?${new URLSearchParams(this.params)}`
+		}
+
+		getThemeName(isDark: boolean): string {
+			return isDark ? 'light' : 'dark'
+		}
+	}
+
+	customElements.define('giscus-frame', GiscusFrame, { extends: 'iframe' })
+</script>
+
+<iframe
+	is="giscus-frame"
+	style="opacity:0"
+	data-discussion={discussion}
+	loading="lazy"
+>
+	{/* Opacity will be removed after load to avoid white flash*/}
+</iframe>
+
+<style lang="scss">
+	[is='giscus-frame'] {
+		width: 100%;
+		color-scheme: dark;
+	}
+</style>

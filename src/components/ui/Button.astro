@@ -1,0 +1,61 @@
+---
+import type { HTMLAttributes, HTMLTag } from 'astro/types'
+import { p } from '@/modules/component/server'
+
+type Props<T extends HTMLTag = 'button'> = HTMLAttributes<T> & {
+	el?: T
+	variant?: 'primary' | 'secondary' | 'tag'
+}
+
+const { variant, el: Element = 'button', ...rawProps } = Astro.props
+const props = p(rawProps)
+	.with(
+		'class',
+		variant == 'primary' ? null : variant, // As primary is the default variant
+	)
+	.with('role', Element != 'button' && 'button')
+	.end()
+---
+
+<Element {...props} class={props.class}>
+	<slot />
+</Element>
+
+<style lang="scss">
+	[class^='astro-'] {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		transition: transform 0.05s ease-in-out;
+		border-radius: 0.5em;
+		padding: 0.5em;
+		text-wrap: nowrap;
+
+		&:global(:not(.tag, .secondary)) {
+			background-color: theme.$color-black;
+			color: theme.$color-white;
+		}
+
+		&:global(.secondary) {
+			border: solid 1px theme.$color-grey;
+		}
+
+		&:global(.tag) {
+			border: solid 1px theme.$color-grey;
+			font-family: monospace;
+		}
+
+		svg {
+			width: 1em;
+			height: 1em;
+		}
+
+		&:hover {
+			transform: scale(1.05);
+		}
+
+		&:focus {
+			transform: scale(0.95);
+		}
+	}
+</style>

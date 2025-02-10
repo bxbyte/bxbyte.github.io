@@ -1,12 +1,12 @@
 ---
-import { Section } from '@/components/sections'
-import { getLocaleContent } from '@/libs/i18n'
+import { Section } from '@/layouts'
+import { getLocaleContent } from '@/modules/i18n/content'
 import locales from './locales'
-import PostCard from '@/components/Postcard.astro'
+import PostCard from '@/components/post/Postcard.astro'
 import { getPostsByLocale } from '@/content'
 
 const content = getLocaleContent(locales, Astro)
-const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
+const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]
 ---
 
 <Section id="posts">
@@ -27,8 +27,10 @@ const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
 
 <style>
 	ul {
+		/* grid-auto-flow: column; */
 		display: grid;
-		grid-auto-flow: column;
+		grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
+		grid-auto-rows: 16em;
 		gap: 2em;
 		padding: 1em 0;
 	}

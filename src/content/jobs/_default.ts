@@ -70,7 +70,7 @@ const defaultJob = {
 				start: new Date('2020'),
 				end: new Date('2023'),
 			},
-		] as ComponentProps<typeof Timeline>['items'],
+		] as component.Props_<typeof Timeline>['items'],
 	},
 }
 export default defaultJob
@@ -98,7 +98,7 @@ declare global {
 			description: string
 			skills: string[][]
 			techs: string[][]
-			experiences: ComponentProps<typeof Timeline>['items']
+			experiences: component.Props_<typeof Timeline>['items']
 		}
 	} & PartialRecursive<typeof defaultJob>
 }

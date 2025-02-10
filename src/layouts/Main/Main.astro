@@ -1,22 +1,21 @@
 ---
 import layout from '@/styles/layout.module.scss'
-import locals from './locals'
-import ActiveLink from '@/components/navigation/ActiveLink.astro'
+import locales from './locales'
+import { ThemeToggle } from '@/modules/theme/components'
+
+import { Route } from '@/components/ui'
 import type { HTMLAttributes } from 'astro/types'
 import type Head from '@/components/Head.astro'
-import Skeleton from '@/layouts//Skeleton.astro'
+import { LocaleNav } from '@/modules/i18n/components'
 
-import LocaleSwitch from '@/components/locale-switch'
-import ThemeSwitch from '@/components/theme-switch'
-
-import { useLocaleContents } from '@/libs/i18n'
-import { Block } from '@/components/sections'
+import { useLocaleContents } from '@/modules/i18n/content'
+import { Block, Skeleton } from '@/layouts'
 
 export interface Props extends HTMLAttributes<'main'> {
-	head?: LocalComponentProps<typeof Head>
+	head?: i18n.NestedLocaleContent<component.Props_<typeof Head>>
 }
 
-export const { getStaticPaths, getLocaleContent } = useLocaleContents(locals)
+export const { getStaticPaths, getLocaleContent } = useLocaleContents(locales)
 const content = getLocaleContent(Astro)
 
 const { head, ...props } = Astro.props
@@ -26,21 +25,21 @@ const { head, ...props } = Astro.props
 	<!-- Slot forwarding -->
 	<slot name="head" slot="head" />
 
-	<Block tag="header" transition:persist-props>
+	<Block el="header" transition:persist-props>
 		<nav>
 			<ul>
 				{
-					content.navLinks.map(({ label, ...props }) => (
+					content.navLinks.map((props) => (
 						<li>
-							<ActiveLink {...props}>{label}</ActiveLink>
+							<Route {...(props as component.Props_<typeof Route>)} />
 						</li>
 					))
 				}
 			</ul>
 		</nav>
 		<div>
-			<LocaleSwitch />
-			<ThemeSwitch />
+			<LocaleNav />
+			<ThemeToggle />
 		</div>
 	</Block>
 
@@ -48,15 +47,15 @@ const { head, ...props } = Astro.props
 		<slot />
 	</main>
 
-	<Block tag="footer" transition:persist class={layout.chunk}>
+	<Block el="footer" transition:persist-props class={layout.chunk}>
 		<div>
 			{
 				content.footer.links.map(({ name, links }) => (
 					<ul>
 						<li>{name}</li>
-						{links.map(({ label, ...props }) => (
+						{links.map((props) => (
 							<li>
-								<ActiveLink {...props}>{label}</ActiveLink>
+								<Route {...props} />
 							</li>
 						))}
 					</ul>
@@ -66,9 +65,7 @@ const { head, ...props } = Astro.props
 		</div>
 		<p>
 			{content.footer.copyrigth.whenwho}
-			<ActiveLink href={content.footer.copyrigth.license.href}
-				>{content.footer.copyrigth.license.label}</ActiveLink
-			>
+			<Route direction="right" {...content.footer.copyrigth.license} />
 		</p>
 	</Block>
 </Skeleton>
@@ -148,7 +145,6 @@ const { head, ...props } = Astro.props
 
 				a {
 					color: theme.$color-main;
-					--x-factor: 1;
 				}
 			}
 		}

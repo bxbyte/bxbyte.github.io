@@ -19,20 +19,7 @@ import '@fontsource/fira-mono'
 	}
 
 	/// Theme implementation
-
 	body {
-		background: theme.$color-white;
 		min-height: 100vh;
-		color: theme.$color-black;
-
-		@each $var in theme.$theme-vars {
-			--#{list.nth($var, 1)}: #{list.nth($var, 2)};
-		}
-
-		&.light {
-			@each $var in theme.$theme-vars {
-				--#{list.nth($var, 1)}: #{list.nth($var, 3)};
-			}
-		}
 	}
 </style>

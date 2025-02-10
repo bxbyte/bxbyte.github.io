@@ -1,0 +1,159 @@
+---
+import type { PostHydrated } from '@/content'
+import GridArt from '@/components/tiles'
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import { getLocaleContent } from '@/modules/i18n/content'
+import { localeDefs } from '@/modules/i18n/config'
+import { Image } from 'astro:assets'
+import { Button } from '@/components/ui'
+import { Icon } from 'astro-icon/components'
+
+interface Props {
+	post: PostHydrated
+}
+
+const content = getLocaleContent(
+	{
+		actionCall: {
+			fr: 'Lire plus',
+			en: 'Read more',
+		},
+		share: {
+			fr: 'Partager',
+			en: 'Share',
+		},
+	},
+	Astro,
+)
+
+const MAX_DESCRIPTION_CHAR_LENGHT = 144,
+	MAX_DESCRIPTION_REGEXP = new RegExp(
+		`^.{1,${MAX_DESCRIPTION_CHAR_LENGHT}}\\w+`,
+	)
+
+function formatDescription(description: string) {
+	return description.length < MAX_DESCRIPTION_CHAR_LENGHT
+		? description
+		: description.match(MAX_DESCRIPTION_REGEXP) + '...'
+}
+
+const {
+	post: {
+		hash,
+		locale,
+		data: { title, description, cover },
+	},
+} = Astro.props
+---
+
+<a href={getRelativeLocaleUrl(Astro.currentLocale as string, '/posts/' + hash)}>
+	<article>
+		{
+			cover ? (
+				<Image src={cover} alt="cover" class="cover" />
+			) : (
+				<GridArt
+					preserveAspectRatio="xMidYMin slice"
+					width={6}
+					height={4}
+					seed={hash}
+					class="cover"
+				/>
+			)
+		}
+		<div>
+			<p role="heading">{title}</p>
+			{description && <p>{formatDescription(description)}</p>}
+			<footer>
+				<Button variant="tag">
+					{content.actionCall}
+					{
+						Astro.currentLocale != locale &&
+							` (${(localeDefs[locale] as any)[Astro.currentLocale as any]})`
+					}
+				</Button>
+				<Button variant="tag">
+					{content.share}
+					<Icon name="mdi:share-variant" />
+				</Button>
+			</footer>
+		</div>
+	</article>
+</a>
+
+<style lang="scss">
+	article {
+		display: grid;
+		position: relative;
+		grid-template-rows: 1fr auto;
+		gap: 1rem;
+		box-sizing: border-box;
+		border: 1px solid theme.$color-grey;
+		border-radius: 1rem;
+		padding: 1rem;
+		width: 100%;
+		height: 100%;
+
+		&,
+		* {
+			transition: 0.2s ease-in-out;
+			transition-property: grid, gap;
+		}
+
+		& > :is(img, svg) {
+			box-sizing: border-box;
+			border-radius: 0.5rem;
+			aspect-ratio: 16 / 9;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+
+			&:is(img) {
+				filter: grayscale(1);
+			}
+		}
+
+		& > div {
+			display: flex;
+			flex-direction: column;
+			height: max-content;
+			height: 100%;
+
+			& > * {
+				margin-bottom: 0.5rem;
+			}
+		}
+
+		p {
+			&[role='heading'] {
+				justify-content: space-between;
+				font-weight: bold;
+				text-wrap: balance;
+			}
+
+			&:not([role='heading']) {
+				display: -webkit-box;
+				overflow: hidden;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+			}
+		}
+
+		footer {
+			display: flex;
+			align-items: end;
+			gap: 1em;
+			margin-top: auto;
+			font-size: 0.85em;
+		}
+
+		&:hover {
+			grid-template-rows: 0fr auto;
+			gap: 0;
+
+			p:last-of-type {
+				display: inline;
+			}
+		}
+	}
+</style>

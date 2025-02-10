@@ -1,10 +1,11 @@
 ---
 import { Icon } from 'astro-icon/components'
-import Main from '@/layouts/Main'
-import PDF from '@/integrations/html2pdf/print'
+import { Main } from '@/layouts'
+import PDF from '@/modules/html2pdf/print'
 import pdfSkin from '@/styles/pdf/skin.module.scss'
-import { join, md } from '@/libs/format'
-import { useLocaleContents } from '@/libs/i18n'
+import { join } from '@/libs/ui/client'
+import md from '@/libs/server/md'
+import { useLocaleContents } from '@/modules/i18n/content'
 import Timeline from '@/components/timeline'
 import GridArt from '@/components/tiles'
 
@@ -98,7 +99,6 @@ const { job } = Astro.props
 					<section>
 						<h2>Diplômes</h2>
 						<Timeline
-							locale="fr"
 							items={job.cv.diplomas}
 							style="gap: 1em;--pad-left:.85em;margin-left:calc(1px - .225em);"
 						/>
@@ -106,7 +106,6 @@ const { job } = Astro.props
 					<section>
 						<h2>Projets relevants</h2>
 						<Timeline
-							locale="fr"
 							items={job.cv.experiences}
 							style="gap: 1em;--pad-left:.85em;margin-left:calc(1px - .225em);"
 						/>

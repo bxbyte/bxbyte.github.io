@@ -1,18 +1,17 @@
 import { type CollectionEntry, getCollection, getEntries } from 'astro:content'
 import { createHash } from 'crypto'
 
-import { defaultLocale, locales } from '@/libs/i18n'
+import { defaultLocale, locales } from '@/modules/i18n/config'
+import { matchLocalePattern } from '@/modules/i18n/content'
 
 import type { AuthorData, JobProps, PostData } from './config'
 
 export type * from './config'
 
-const LOCALS_PATH_REGEXP = Object.fromEntries(
-	locales.map((locale) => [
-		locale,
-		new RegExp(`\\/${locale}\\/|\\.${locale}\\..*$`),
-	]),
-) as { [locale in Locales]: RegExp }
+/**
+ * Try to match a path to some locale
+ */
+const matchLocalePath = matchLocalePattern((l) => `\\/${l}\\/|\\.${l}\\..*$`)
 
 type PostEntry = Omit<CollectionEntry<'posts'>, 'data'> & {
 	data: PostData
@@ -20,7 +19,7 @@ type PostEntry = Omit<CollectionEntry<'posts'>, 'data'> & {
 
 export type PostHydrated = Omit<CollectionEntry<'posts'>, 'data'> & {
 	hash: string
-	locale: Locales
+	locale: i18n.Locales
 	data: Omit<PostData, 'authors'> & {
 		authors?: AuthorData[]
 	}
@@ -37,23 +36,21 @@ export function unDatafied<T>({ data }: { data: T }): T {
 }
 
 export async function getPostsByLocale(): Promise<{
-	[locale in Locales]: PostHydrated[]
+	[locale in i18n.Locales]: PostHydrated[]
 }> {
 	const posts = await Promise.all(
 		(await getCollection('posts')).map(async (post: PostEntry) => {
 			const filePath = (post as any).filePath as string,
-				localeRegexp = (
-					Object.entries(LOCALS_PATH_REGEXP) as [Locales, RegExp][]
-				)
-					.map((t) => t[1].test(filePath) && t)
-					.filter(Boolean)[0]
+				localeMatch = matchLocalePath(filePath)
 
-			var locale = defaultLocale as Locales,
-				toHash: string = filePath
+			var locale = defaultLocale,
+				toHash = filePath
 
-			if (localeRegexp) {
-				locale = localeRegexp[0]
-				toHash = filePath.replace(localeRegexp[1], '')
+			// If the path match a locale specific content
+			if (localeMatch) {
+				locale = localeMatch[0]
+				// Make sure the hash stay the same for any other locales
+				toHash = filePath.replace(localeMatch[1], '')
 			}
 
 			return {
@@ -84,7 +81,7 @@ export async function getPostsByLocale(): Promise<{
 			),
 		]),
 	) as {
-		[locale in Locales]: PostHydrated[]
+		[locale in i18n.Locales]: PostHydrated[]
 	}
 
 	return postByLocal

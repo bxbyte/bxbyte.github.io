@@ -1,10 +1,9 @@
 ---
-import Main from '@/layouts/Main'
 import layoutStyles from '@/styles/layout.module.scss'
 import { getPostsByLocale } from '@/content'
-import { Section } from '@/components/sections'
-import { useLocaleContents } from '@/libs/i18n'
-import PostCard from '@/components/Postcard.astro'
+import { Main, Section } from '@/layouts'
+import { useLocaleContents } from '@/modules/i18n/content'
+import PostCard from '@/components/post/Postcard.astro'
 
 export const { getStaticPaths, getLocaleContent } = useLocaleContents({
 	what: {
@@ -16,9 +15,8 @@ export const { getStaticPaths, getLocaleContent } = useLocaleContents({
 		fr: 'Voir plus',
 	},
 })
-const content = getLocaleContent(Astro)
 
-const posts = (await getPostsByLocale())[Astro.currentLocale as Locales]
+const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]
 
 function formatDate(date: Date) {
 	return date.toLocaleDateString(Astro.currentLocale, {

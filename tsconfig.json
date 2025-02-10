@@ -1,8 +1,9 @@
 {
 	"extends": "astro/tsconfigs/base",
-	"include": [".astro/types.d.ts", "**/*"],
+	"include": [".astro/types.d.ts", "**/*", "src/styles/theme"],
 	"exclude": ["dist", "node_modules"],
 	"compilerOptions": {
+		"experimentalDecorators": true,
 		"jsxImportSource": "astro",
 		"skipLibCheck": true,
 		"strictNullChecks": true,

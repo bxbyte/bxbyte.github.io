@@ -1,0 +1,72 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import Route from './Route.astro'
+
+interface Props extends HTMLAttributes<'nav'> {
+	path?: string
+	displayPath?: string
+}
+
+let { path = Astro.url.pathname, displayPath, ...props } = Astro.props
+displayPath ||= path
+
+let pathChunk = path.split('/').filter(Boolean),
+	displayPathChunk = displayPath.split('/').filter(Boolean)
+
+// Remove local
+if (pathChunk.at(0) == Astro.currentLocale) {
+	pathChunk.splice(0, 1)
+	displayPathChunk.splice(0, 1)
+}
+
+if (pathChunk.length != displayPathChunk.length)
+	throw new Error(
+		`Display path and real path are not equals:\n\t${pathChunk} \n\t${displayPathChunk}`,
+	)
+---
+
+<nav {...props}>
+	<ul>
+		<li>
+			<Route label="home" match="equal" href="/" />
+		</li>
+		{
+			displayPathChunk.map((chunk, i) => (
+				<li>
+					<Route
+						match="equal"
+						label={chunk}
+						href={'/' + pathChunk.slice(0, i + 1).join('/')}
+					/>
+				</li>
+			))
+		}
+	</ul>
+</nav>
+
+<style lang="scss">
+	ul {
+		$gap: 0.5em;
+		display: flex;
+		color: theme.$color-black;
+		font-size: 0.85em;
+		text-transform: uppercase;
+
+		&,
+		li {
+			gap: $gap;
+		}
+
+		li {
+			position: relative;
+			margin-right: calc($gap + 1ch);
+
+			&:not(:last-child):after {
+				position: absolute;
+				top: 0;
+				left: calc(100% + $gap);
+				content: '>';
+			}
+		}
+	}
+</style>

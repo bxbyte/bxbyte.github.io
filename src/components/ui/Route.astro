@@ -1,0 +1,82 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n'
+import Ref from './Ref.astro'
+
+type Props = component.Props_<typeof Ref> &
+	Match & {
+		href: string
+	}
+
+export type Match = {
+	match?: 'start' | 'equal'
+}
+
+var { href, match, ...props } = Astro.props,
+	isCurrentPage = false
+
+if (match) {
+	href = getRelativeLocaleUrl(Astro.currentLocale as string, href)
+
+	if (match == 'start') {
+		href = href.replace(/\/$/, '')
+		isCurrentPage = Astro.url.pathname.startsWith(href)
+	} else {
+		isCurrentPage = Astro.url.pathname == href
+	}
+}
+---
+
+<script>
+	import { define } from '@/modules/component/client'
+	import type { Match } from './Route.astro' // Self import server side type
+
+	// Route elements watched
+	const routeEl = {
+		equal: new Set<RouteEl>(),
+		start: new Set<RouteEl>(),
+	}
+
+	@define('active-link', { extends: 'a' })
+	class RouteEl extends HTMLAnchorElement {
+		dataset: Match = {} // For some reason setting a default is needed
+
+		constructor() {
+			super()
+			if (this.dataset.match) {
+				routeEl[this.dataset.match].add(this)
+			}
+		}
+
+		disconnectedCallback() {
+			if (this.dataset.match) routeEl[this.dataset.match].delete(this)
+		}
+
+		toggleActive(state?: boolean) {
+			this.classList.toggle('active', state)
+		}
+	}
+
+	// Watch events to update state
+	document.addEventListener('astro:after-swap', () => {
+		routeEl.start.forEach((el) =>
+			el.toggleActive(window.location.href.startsWith(el.href)),
+		)
+		routeEl.equal.forEach((el) =>
+			el.toggleActive(
+				el.href
+					.replace(/\/$/, '')
+					.endsWith(window.location.pathname.replace(/\/$/, '')),
+			),
+		)
+	})
+</script>
+
+<Ref
+	is="active-link"
+	href={href}
+	data-match={match}
+	defaultActive={isCurrentPage}
+	{...props}
+>
+	<slot />
+</Ref>

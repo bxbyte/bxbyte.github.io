@@ -4,69 +4,70 @@ import { Image } from 'astro:assets'
 import sharp, { type Sharp } from 'sharp'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
-import config from '!/astro.config'
 
-import { computeAssets } from '@/integrations/assets'
-
-type SharpMethod = {
-	[k in keyof Sharp as Sharp[k] extends Function ? k : never]: Sharp[k]
-}
-type SharpCall = {
-	[K in keyof SharpMethod]: { call: K; params?: Parameters<Sharp[K]> }
-}[keyof SharpMethod]
+import { compute } from '@/modules/compute/compute'
 
 interface Props extends HTMLAttributes<'svg'> {
-	src: ImageMetadata
+	src: string
 	rows?: number
 	cols?: number
 	type?: 'webp' | 'png' | 'jpeg'
-	sharpCallback?: (img: Sharp) => Promise<Sharp> | Sharp
+	imgProcessing?: (img: Sharp) => Promise<Sharp> | Sharp
 }
 
 var {
-	src: { src, width, height },
+	src,
 	rows = 4,
 	cols = 8,
 	type = 'webp',
-	sharpCallback = (v) => v,
+	imgProcessing = (v) => v,
 	...props
 } = Astro.props
 
-width = ~~(width / cols)
-height = ~~(height / rows)
+src = join(process.cwd(), decodeURI(src))
 
-src = src.replace(/^\/@fs|\?[^?]*$/gm, '')
-if (import.meta.env.PROD)
-	src = join(process.cwd(), config.outDir || '/dist', src)
+let { width, height, chunks } = await compute(
+	[src, type, imgProcessing.toString()], // Used as cache key
+	async (add) => {
+		const img = await imgProcessing(sharp(await readFile(src)))
 
-const chunks = await computeAssets(
-	async () => {
-		const img = await sharpCallback(sharp(await readFile(src)))
-		return (
-			await Promise.all(
-				Array.from({ length: cols }, (_, x) =>
-					Promise.all(
-						Array.from({ length: rows }, async (_, y) => ({
-							value: await img
-								.clone()
-								.extract({
-									width,
-									height,
-									left: x * width,
-									top: y * height,
-								})
-								[type]()
-								.toBuffer(),
-							x,
-							y,
-						})),
+		// Get chunk size
+		let { width, height } = (await img.metadata()) as Record<string, number>
+
+		width = Math.floor(width / cols)
+		height = Math.floor(height / rows)
+
+		return {
+			width,
+			height,
+			// Slice image into chunks
+			chunks: (
+				await Promise.all(
+					Array.from({ length: cols }, (_, x) =>
+						Promise.all(
+							Array.from({ length: rows }, async (_, y) => ({
+								x,
+								y,
+								href: await add(
+									await img
+										.clone()
+										.extract({
+											width,
+											height,
+											left: x * width,
+											top: y * height,
+										})
+										[type]()
+										.toBuffer(),
+									type,
+								),
+							})),
+						),
 					),
-				),
-			)
-		).flat()
+				)
+			).flat(),
+		}
 	},
-	type,
-	[src, type, width, height, sharpCallback.toString()], // Use this combinaison as cache key
 )
 ---
 
