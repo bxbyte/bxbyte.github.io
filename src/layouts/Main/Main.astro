@@ -3,16 +3,16 @@ import layout from '@/styles/layout.module.scss'
 import locales from './locales'
 import { ThemeToggle } from '@/modules/theme/components'
 
-import { Route } from '@/components/ui'
+import { Route } from '@/components'
 import type { HTMLAttributes } from 'astro/types'
-import type Head from '@/components/Head.astro'
+import type { SeoHeaders } from '@/modules/seo/components'
 import { LocaleNav } from '@/modules/i18n/components'
 
 import { useLocaleContents } from '@/modules/i18n/content'
 import { Block, Skeleton } from '@/layouts'
 
 export interface Props extends HTMLAttributes<'main'> {
-	head?: i18n.NestedLocaleContent<component.Props_<typeof Head>>
+	head?: i18n.NestedLocaleContent<component.Props_<typeof SeoHeaders>>
 }
 
 export const { getStaticPaths, getLocaleContent } = useLocaleContents(locales)

@@ -237,7 +237,6 @@
 			background: theme.$color-white;
 			padding: 0 0.5em;
 			content: attr(data-text);
-			// color: color-mix(in srgb, theme.$color-grey, theme.$color-black 10%);
 			text-align: center;
 			white-space: pre;
 		}

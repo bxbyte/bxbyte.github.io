@@ -1,5 +1,5 @@
 ---
-import infos from '@/data/infos'
+import seo from '../config'
 import merge from 'deepmerge'
 
 type MetaData_<T> = Record<string, string | string[] | T | undefined>
@@ -12,7 +12,7 @@ export interface Props {
 	script?: { content?: string; src?: string; type?: string }[]
 }
 
-const { title, meta, link, script } = merge(infos.head, Astro.props) as Props
+const { title, meta, link, script } = merge(seo, Astro.props) as Props
 
 function metaProp(meta: MetaData, propPrefix = ''): string {
 	if (propPrefix) propPrefix += ':'

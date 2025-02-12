@@ -1,13 +1,11 @@
 import pkg from './package.json'
 import mdx from '@astrojs/mdx'
-import sitemap from '@astrojs/sitemap'
 import { transformerNotationDiff } from '@shikijs/transformers'
 
 import type { AstroUserConfig } from 'astro'
 import compress from 'astro-compress'
 import compressor from 'astro-compressor'
 import icon from 'astro-icon'
-import robotsTxt from 'astro-robots-txt'
 import { defineConfig, envField } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
@@ -16,6 +14,7 @@ import compute from './src/modules/compute'
 import html2pdf from './src/modules/html2pdf'
 import i18n from './src/modules/i18n'
 import theme from './src/modules/theme'
+import seo from './src/modules/theme'
 
 const pseudoConfig = {
 	experimental: { contentIntellisense: true },
@@ -43,8 +42,8 @@ const pseudoConfig = {
 	integrations: [
 		i18n,
 		theme,
-		compute('/_/'),
-		// rename({ rename: {} }),
+		seo,
+		compute('_/'),
 		icon(),
 		mdx({
 			remarkPlugins: [remarkMath],
@@ -58,9 +57,6 @@ const pseudoConfig = {
 			],
 		}),
 		await html2pdf(pkg.config),
-		// assets('/_/'),
-		robotsTxt(),
-		sitemap(),
 		compress(),
 		compressor({ gzip: true, brotli: true }),
 	],

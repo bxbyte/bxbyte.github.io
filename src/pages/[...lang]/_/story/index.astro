@@ -2,8 +2,8 @@
 import locales from './locales'
 import { Section } from '@/layouts'
 
-import GridArt from '@/components/tiles'
-import Timeline from '@/components/timeline'
+import { PatternGrid } from '@/components/graphic'
+import Timeline from '@/components/docs/Timeline'
 import { getLocaleContent } from '@/modules/i18n/content'
 
 const content = getLocaleContent(locales, Astro)
@@ -12,7 +12,8 @@ const content = getLocaleContent(locales, Astro)
 <Section id="history" layout="col2">
 	<div>
 		<h1>{content.title}</h1>
-		<GridArt
+		<PatternGrid
+			animated
 			width={12}
 			height={4}
 			seed="hello "

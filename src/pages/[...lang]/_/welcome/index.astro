@@ -2,24 +2,23 @@
 import { Section } from '@/layouts'
 import { getLocaleContent } from '@/modules/i18n/content'
 import locales from './locales'
-import ChunkedImage from '@/components/ChunkedImage.astro'
+import { ImageGrid } from '@/components'
 import backImg from './back.png?url'
 import { grainUrl } from '@/styles/theme'
 import sharp from 'sharp'
-
-const imgScale = 0.5
 
 const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="welcome">
 	<div slot="back">
-		<ChunkedImage
+		<ImageGrid
 			src={backImg}
 			rows={2}
-			cols={8}
+			cols={4}
 			preserveAspectRatio="xMidYMin slice"
 			imgProcessing={async (img) => {
+				const imgScale = 0.4
 				const { width, height } = (await img.metadata()) as Record<
 					string,
 					number

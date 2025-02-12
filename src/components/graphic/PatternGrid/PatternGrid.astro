@@ -4,6 +4,8 @@ import { getRandom } from './random'
 import type { HTMLAttributes } from 'astro/types'
 import { gradients } from './Gradient.global.astro'
 import grainUrl from './grain.svg?url'
+import { compute } from '@/modules/compute/compute'
+import { p } from '@/modules/component/server'
 
 const patternValues = Object.values(patterns)
 
@@ -11,15 +13,34 @@ interface Props extends HTMLAttributes<'svg'> {
 	width: number
 	height: number
 	seed: any
+	animated?: boolean
 }
 
-const { width, height, seed, ...props } = Astro.props,
-	random = getRandom(seed)
+const { width, height, seed, animated, ...props } = Astro.props
 
-const id = (
-	getRandom(seed + '/' + width + '/' + height)() *
-	(1 << 16)
-).toString(32)
+const { maskId, tiles } = await compute([width, height, seed], () => {
+	const random = getRandom(seed)
+	return {
+		maskId: (
+			getRandom(seed + '/' + width + '/' + height)() *
+			(1 << 16)
+		).toString(32),
+		tiles: Array.from({ length: width }, (_, x) =>
+			Array.from({ length: height }, (_, y) => {
+				let rotation = new Array(3).fill(0)
+				rotation[~~(3 * random())] = [1, -1][Math.round(random())]
+				return {
+					x,
+					y,
+					r: rotation.join(),
+					fill: patternValues[
+						Math.round(random() * (patternValues.length - 1))
+					],
+				}
+			}),
+		).flat(),
+	}
+})
 ---
 
 <svg
@@ -30,40 +51,34 @@ const id = (
 	{...props}
 >
 	<defs>
-		<mask id={id} style={{ '--width': width, '--height': height }}>
+		<mask id={maskId} style={{ '--width': width, '--height': height }}>
 			<rect width="100%" height="100%" fill="#fff"></rect>
 			{
-				Array.from({ length: width }, (_, x) =>
-					Array.from({ length: height }, (_, y) => ({ x, y })),
-				)
-					.flat()
-					.map((coord) => (
-						<rect
-							style={{
-								'--x': coord.x,
-								'--y': coord.y,
-								'--r': (() => {
-									let rotationAxis = new Array(3).fill(0)
-									rotationAxis[~~(3 * random())] = [1, -1][Math.round(random())]
-									return rotationAxis.join()
-								})(),
-							}}
-							fill={
-								patternValues[Math.round(random() * (patternValues.length - 1))]
-							}
-						/>
-					))
+				tiles.map(({ x, y, r, fill }) => (
+					<rect
+						style={p({
+							'--x': x,
+							'--y': y,
+							'--r': animated && r,
+						}).end()}
+						fill={fill}
+					/>
+				))
 			}
 		</mask>
 	</defs>
-	<rect mask={`url(#${id})`} width="100%" height="100%" fill={gradients.main}
-	></rect>
+	<rect
+		mask={`url(#${maskId})`}
+		width="100%"
+		height="100%"
+		fill={gradients.main}
+	>
+	</rect>
 </svg>
 
 <style lang="scss">
 	svg {
 		& mask > rect:not(:first-child) {
-			// --default-transform: scale(0.9);
 			--default-transform: scale(1.01);
 			transform: var(--default-transform);
 			transform-origin: calc((var(--x) + 0.5) * 1px)

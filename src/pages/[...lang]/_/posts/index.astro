@@ -2,7 +2,7 @@
 import { Section } from '@/layouts'
 import { getLocaleContent } from '@/modules/i18n/content'
 import locales from './locales'
-import PostCard from '@/components/post/Postcard.astro'
+import { PostCard } from '@/components'
 import { getPostsByLocale } from '@/content'
 
 const content = getLocaleContent(locales, Astro)

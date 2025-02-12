@@ -1,6 +1,6 @@
 import meImgUrl from './me.png?url'
 
-import type Timeline from '@/components/timeline'
+import type Timeline from '@/components/docs/Timeline'
 
 interface Link {
 	value: string

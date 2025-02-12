@@ -1,11 +1,11 @@
 ---
 import type { PostHydrated } from '@/content'
-import GridArt from '@/components/tiles'
+import { PatternGrid } from '@/components/graphic'
 import { getRelativeLocaleUrl } from 'astro:i18n'
 import { getLocaleContent } from '@/modules/i18n/content'
 import { localeDefs } from '@/modules/i18n/config'
 import { Image } from 'astro:assets'
-import { Button } from '@/components/ui'
+import { Button } from '@/components/form'
 import { Icon } from 'astro-icon/components'
 
 interface Props {
@@ -52,7 +52,7 @@ const {
 			cover ? (
 				<Image src={cover} alt="cover" class="cover" />
 			) : (
-				<GridArt
+				<PatternGrid
 					preserveAspectRatio="xMidYMin slice"
 					width={6}
 					height={4}

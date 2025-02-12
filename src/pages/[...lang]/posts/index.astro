@@ -3,7 +3,7 @@ import layoutStyles from '@/styles/layout.module.scss'
 import { getPostsByLocale } from '@/content'
 import { Main, Section } from '@/layouts'
 import { useLocaleContents } from '@/modules/i18n/content'
-import PostCard from '@/components/post/Postcard.astro'
+import { PostCard } from '@/components'
 
 export const { getStaticPaths, getLocaleContent } = useLocaleContents({
 	what: {

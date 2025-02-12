@@ -9,63 +9,58 @@ import { compute } from '@/modules/compute/compute'
 
 interface Props extends HTMLAttributes<'svg'> {
 	src: string
-	rows?: number
-	cols?: number
+	rows: number
+	cols: number
 	type?: 'webp' | 'png' | 'jpeg'
 	imgProcessing?: (img: Sharp) => Promise<Sharp> | Sharp
 }
 
-var {
+let {
 	src,
-	rows = 4,
-	cols = 8,
+	rows,
+	cols,
 	type = 'webp',
 	imgProcessing = (v) => v,
 	...props
 } = Astro.props
 
-src = join(process.cwd(), decodeURI(src))
+src = import.meta.env.DEV
+	? join(process.cwd(), decodeURI(src))
+	: join(process.cwd(), 'dist', decodeURI(src))
 
 let { width, height, chunks } = await compute(
-	[src, type, imgProcessing.toString()], // Used as cache key
+	[src, type, imgProcessing.toString(), Astro.routePattern], // Used as cache key
 	async (add) => {
 		const img = await imgProcessing(sharp(await readFile(src)))
 
-		// Get chunk size
 		let { width, height } = (await img.metadata()) as Record<string, number>
-
 		width = Math.floor(width / cols)
 		height = Math.floor(height / rows)
 
 		return {
 			width,
 			height,
-			// Slice image into chunks
-			chunks: (
-				await Promise.all(
-					Array.from({ length: cols }, (_, x) =>
-						Promise.all(
-							Array.from({ length: rows }, async (_, y) => ({
-								x,
-								y,
-								href: await add(
-									await img
-										.clone()
-										.extract({
-											width,
-											height,
-											left: x * width,
-											top: y * height,
-										})
-										[type]()
-										.toBuffer(),
-									type,
-								),
-							})),
+			chunks: await Promise.all(
+				Array.from({ length: cols }, (_, x) =>
+					Array.from({ length: rows }, async (_, y) => ({
+						x,
+						y,
+						href: await add(
+							await img
+								.clone()
+								.extract({
+									width,
+									height,
+									left: x * width,
+									top: y * height,
+								})
+								[type]()
+								.toBuffer(),
+							type,
 						),
-					),
-				)
-			).flat(),
+					})),
+				).flat(),
+			),
 		}
 	},
 )

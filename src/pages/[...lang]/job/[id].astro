@@ -4,10 +4,9 @@ import { Main } from '@/layouts'
 import PDF from '@/modules/html2pdf/print'
 import pdfSkin from '@/styles/pdf/skin.module.scss'
 import { join } from '@/libs/ui/client'
-import md from '@/libs/server/md'
+import { md } from '@/modules/component/server'
 import { useLocaleContents } from '@/modules/i18n/content'
-import Timeline from '@/components/timeline'
-import GridArt from '@/components/tiles'
+import { PatternGrid, Timeline } from '@/components'
 
 import { type JobProps, getJobs } from '@/content'
 
@@ -32,7 +31,7 @@ const { job } = Astro.props
 		<PDF targetSelector="#pdf" size="a4" scale={5} authors={job.me.name}>
 			<section id="cv" class={pdfSkin.fullOutline}>
 				<section id="picture" aria-flowto="header">
-					<GridArt
+					<PatternGrid
 						style="position:absolute;align-self: end; width: 100%; height: 100%"
 						width={3}
 						height={3}

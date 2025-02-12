@@ -13,6 +13,6 @@ const { id } = Astro.props,
 if (!author) throw new Error('Author id noexistent')
 ---
 
-<a href={author.data.social} title={`${author.data.name} social link`}
-	>{author.data.name}</a
->
+<a href={author.data.social} title={`${author.data.name} social link`}>
+	{author.data.name}
+</a>

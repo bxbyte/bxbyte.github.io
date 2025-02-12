@@ -13,7 +13,7 @@ export default async (
 	>,
 ) => {
 	return {
-		name: 'html2pdf',
+		name: import.meta.filename,
 		hooks: {
 			'astro:config:setup': async ({ addDevToolbarApp, logger, config }) => {
 				logger = logger.fork('PDF')
