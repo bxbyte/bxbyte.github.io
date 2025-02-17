@@ -5,10 +5,13 @@
 
 /// Accent Colors
 
-$color-main: theme.define(color-main, #a8fcb3, #19897a);
-$gradient-main-color1: theme.define(gradient-main-color1, #3ff08e, #0ed6a4);
-$gradient-main-color2: theme.define(gradient-main-color2, #8560ec, #25186e);
-// $gradient-main-color2: theme.define(gradient-main-color2, #a8fcb3, #86b8f7);
+// $color-main: theme.define(color-main, #a8fcb3, #5837ec);
+// $gradient-main-color1: theme.define(gradient-main-color1, #3ff08e, #0ed6a4);
+// $gradient-main-color2: theme.define(gradient-main-color2, #8560ec, #25186e);
+
+$color-main: theme.define(color-main, #91a9f8, #4b68da);
+$gradient-main-color1: theme.define(gradient-main-color1, #3fb2cf, #7fa4f5);
+$gradient-main-color2: theme.define(gradient-main-color2, #6013b8, #5a13b8);
 
 /// 50 Shades of gray
 

@@ -1,0 +1,71 @@
+---
+import { Picture } from 'astro:assets'
+import { p } from '@/modules/composer/server'
+
+type PictureProps = component.Props_<typeof Picture>
+
+type Props = Pick<
+	component.Props_<typeof Picture>,
+	'src' | 'alt' | 'width' | 'height'
+> &
+	PictureProps['pictureAttributes']
+
+const { src, alt, width, height, ...rawProps } = Astro.props,
+	props = p(rawProps).with('is', 'optimized-image').with('class', 'loading')
+---
+
+<script>
+	import { define } from '@/modules/composer/client'
+
+	@define('optimized-image', { extends: 'picture' })
+	class OptimizedImage extends HTMLPictureElement {
+		connectedCallback() {
+			const img = this.lastElementChild as HTMLImageElement
+			if (img.complete) this.setLoaded()
+			else
+				img.addEventListener('load', this.setLoaded.bind(this), {
+					once: true,
+				})
+		}
+
+		setLoaded() {
+			this.classList.remove('loading')
+		}
+	}
+</script>
+
+<Picture
+	format="avif"
+	formats={['avif', 'webp', 'jpg']}
+	fallbackFormat="webp"
+	src={src as ImageMetadata}
+	alt={alt}
+	width={width}
+	height={height}
+	pictureAttributes={props.end()}
+/>
+
+<style lang="scss">
+	picture {
+		position: relative;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		&.loading::after {
+			position: absolute;
+			top: 0;
+			left: 0;
+			align-content: center;
+			background-color: theme.$color-grey;
+			width: 100%;
+			height: 100%;
+			content: 'loading...';
+			text-align: center;
+		}
+	}
+</style>

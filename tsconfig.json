@@ -4,6 +4,7 @@
 	"exclude": ["dist", "node_modules"],
 	"compilerOptions": {
 		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
 		"jsxImportSource": "astro",
 		"skipLibCheck": true,
 		"strictNullChecks": true,

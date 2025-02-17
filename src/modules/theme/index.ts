@@ -8,7 +8,7 @@ const variablesUrl = join(dirname(import.meta.url), './styles/variables.scss')
  * Define theme related variables (colors, shades, ...)
  */
 export default {
-	name: import.meta.filename,
+	name: 'theme',
 	hooks: {
 		async 'astro:config:setup'({ updateConfig }) {
 			updateConfig({

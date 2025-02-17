@@ -2,20 +2,20 @@
 import { Section } from '@/layouts'
 import { getLocaleContent } from '@/modules/i18n/content'
 import locales from './locales'
-import { ImageGrid } from '@/components'
-import backImg from './back.png?url'
+import { GridImage } from '@/components'
 import { grainUrl } from '@/styles/theme'
 import sharp from 'sharp'
+import backImgPath from './back.png?path'
 
 const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="welcome">
 	<div slot="back">
-		<ImageGrid
-			src={backImg}
+		<GridImage
+			src={backImgPath}
 			rows={2}
-			cols={4}
+			cols={8}
 			preserveAspectRatio="xMidYMin slice"
 			imgProcessing={async (img) => {
 				const imgScale = 0.4

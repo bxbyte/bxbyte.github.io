@@ -1,6 +1,6 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
-import { newId } from '@/modules/component/server'
+import { newId } from '@/modules/composer/server'
 
 type Props<T extends 'input' | 'textarea' = 'input'> = HTMLAttributes<T> & {
 	el?: T

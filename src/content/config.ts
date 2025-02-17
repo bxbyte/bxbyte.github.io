@@ -44,7 +44,7 @@ export const collections = {
 			pattern: ['./posts/**/*.mdx', '!./posts/**/_*.mdx'],
 			base: (import.meta as any).dirname,
 		}),
-		schema: ({ image }: { image: ImageFunction }) =>
+		schema: ({ image }) =>
 			PostData.and(
 				z.object({
 					cover: z.optional(image()),

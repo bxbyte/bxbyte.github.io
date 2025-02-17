@@ -1,3 +1,4 @@
+import { env } from './astro.env'
 import pkg from './package.json'
 import mdx from '@astrojs/mdx'
 import { transformerNotationDiff } from '@shikijs/transformers'
@@ -6,17 +7,20 @@ import type { AstroUserConfig } from 'astro'
 import compress from 'astro-compress'
 import compressor from 'astro-compressor'
 import icon from 'astro-icon'
-import { defineConfig, envField } from 'astro/config'
+import { defineConfig } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 
+import composer from './src/modules/composer'
 import compute from './src/modules/compute'
 import html2pdf from './src/modules/html2pdf'
 import i18n from './src/modules/i18n'
+import seo from './src/modules/seo'
 import theme from './src/modules/theme'
-import seo from './src/modules/theme'
 
 const pseudoConfig = {
+	env,
+	site: process.env.SERVER_URL,
 	experimental: { contentIntellisense: true },
 	output: 'static',
 	scopedStyleStrategy: 'class',
@@ -43,6 +47,7 @@ const pseudoConfig = {
 		i18n,
 		theme,
 		seo,
+		composer(),
 		compute('_/'),
 		icon(),
 		mdx({
@@ -58,42 +63,23 @@ const pseudoConfig = {
 		}),
 		await html2pdf(pkg.config),
 		compress(),
-		compressor({ gzip: true, brotli: true }),
-	],
-	env: {
-		schema: {
-			FORMSPREE_ID: envField.string({
-				context: 'client',
-				access: 'public',
-				default: 'mdoqjapd',
-			}),
-			REPOSITERY: envField.string({
-				context: 'client',
-				access: 'public',
-				default: 'bxbyte/bxbyte.github.io',
-			}),
-			REPOSITERY_PAGE: envField.string({
-				context: 'client',
-				access: 'public',
-				default: 'bxbyte/bxbyte.github.io',
-			}),
-			REPOSITERY_URL: envField.string({
-				context: 'client',
-				access: 'public',
-				default: 'https://github.com/bxbyte/bxbyte.github.io',
-			}),
-			REPOSITERY_OWNER: envField.string({
-				context: 'server',
-				access: 'public',
-				default: 'bxbyte',
-			}),
-			SERVER_URL: envField.string({
-				context: 'server',
-				access: 'public',
-				default: 'https://lucas-maillet.com',
-			}),
-		},
-	},
+		compressor({
+			fileExtensions: [
+				'.html',
+				'.svg',
+				'.xml',
+				'.cjs',
+				'.js',
+				'.mjs',
+				'.css',
+				'.txt',
+				'.jpg',
+				'.jpeg',
+				'.webp',
+				'.avif',
+			],
+		}),
+	].filter(Boolean),
 } as const satisfies AstroUserConfig
 
 // https://astro.build/config

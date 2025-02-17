@@ -1,5 +1,7 @@
+import { existsSync } from 'fs'
+import { writeFile } from 'fs/promises'
 import hashObject from 'object-hash'
-import { join } from 'path'
+import { dirname } from 'path'
 
 /**
  * Computed artefact informations
@@ -15,25 +17,15 @@ type ArtefactData = Buffer | string
  * Compute store, with shared infos relative to computed & cached data
  */
 export const $compute: {
-	computed: Record<
-		string,
-		{
-			returned: any
-			data: Record<string, { value: ArtefactData; ext: string }>
-		}
-	>
-	routePrefix: string
+	getArtefactAbsolutePath: (filename: string) => string
+	getArtefactRelativePath: (filename: string) => string
+	computed: Record<string, any>
 } = ((global as any)['$compute'] ||= {
 	computed: {},
 })
 
-export const routePatternFormat = ({ hash, id, ext }: ArtefactMetadata) =>
-		`${hash}-${id}.${ext}`,
-	routePattern = routePatternFormat({
-		hash: '[hash]',
-		id: '[id]',
-		ext: '[ext]',
-	})
+export const filenameFormat = ({ hash, id, ext }: ArtefactMetadata) =>
+	`${hash}-${id}.${ext}`
 
 /**
  * Compute data & store it in cache
@@ -45,7 +37,7 @@ export const routePatternFormat = ({ hash, id, ext }: ArtefactMetadata) =>
 export async function compute<T>(
 	key: any,
 	computer: (
-		add: (data: ArtefactData, filetype: string) => Promise<string>,
+		add: (data: ArtefactData, filetype: string, id?: string) => Promise<string>,
 	) => T,
 ): Promise<T> {
 	const hash = hashObject(key)
@@ -53,29 +45,23 @@ export async function compute<T>(
 
 	// If not already computed & cached
 	if (!computed) {
-		const data = {}
 		let lastId = 0
-		computed = $compute.computed[hash] = {
-			data,
-			returned: await computer(async (value: ArtefactData, ext: string) => {
-				const id = `${lastId++}`,
-					url = join(
-						'/',
-						$compute.routePrefix,
-						routePatternFormat({
-							hash,
-							ext,
-							id,
-						}),
-					)
-				data[id] = {
-					value,
-					ext,
-				}
-				return url
-			}),
-		}
+		computed = $compute.computed[hash] = await computer(
+			async (value, ext, id) => {
+				id ||= `${lastId++}` // In case no id was provided
+
+				// Write artefact
+				const filename = filenameFormat({ hash, ext, id })
+				await writeFile(
+					$compute.getArtefactAbsolutePath(filename),
+					value as any,
+				)
+
+				// Return path to artefact
+				return $compute.getArtefactRelativePath(filename)
+			},
+		)
 	}
 
-	return computed.returned
+	return computed
 }

@@ -3,7 +3,6 @@ import iconSVG from './devtool/assets/icon.svg?raw'
 import type { AstroIntegration } from 'astro'
 
 import server from './devtool/server'
-import toolbarURL from './devtool/toolbar?url'
 import Renderer from './server/renderer'
 
 export default async (
@@ -13,7 +12,7 @@ export default async (
 	>,
 ) => {
 	return {
-		name: import.meta.filename,
+		name: 'html2pdf',
 		hooks: {
 			'astro:config:setup': async ({ addDevToolbarApp, logger, config }) => {
 				logger = logger.fork('PDF')
@@ -24,13 +23,13 @@ export default async (
 					...setupParam,
 				})
 
-				if (import.meta.env.DEV) {
+				if (!import.meta.env.PROD) {
 					logger.debug('Loading toolbar...')
 					addDevToolbarApp({
 						id: 'PDF',
 						name: 'HTML to PDF',
 						icon: iconSVG,
-						entrypoint: toolbarURL,
+						entrypoint: new URL('./devtool/toolbar.ts', import.meta.url),
 					})
 				}
 			},

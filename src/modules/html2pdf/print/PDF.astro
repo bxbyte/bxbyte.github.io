@@ -32,7 +32,7 @@ const props = props_ as Props & typeof DEFAULT_PROPS & { size: RawPageSize }
 ---
 
 <Fragment slot="head">
-	{import.meta.env.DEV && <Metadata {...props} />}
+	{!import.meta.env.PROD && <Metadata {...props} />}
 	<PagedJS {...props} />
 </Fragment>
 

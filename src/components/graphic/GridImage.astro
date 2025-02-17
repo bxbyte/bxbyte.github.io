@@ -1,14 +1,14 @@
 ---
 import type { HTMLAttributes } from 'astro/types'
-import { Image } from 'astro:assets'
 import sharp, { type Sharp } from 'sharp'
 import { readFile } from 'fs/promises'
-import { join } from 'path'
 
 import { compute } from '@/modules/compute/compute'
+import OptimizedImage from './OptimizedImage.astro'
+import type { Metadata } from './types'
 
 interface Props extends HTMLAttributes<'svg'> {
-	src: string
+	src: string | URL
 	rows: number
 	cols: number
 	type?: 'webp' | 'png' | 'jpeg'
@@ -24,28 +24,25 @@ let {
 	...props
 } = Astro.props
 
-src = import.meta.env.DEV
-	? join(process.cwd(), decodeURI(src))
-	: join(process.cwd(), 'dist', decodeURI(src))
-
-let { width, height, chunks } = await compute(
-	[src, type, imgProcessing.toString(), Astro.routePattern], // Used as cache key
+let { width, height, format, chunks } = await compute(
+	[src, type, imgProcessing.toString()], // Used as cache key
 	async (add) => {
 		const img = await imgProcessing(sharp(await readFile(src)))
 
-		let { width, height } = (await img.metadata()) as Record<string, number>
+		let { width, height, format } = (await img.metadata()) as Metadata
 		width = Math.floor(width / cols)
 		height = Math.floor(height / rows)
 
 		return {
 			width,
 			height,
+			format,
 			chunks: await Promise.all(
 				Array.from({ length: cols }, (_, x) =>
 					Array.from({ length: rows }, async (_, y) => ({
 						x,
 						y,
-						href: await add(
+						src: await add(
 							await img
 								.clone()
 								.extract({
@@ -57,6 +54,7 @@ let { width, height, chunks } = await compute(
 								[type]()
 								.toBuffer(),
 							type,
+							`${x},${y}`,
 						),
 					})),
 				).flat(),
@@ -73,9 +71,12 @@ let { width, height, chunks } = await compute(
 >
 	<g style={{ '--width': width, '--height': height }}>
 		{
-			chunks.map(({ href, x, y }) => (
+			chunks.map(({ src, x, y }) => (
 				<foreignObject style={{ '--x': x, '--y': y }}>
-					<Image src={href} width={width} height={height} alt={`${x}x${y}`} />
+					<OptimizedImage
+						src={{ src, width, height, format }}
+						alt={`${x},${y}`}
+					/>
 				</foreignObject>
 			))
 		}</g
