@@ -6,7 +6,7 @@
 	"frontMatter.content.pageFolders": [
 		{
 			"title": "posts",
-			"path": "[[workspace]]/src/content/posts",
+			"path": "[[workspace]]/web/src/content/posts",
 			"previewPath": "/posts",
 			"contentTypes": ["posts"]
 		}
@@ -76,7 +76,7 @@
 		{
 			"id": "authors",
 			"title": "Authors",
-			"file": "[[workspace]]/src/data/authors.json",
+			"file": "[[workspace]]/web/src/data/authors.json",
 			"schema": {
 				"title": "Author",
 				"type": "object",

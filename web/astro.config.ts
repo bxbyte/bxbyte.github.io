@@ -1,13 +1,3 @@
-import mdx from "@astrojs/mdx"
-import { transformerNotationDiff } from "@shikijs/transformers"
-
-import compress from "astro-compress"
-import compressor from "astro-compressor"
-import icon from "astro-icon"
-import { defineConfig } from "astro/config"
-import rehypeKatex from "rehype-katex"
-import remarkMath from "remark-math"
-
 import { env } from "./astro.env"
 import pkg from "./package.json"
 import composer from "./src/modules/composer"
@@ -16,6 +6,14 @@ import html2pdf from "./src/modules/html2pdf"
 import i18n from "./src/modules/i18n"
 import seo from "./src/modules/seo"
 import theme from "./src/modules/theme"
+
+import mdx from "@astrojs/mdx"
+import { transformerNotationDiff } from "@shikijs/transformers"
+import compress from "astro-compress"
+import icon from "astro-icon"
+import { defineConfig } from "astro/config"
+import rehypeKatex from "rehype-katex"
+import remarkMath from "remark-math"
 
 export default defineConfig({
 	env,
@@ -62,21 +60,5 @@ export default defineConfig({
 		}),
 		await html2pdf(pkg.config),
 		compress({ Image: false }),
-		compressor({
-			fileExtensions: [
-				".html",
-				".svg",
-				".xml",
-				".cjs",
-				".js",
-				".mjs",
-				".css",
-				".txt",
-				".jpg",
-				".jpeg",
-				".webp",
-				".avif",
-			],
-		}),
 	].filter(Boolean),
 })
