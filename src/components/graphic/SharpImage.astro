@@ -1,11 +1,11 @@
 ---
-import OptimizedImage from './OptimizedImage.astro'
-import sharp, { type Sharp } from 'sharp'
-import { readFile } from 'fs/promises'
+import OptimizedImage from "./OptimizedImage.astro"
+import sharp, { type Sharp } from "sharp"
+import { readFile } from "fs/promises"
 
-import { compute } from '@/modules/compute/compute'
-import { getImagePath } from '@/modules/composer/server'
-import type { Metadata } from './types'
+import { compute } from "@/modules/compute/compute"
+import { getImagePath } from "@/modules/composer/server"
+import type { Metadata } from "./types"
 
 type Props = component.Props_<typeof OptimizedImage> & {
 	src: ImageMetadata
@@ -18,7 +18,7 @@ let img = await compute(
 	[src, imgProcessing.toString()], // Used as cache key
 	async (add) => {
 		const sharpImg = await imgProcessing(
-			sharp(await readFile(getImagePath(src))),
+			sharp(await readFile(getImagePath(src)))
 		)
 
 		let { width, height, format } = (await sharpImg.metadata()) as Metadata
@@ -29,7 +29,7 @@ let img = await compute(
 			src: await add(await sharpImg.toBuffer(), format),
 			format,
 		}
-	},
+	}
 )
 ---
 

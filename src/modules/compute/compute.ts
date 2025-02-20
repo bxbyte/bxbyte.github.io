@@ -1,7 +1,7 @@
-import { existsSync } from 'fs'
-import { writeFile } from 'fs/promises'
-import hashObject from 'object-hash'
-import { dirname } from 'path'
+import { existsSync } from "fs"
+import { writeFile } from "fs/promises"
+import hashObject from "object-hash"
+import { dirname } from "path"
 
 /**
  * Computed artefact informations
@@ -20,7 +20,7 @@ export const $compute: {
 	getArtefactAbsolutePath: (filename: string) => string
 	getArtefactRelativePath: (filename: string) => string
 	computed: Record<string, any>
-} = ((global as any)['$compute'] ||= {
+} = ((global as any)["$compute"] ||= {
 	computed: {},
 })
 
@@ -37,8 +37,12 @@ export const filenameFormat = ({ hash, id, ext }: ArtefactMetadata) =>
 export async function compute<T>(
 	key: any,
 	computer: (
-		add: (data: ArtefactData, filetype: string, id?: string) => Promise<string>,
-	) => T,
+		add: (
+			data: ArtefactData,
+			filetype: string,
+			id?: string
+		) => Promise<string>
+	) => T
 ): Promise<T> {
 	const hash = hashObject(key)
 	let computed = $compute.computed[hash]
@@ -54,12 +58,12 @@ export async function compute<T>(
 				const filename = filenameFormat({ hash, ext, id })
 				await writeFile(
 					$compute.getArtefactAbsolutePath(filename),
-					value as any,
+					value as any
 				)
 
 				// Return path to artefact
 				return $compute.getArtefactRelativePath(filename)
-			},
+			}
 		)
 	}
 

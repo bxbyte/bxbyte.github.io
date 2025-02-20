@@ -1,9 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types"
 
-interface Props extends HTMLAttributes<'div'> {
-	'no-margin': boolean
-	'no-padding': boolean
+interface Props extends HTMLAttributes<"div"> {
+	"no-margin": boolean
+	"no-padding": boolean
 	padding?: string
 	margin?: string
 }
@@ -41,31 +41,39 @@ function parseBox(box: string) {
 function prefixKeysSuffixValues(
 	prefix: string,
 	suffix: string,
-	obj: Record<string, any>,
+	obj: Record<string, any>
 ) {
 	return Object.fromEntries(
-		Object.entries(obj).map(([k, v]) => [prefix + k, v + suffix]),
+		Object.entries(obj).map(([k, v]) => [prefix + k, v + suffix])
 	)
 }
 
 const {
-		'no-padding': noPadding,
-		'no-margin': noMargin,
+		"no-padding": noPadding,
+		"no-margin": noMargin,
 		padding: paddingString,
 		margin: marginString,
 		class: classString,
 		...props
 	} = Astro.props,
 	padding = noPadding
-		? prefixKeysSuffixValues('padding-', '!important', parseBox('0%'))
+		? prefixKeysSuffixValues("padding-", "!important", parseBox("0%"))
 		: paddingString &&
-			prefixKeysSuffixValues('padding-', '!important', parseBox(paddingString)),
+			prefixKeysSuffixValues(
+				"padding-",
+				"!important",
+				parseBox(paddingString)
+			),
 	margin = noMargin
-		? prefixKeysSuffixValues('margin-', '!important', parseBox('0%'))
+		? prefixKeysSuffixValues("margin-", "!important", parseBox("0%"))
 		: marginString &&
-			prefixKeysSuffixValues('margin-', '!important', parseBox(marginString))
+			prefixKeysSuffixValues(
+				"margin-",
+				"!important",
+				parseBox(marginString)
+			)
 ---
 
-<div {...props} class:list={[classString, 'page']}>
+<div {...props} class:list={[classString, "page"]}>
 	<slot />
 </div>

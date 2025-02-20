@@ -1,11 +1,11 @@
-import type { AstroConfig, AstroIntegrationLogger } from 'astro'
-import { createHash } from 'crypto'
-import { existsSync, mkdirSync, mkdtempSync, rmSync } from 'fs'
-import { tmpdir } from 'os'
-import { basename, join } from 'path'
-import puppeteer, { Browser, Page, type SupportedBrowser } from 'puppeteer-core'
+import type { AstroConfig, AstroIntegrationLogger } from "astro"
+import { createHash } from "crypto"
+import { existsSync, mkdirSync, mkdtempSync, rmSync } from "fs"
+import { tmpdir } from "os"
+import { basename, join } from "path"
+import puppeteer, { Browser, Page, type SupportedBrowser } from "puppeteer-core"
 
-import { GhostScript } from './ghostscript'
+import { GhostScript } from "./ghostscript"
 
 const MAX_RENDER_TIMEOUT = 5 * 60 * 1000 // 5min max of rendering time
 
@@ -19,7 +19,7 @@ declare global {
 }
 
 function getHash(value: string) {
-	return createHash('sha256').update(value).digest('hex').slice(0, 6)
+	return createHash("sha256").update(value).digest("hex").slice(0, 6)
 }
 
 export default class Renderer {
@@ -41,11 +41,11 @@ export default class Renderer {
 		logger: AstroIntegrationLogger
 		config: AstroConfig
 	}): Promise<void> {
-		this.logger = logger.fork('PDF:renderer')
+		this.logger = logger.fork("PDF:renderer")
 		this.gsPath = gsPath
 		this.config = config
 
-		this.logger.debug('Launching puppeter browser')
+		this.logger.debug("Launching puppeter browser")
 		this.browser = await puppeteer.launch({
 			browser: browserType as SupportedBrowser,
 			executablePath: browserPath,
@@ -56,31 +56,33 @@ export default class Renderer {
 
 	static async loadPage(url: URL): Promise<Page> {
 		const page = await this.browser.newPage()
-		await page.emulateMediaType('print')
+		await page.emulateMediaType("print")
 
 		// Preloading
 		await page.evaluateOnNewDocument(() => {
 			// Image loading
-			document.addEventListener('astro:color-swap', () => {
+			document.addEventListener("astro:color-swap", () => {
 				window.images = (async () => {
 					await Promise.all(
-						Array.from(document.querySelectorAll('img')).map((img) => {
-							if (img.complete) return
-							return new Promise((resolve, reject) => {
-								img.addEventListener('load', resolve)
-								img.addEventListener('error', reject)
-							})
-						}),
+						Array.from(document.querySelectorAll("img")).map(
+							(img) => {
+								if (img.complete) return
+								return new Promise((resolve, reject) => {
+									img.addEventListener("load", resolve)
+									img.addEventListener("error", reject)
+								})
+							}
+						)
 					)
 				})()
 			})
 		})
 
-		this.logger.debug('Loading page...')
-		await page.goto(url.href, { waitUntil: 'networkidle2' })
+		this.logger.debug("Loading page...")
+		await page.goto(url.href, { waitUntil: "networkidle2" })
 
 		// Loading
-		this.logger.debug('Loading ressources...')
+		this.logger.debug("Loading ressources...")
 		await page.evaluate(async () => {
 			return await Promise.all([
 				window.images, // Wait images loading
@@ -95,26 +97,26 @@ export default class Renderer {
 			url: URL | string
 			filename?: string
 		} & Parameters<typeof GhostScript.prototype.setSize>[0] &
-			Parameters<typeof GhostScript.prototype.setMetadata>[0],
+			Parameters<typeof GhostScript.prototype.setMetadata>[0]
 	): Promise<string> {
 		param.url = new URL(param.url)
-		param.url.searchParams.delete('page')
+		param.url.searchParams.delete("page")
 
-		const tempDir = mkdtempSync(join(tmpdir(), 'renderer')),
+		const tempDir = mkdtempSync(join(tmpdir(), "renderer")),
 			filepath = `${basename(param.filename || param.url.pathname)}.pdf`,
 			hashDir = getHash(param.url.href),
 			renderServerDir = join(
 				this.config.publicDir.href,
 				this.config.build.assets,
-				hashDir,
+				hashDir
 			)
 
-		this.logger.debug('Converting to pdf...')
+		this.logger.debug("Converting to pdf...")
 
 		const webpage = await this.loadPage(param.url)
 		webpage.setDefaultTimeout(MAX_RENDER_TIMEOUT) // Fix timeout error for heavy rendering
 		const numberOfPages = await webpage.evaluate(
-			() => document.querySelectorAll('.pagedjs_page').length,
+			() => document.querySelectorAll(".pagedjs_page").length
 		)
 		await webpage.close()
 
@@ -126,7 +128,7 @@ export default class Renderer {
 				}).map(async (_, i) => {
 					const pageUrl = new URL(param.url),
 						path = join(tempDir, `page_${i}.pdf`)
-					pageUrl.searchParams.set('page', i.toString())
+					pageUrl.searchParams.set("page", i.toString())
 
 					const page = await this.loadPage(pageUrl)
 
@@ -139,7 +141,7 @@ export default class Renderer {
 						document
 							.querySelector('.pagedjs_page:nth-child(${i + 1})')
 							.style.display = 'inherit'
-						`,
+						`
 					)
 
 					await page.pdf({
@@ -153,28 +155,28 @@ export default class Renderer {
 					await page.close()
 
 					return { i, path }
-				}),
+				})
 			)
 		)
 			.sort(({ i: a }, { i: b }) => a - b)
 			.map(({ path }) => path)
 
-		this.logger.debug('Making sure render dir exist')
+		this.logger.debug("Making sure render dir exist")
 		if (!existsSync(renderServerDir))
 			mkdirSync(renderServerDir, { recursive: true })
 
-		this.logger.debug('Executing ghostscript...')
+		this.logger.debug("Executing ghostscript...")
 		new GhostScript(
 			this.gsPath,
 			join(renderServerDir, filepath),
-			...intermediatedPages,
+			...intermediatedPages
 		)
 			.setMetadata(param)
 			.setSize(param)
 			.exec()
 
-		this.logger.debug('Clearing temporary files')
+		this.logger.debug("Clearing temporary files")
 		rmSync(tempDir, { recursive: true })
-		return join('/' + this.config.build.assets, hashDir, filepath)
+		return join("/" + this.config.build.assets, hashDir, filepath)
 	}
 }

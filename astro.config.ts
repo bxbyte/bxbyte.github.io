@@ -1,32 +1,31 @@
-import { env } from './astro.env'
-import pkg from './package.json'
-import mdx from '@astrojs/mdx'
-import { transformerNotationDiff } from '@shikijs/transformers'
+import mdx from "@astrojs/mdx"
+import { transformerNotationDiff } from "@shikijs/transformers"
 
-import type { AstroUserConfig } from 'astro'
-import compress from 'astro-compress'
-import compressor from 'astro-compressor'
-import icon from 'astro-icon'
-import { defineConfig } from 'astro/config'
-import rehypeKatex from 'rehype-katex'
-import remarkMath from 'remark-math'
+import compress from "astro-compress"
+import compressor from "astro-compressor"
+import icon from "astro-icon"
+import { defineConfig } from "astro/config"
+import rehypeKatex from "rehype-katex"
+import remarkMath from "remark-math"
 
-import composer from './src/modules/composer'
-import compute from './src/modules/compute'
-import html2pdf from './src/modules/html2pdf'
-import i18n from './src/modules/i18n'
-import seo from './src/modules/seo'
-import theme from './src/modules/theme'
+import { env } from "./astro.env"
+import pkg from "./package.json"
+import composer from "./src/modules/composer"
+import compute from "./src/modules/compute"
+import html2pdf from "./src/modules/html2pdf"
+import i18n from "./src/modules/i18n"
+import seo from "./src/modules/seo"
+import theme from "./src/modules/theme"
 
-const pseudoConfig = {
+export default defineConfig({
 	env,
 	site: process.env.SERVER_URL,
 	experimental: { contentIntellisense: true },
-	output: 'static',
-	scopedStyleStrategy: 'class',
-	build: { assets: '_', concurrency: 2 },
+	output: "static",
+	scopedStyleStrategy: "class",
+	build: { assets: "_", concurrency: 2 },
 	image: {
-		domains: ['astro.build'],
+		domains: ["astro.build"],
 	},
 	vite: {
 		optimizeDeps: {
@@ -35,7 +34,7 @@ const pseudoConfig = {
 		},
 		build: {
 			assetsInlineLimit: 128,
-			assetsDir: '_',
+			assetsDir: "_",
 		},
 	},
 	markdown: {
@@ -48,7 +47,7 @@ const pseudoConfig = {
 		theme,
 		seo,
 		composer(),
-		compute('_/'),
+		compute("_/"),
 		icon(),
 		mdx({
 			remarkPlugins: [remarkMath],
@@ -56,31 +55,28 @@ const pseudoConfig = {
 				[
 					rehypeKatex,
 					{
-						output: 'mathml',
+						output: "mathml",
 					},
 				],
 			],
 		}),
 		await html2pdf(pkg.config),
-		compress(),
+		compress({ Image: false }),
 		compressor({
 			fileExtensions: [
-				'.html',
-				'.svg',
-				'.xml',
-				'.cjs',
-				'.js',
-				'.mjs',
-				'.css',
-				'.txt',
-				'.jpg',
-				'.jpeg',
-				'.webp',
-				'.avif',
+				".html",
+				".svg",
+				".xml",
+				".cjs",
+				".js",
+				".mjs",
+				".css",
+				".txt",
+				".jpg",
+				".jpeg",
+				".webp",
+				".avif",
 			],
 		}),
 	].filter(Boolean),
-} as const satisfies AstroUserConfig
-
-// https://astro.build/config
-export default defineConfig(pseudoConfig)
+})

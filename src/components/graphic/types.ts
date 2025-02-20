@@ -1,4 +1,4 @@
-import type { ImageInputFormat } from 'astro'
+import type { ImageInputFormat } from "astro"
 
 export interface Metadata {
 	width: number

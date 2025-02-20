@@ -1,14 +1,14 @@
 const content = {
 	hi: {
-		en: 'Welcome !',
-		fr: 'Bienvenue !',
+		en: "Welcome !",
+		fr: "Bienvenue !",
 	},
 	iam: {
 		en: "I'm Lucas Maillet",
-		fr: 'Ici Lucas Maillet',
+		fr: "Ici Lucas Maillet",
 	},
 	status: {
-		en: 'Applicated computer science student at the University of Grenoble-Alpes',
+		en: "Applicated computer science student at the University of Grenoble-Alpes",
 		fr: "Etudiant en BUT informatique de l'Université Grenoble-Alpes",
 	},
 	what: {

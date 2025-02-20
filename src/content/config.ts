@@ -1,15 +1,15 @@
-import { file, glob } from 'astro/loaders'
+import { file, glob } from "astro/loaders"
 import {
 	type ImageFunction,
 	defineCollection,
 	reference,
 	z,
-} from 'astro:content'
-import deepmerge from 'deepmerge'
+} from "astro:content"
+import deepmerge from "deepmerge"
 
-import defaultJob from './jobs/_default'
+import defaultJob from "./jobs/_default"
 
-const AUTHORS_DATA_PATH = 'src/data/authors.json'
+const AUTHORS_DATA_PATH = "src/data/authors.json"
 
 export type JobProps = typeof defaultJob & Job
 
@@ -24,8 +24,8 @@ const PostData = z.object({
 	description: z.optional(z.string()),
 	keywords: z.optional(z.array(z.string())),
 	date: z.date(),
-	authors: z.array(reference('authors')).optional(),
-	type: z.enum(['pdf', 'post']).default('post'),
+	authors: z.array(reference("authors")).optional(),
+	type: z.enum(["pdf", "post"]).default("post"),
 })
 
 export type PostData = z.infer<typeof PostData> & {
@@ -41,27 +41,27 @@ export const collections = {
 	}),
 	posts: defineCollection({
 		loader: glob({
-			pattern: ['./posts/**/*.mdx', '!./posts/**/_*.mdx'],
+			pattern: ["./posts/**/*.mdx", "!./posts/**/_*.mdx"],
 			base: (import.meta as any).dirname,
 		}),
 		schema: ({ image }) =>
 			PostData.and(
 				z.object({
 					cover: z.optional(image()),
-				}),
+				})
 			),
 	}),
 	jobs: defineCollection<JobProps[]>({
 		loader: async () =>
 			await Promise.all(
 				Object.values(
-					import.meta.glob(['jobs/**/*.ts', '!jobs/**/_*.ts'], {
-						import: 'default',
-					}),
+					import.meta.glob(["jobs/**/*.ts", "!jobs/**/_*.ts"], {
+						import: "default",
+					})
 				).map(
 					async (v: any) =>
-						deepmerge(defaultJob, await v()) as unknown as JobProps,
-				),
+						deepmerge(defaultJob, await v()) as unknown as JobProps
+				)
 			),
 	}),
 }

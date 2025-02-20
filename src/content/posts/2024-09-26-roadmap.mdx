@@ -6,17 +6,17 @@ type: pdf
 scale: 100
 ---
 
-import '@/styles/pdf/article.scss'
+import "@/styles/pdf/article.scss"
 
-import { layout } from '@/modules/html2pdf/styles'
+import { layout } from "@/modules/html2pdf/styles"
 
-import skin from '@/styles/pdf/skin.module.scss'
+import skin from "@/styles/pdf/skin.module.scss"
 
 export const config = {
 	title: frontmatter.title,
-	author: 'Lucas Maillet',
-	class: 'A12',
-	ressource: 'R3.10a',
+	author: "Lucas Maillet",
+	class: "A12",
+	ressource: "R3.10a",
 }
 
 <div 
@@ -31,7 +31,7 @@ export const config = {
 {' '}
 
 <img
-	src={(await import('./road.jpeg?url')).default}
+	src={(await import("./road.jpeg?url")).default}
 	style="height: calc(100%); width: 100%;"
 />
 
@@ -56,64 +56,64 @@ extraitent des cours et expériences de l'année précédente et de quelques rec
 
 ### 2. Définir les parties prenantes :
 
-- MOA ?
-  - Client ?
-  - Directeur de projet MOA ?
-- MOE ?
-  - Directeur de projet MOE ?
-  - Equipe projet
-    - Développeurs ?
-    - Chef de projet ?
-- COPIL ?
-- CODIR ?
-- DPO ou équivalent ?
-- Intervenants externes ?
-  - Nom de domaine ==> fournisseur DNS ?
-  - Serveur / Cloud ==> host ?
-  - Projet international (i18n, g11n, ...) ==> traducteur ?
-  - Etc
+-   MOA ?
+    -   Client ?
+    -   Directeur de projet MOA ?
+-   MOE ?
+    -   Directeur de projet MOE ?
+    -   Equipe projet
+        -   Développeurs ?
+        -   Chef de projet ?
+-   COPIL ?
+-   CODIR ?
+-   DPO ou équivalent ?
+-   Intervenants externes ?
+    -   Nom de domaine ==> fournisseur DNS ?
+    -   Serveur / Cloud ==> host ?
+    -   Projet international (i18n, g11n, ...) ==> traducteur ?
+    -   Etc
 
 ### 3. Réaliser le CCM (si projet produit)
 
 1. Identifier les concurrents
-   - Concurrents directs / indirects ?
-   - Concurrents potentiels ?
+    - Concurrents directs / indirects ?
+    - Concurrents potentiels ?
 2. Collecter des données sur les utilisateurs
-   - Depuis l'OpenData ou des enquêtes
-   - Permet d'établir des profils types
+    - Depuis l'OpenData ou des enquêtes
+    - Permet d'établir des profils types
 3. Coûts
-   - Coûts directs / indirects ?
-   - Ressources ?
+    - Coûts directs / indirects ?
+    - Ressources ?
 4. Estimer le ROI
-   - Modèle de revenu ?
-   - Investisseurs ?
-   - Clients ?
+    - Modèle de revenu ?
+    - Investisseurs ?
+    - Clients ?
 
 ### 4. Réaliser le CCF (si projet ouvrage)
 
 1. QQOQCP ?
 2. Identifier les besoins
-   1. Exprimer les besoins en fonctions d'usage
-      - [Schéma de la bête à corne](https://www.youtube.com/watch?v=N6CgqaXMphA)
-      - Définir les finalités, pas les solutions
+    1. Exprimer les besoins en fonctions d'usage
+        - [Schéma de la bête à corne](https://www.youtube.com/watch?v=N6CgqaXMphA)
+        - Définir les finalités, pas les solutions
 3. Réaliser l'analyse fonctionnel
-   1. Identifier les fonctions principales / contraintes
-      1. [Diagramme pieuvre](https://www.youtube.com/watch?v=N6CgqaXMphA)
-      2. Préciser les fonctions
-         - Critères (qu'est ce qui caractérise la fonction)
-         - Niveaux (valeurs / types à respecter)
-         - Flexibilités (marges d'approximation)
-      3. Ordonné les fonctions par importance
+    1. Identifier les fonctions principales / contraintes
+        1. [Diagramme pieuvre](https://www.youtube.com/watch?v=N6CgqaXMphA)
+        2. Préciser les fonctions
+            - Critères (qu'est ce qui caractérise la fonction)
+            - Niveaux (valeurs / types à respecter)
+            - Flexibilités (marges d'approximation)
+        3. Ordonné les fonctions par importance
 
 ### 5. Réaliser le CCT
 
-- Outils ?
-- Technos ?
-- Charte graphique ?
-- Languages ?
-- Nomenclatures ?
-- Normes ?
-- Etc
+-   Outils ?
+-   Technos ?
+-   Charte graphique ?
+-   Languages ?
+-   Nomenclatures ?
+-   Normes ?
+-   Etc
 
 ## II. Préparatifs
 
@@ -121,18 +121,18 @@ extraitent des cours et expériences de l'année précédente et de quelques rec
 
 1. Identifier les contraintes et risques induits
 2. Organiser les risques
-   1. Estimer les probabilités et impact des risques
-   2. Réaliser une matrice de criticité
+    1. Estimer les probabilités et impact des risques
+    2. Réaliser une matrice de criticité
 3. Etablir un plan de mitigation
 4. Identifier une stratégie de mitigation pour chaque risques
 
-   - Récursivement jusqu'à:
-     - Acceptation
-     - Evitement
-     - Protection
-     - Reserves
-     - Transfert
-   - Logigramme du plan de mitigation
+    - Récursivement jusqu'à:
+        - Acceptation
+        - Evitement
+        - Protection
+        - Reserves
+        - Transfert
+    - Logigramme du plan de mitigation
 
 5. Définir le modèle de développement
 
@@ -144,34 +144,34 @@ extraitent des cours et expériences de l'année précédente et de quelques rec
 
 1. Identifier les contraintes de délais
 2. Estimer les charges des tâches
-   - Méthode DELPHI
-   - Méthode de la répartition proportionnelle
-   - Methode COCOMO
+    - Méthode DELPHI
+    - Méthode de la répartition proportionnelle
+    - Methode COCOMO
 3. Déterminer les contraintes / flexibilités temporelles
-   - Diagramme de GANTT
-   - Graphe MPM
+    - Diagramme de GANTT
+    - Graphe MPM
 
 ### 3. Mise en place des outils de collaboration
 
-- Github / Gitlab
-- Discord
-- Trelo / Notion / Jira
-- Etc
+-   Github / Gitlab
+-   Discord
+-   Trelo / Notion / Jira
+-   Etc
 
 ## III. Conception
 
 ### 1. Rédiger le dossier de conception
 
 1. Spécifier les cas d'utilisations
-   - Logigrammes des processus
-   - Diagrammes séquencielles
-   - Diagrammes des cas d'utilisations
+    - Logigrammes des processus
+    - Diagrammes séquencielles
+    - Diagrammes des cas d'utilisations
 2. Concevoir l'architecture
-   - Diagramme de classes simplifié / complet du modèle
-   - Modèle entité-association de la BDD (si BDD)
+    - Diagramme de classes simplifié / complet du modèle
+    - Modèle entité-association de la BDD (si BDD)
 3. Illustrater les cas d'utilisations
-   - Diagrammes séquentielles
-   - Diagrammes d'objets
+    - Diagrammes séquentielles
+    - Diagrammes d'objets
 
 ### 2. Réaliser le PIA
 
@@ -184,28 +184,28 @@ extraitent des cours et expériences de l'année précédente et de quelques rec
 1. Définir les personnas
 2. Définir les critères ergonomiques
 3. Concevoir les maquettes
-   1. Réaliser les wireframes
-      - Pour les cas d'utilisations
-      1. Grouper les fonctionnalités
-      2. Appliquer les critères ergonomiques aux fonctionnalités
-      - Pour les formulaires de consentement
-      1. Lister les données et spécifier leur utilisations
-      2. Appliquer les critères RGPD
-   2. Appliquer la charte graphique
+    1. Réaliser les wireframes
+        - Pour les cas d'utilisations
+        1. Grouper les fonctionnalités
+        2. Appliquer les critères ergonomiques aux fonctionnalités
+        - Pour les formulaires de consentement
+        1. Lister les données et spécifier leur utilisations
+        2. Appliquer les critères RGPD
+    2. Appliquer la charte graphique
 
 ### 4. Réaliser le Lean Canvas (si investisseur)
 
 1. Respecter la charte graphique
 2. Présenter l'intêret du projet :
-   - Problèmes
-   - Solutions
-   - Alternatives
-   - Avantages de la solution
-   - Proposition de valeur
-   - Indicateurs clés
-   - Structure des coûts
-   - Sources de revenus
-   - Segment de clientèle
-   - Canaux
+    - Problèmes
+    - Solutions
+    - Alternatives
+    - Avantages de la solution
+    - Proposition de valeur
+    - Indicateurs clés
+    - Structure des coûts
+    - Sources de revenus
+    - Segment de clientèle
+    - Canaux
 
 </div>

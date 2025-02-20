@@ -1,14 +1,14 @@
-@use '@/styles/theme/theme.scss';
+@use "@/styles/theme/theme.scss";
 
 // Fontsources fonts
 
 @mixin font-inter {
 	font-weight: 250;
-	font-family: 'Inter Variable', sans-serif;
+	font-family: "Inter Variable", sans-serif;
 }
 
 @mixin font-fira {
-	font-family: 'Fira Mono', monospace;
+	font-family: "Fira Mono", monospace;
 }
 
 * {

@@ -1,15 +1,15 @@
-import type { GetStaticPaths } from 'astro'
-import { getRelativeLocaleUrl } from 'astro:i18n'
-import cloneDeep from 'clone-deep'
-import deepmerge from 'deepmerge'
+import type { GetStaticPaths } from "astro"
+import { getRelativeLocaleUrl } from "astro:i18n"
+import cloneDeep from "clone-deep"
+import deepmerge from "deepmerge"
 
-import { locales } from './config'
+import { locales } from "./config"
 
 /**
  * Associate each locale to its corresponding path in the url parameters.
  */
 export const localePaths = Object.fromEntries(
-	locales.map((locale) => [locale, getRelativeLocaleUrl(locale)]),
+	locales.map((locale) => [locale, getRelativeLocaleUrl(locale)])
 )
 
 /**
@@ -35,11 +35,11 @@ export function getStaticPaths() {
  */
 function unnestLocaleContent<T>(
 	locale: i18n.Locales,
-	localeContent: T,
+	localeContent: T
 ): i18n.UnNestedLocaleContent<T> {
 	if (Array.isArray(localeContent)) {
 		return localeContent.map((v) => unnestLocaleContent(locale, v)) as any
-	} else if (localeContent && typeof localeContent == 'object') {
+	} else if (localeContent && typeof localeContent == "object") {
 		let keys = Object.keys(localeContent)
 		if (locales.every((locale) => keys.includes(locale))) {
 			return (localeContent as any)[locale]
@@ -48,8 +48,8 @@ function unnestLocaleContent<T>(
 				(k) =>
 					((localeContent as any)[k] = unnestLocaleContent(
 						locale,
-						(localeContent as any)[k],
-					)),
+						(localeContent as any)[k]
+					))
 			)
 		}
 	}
@@ -64,16 +64,16 @@ function unnestLocaleContent<T>(
  */
 export function getLocaleContent<T extends Object>(
 	localeContent: T,
-	astro: { currentLocale?: string },
+	astro: { currentLocale?: string }
 ): i18n.UnNestedLocaleContent<T> {
 	const contentByLang = Object.fromEntries(
 		locales.map((locale) => [
 			localePaths[locale],
 			unnestLocaleContent(locale, cloneDeep(localeContent)),
-		]),
+		])
 	)
 
-	const lang = astro.currentLocale ? localePaths[astro.currentLocale] : '/'
+	const lang = astro.currentLocale ? localePaths[astro.currentLocale] : "/"
 	return contentByLang[lang]
 }
 
@@ -87,7 +87,7 @@ export function getLocaleContent<T extends Object>(
  */
 export function useLocaleContents<T extends Object, S extends GetStaticPaths>(
 	localeContent: T,
-	oldGetStaticPaths?: S,
+	oldGetStaticPaths?: S
 ): {
 	getLocaleContent: (astro: {
 		currentLocale?: string
@@ -98,12 +98,14 @@ export function useLocaleContents<T extends Object, S extends GetStaticPaths>(
 		locales.map((locale) => [
 			localePaths[locale],
 			unnestLocaleContent(locale, cloneDeep(localeContent)),
-		]),
+		])
 	)
 
 	return {
 		getLocaleContent(astro) {
-			const lang = astro.currentLocale ? localePaths[astro.currentLocale] : '/'
+			const lang = astro.currentLocale
+				? localePaths[astro.currentLocale]
+				: "/"
 			return contentByLang[lang]
 		},
 		getStaticPaths: oldGetStaticPaths
@@ -111,21 +113,22 @@ export function useLocaleContents<T extends Object, S extends GetStaticPaths>(
 					const oldPaths = await oldGetStaticPaths(params)
 					return oldPaths.every(
 						(path) =>
-							path.params && locales.includes(path.params.locale as any),
+							path.params &&
+							locales.includes(path.params.locale as any)
 					)
 						? oldPaths.map((path) => {
 								path.params.lang = getRelativeLocaleUrl(
-									path.params.locale as any,
+									path.params.locale as any
 								)
 								return path
 							}) // Set the lang parameter for each locale
 						: oldPaths.flatMap(
 								(
-									path, // Open path for each locale
+									path // Open path for each locale
 								) =>
 									getStaticPaths().map((localPath) =>
-										deepmerge(path, localPath),
-									),
+										deepmerge(path, localPath)
+									)
 							)
 				}
 			: (getStaticPaths as any),

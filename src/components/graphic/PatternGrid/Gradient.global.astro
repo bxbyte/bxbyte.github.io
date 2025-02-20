@@ -1,23 +1,25 @@
 ---
-import themeVariables from '@/modules/theme/variables'
+import themeVariables from "@/modules/theme/variables"
 
-import { urlIdCollection } from '@/libs/server/urlid'
+import { urlIdCollection } from "@/libs/server/urlid"
 
 export const gradients = urlIdCollection(
 	{
-		main: 'main',
+		main: "main",
 	} as const,
-	'gradient',
+	"gradient"
 )
 ---
 
 <svg xmlns="http://www.w3.org/2000/svg">
 	<defs>
 		<linearGradient id={gradients.main.id} y2="100%">
-			<stop offset="10%" stop-color={themeVariables['gradient-main-color1']}
-			></stop>
-			<stop offset="100%" stop-color={themeVariables['gradient-main-color2']}
-			></stop>
+			<stop
+				offset="10%"
+				stop-color={themeVariables["gradient-main-color1"]}></stop>
+			<stop
+				offset="100%"
+				stop-color={themeVariables["gradient-main-color2"]}></stop>
 		</linearGradient>
 	</defs>
 </svg>

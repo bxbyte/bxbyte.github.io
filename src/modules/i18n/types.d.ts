@@ -1,4 +1,4 @@
-import type { localeDefs } from './config'
+import type { localeDefs } from "./config"
 
 declare global {
 	declare namespace i18n {
@@ -26,7 +26,11 @@ declare global {
 		 */
 		type NestedLocaleContent<T> =
 			T extends Record<string, any>
-				? { [k in keyof T]: NestedLocaleContent<T[k] | Record<Locales, T[k]>> }
+				? {
+						[k in keyof T]: NestedLocaleContent<
+							T[k] | Record<Locales, T[k]>
+						>
+					}
 				: T
 	}
 

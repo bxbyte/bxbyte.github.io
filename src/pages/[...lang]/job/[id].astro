@@ -1,14 +1,14 @@
 ---
-import { Icon } from 'astro-icon/components'
-import { Main } from '@/layouts'
-import PDF from '@/modules/html2pdf/print'
-import pdfSkin from '@/styles/pdf/skin.module.scss'
-import { join } from '@/libs/ui/client'
-import { md } from '@/modules/composer/server'
-import { useLocaleContents } from '@/modules/i18n/content'
-import { PatternGrid, Timeline } from '@/components'
+import { Icon } from "astro-icon/components"
+import { Main } from "@/layouts"
+import PDF from "@/modules/html2pdf/print"
+import pdfSkin from "@/styles/pdf/skin.module.scss"
+import { join } from "@/libs/ui/client"
+import { md } from "@/modules/composer/server"
+import { useLocaleContents } from "@/modules/i18n/content"
+import { PatternGrid, Timeline } from "@/components"
 
-import { type JobProps, getJobs } from '@/content'
+import { type JobProps, getJobs } from "@/content"
 
 interface Props {
 	job: JobProps
@@ -20,7 +20,7 @@ export const { getStaticPaths } = useLocaleContents(
 		(await getJobs()).map((job) => ({
 			params: { id: job.id },
 			props: { job },
-		})),
+		}))
 )
 
 const { job } = Astro.props
@@ -48,7 +48,11 @@ const { job } = Astro.props
 					<h2>{job.cv.object}</h2>
 					<Fragment set:html={md(job.cv.description)} />
 				</section>
-				<section id="leftbar" aria-flowto="content" style="overflow: hidden;">
+				<section
+					id="leftbar"
+					aria-flowto="content"
+					style="overflow: hidden;"
+				>
 					<section>
 						<h2>Coordonées</h2>
 						<ul id="contacts">
@@ -56,7 +60,11 @@ const { job } = Astro.props
 								job.me.contacts.map(({ icon, value, link }) => (
 									<li>
 										<a href={link}>
-											<Icon name={icon} aria-hidden="true" /> {value}
+											<Icon
+												name={icon}
+												aria-hidden="true"
+											/>{" "}
+											{value}
 										</a>
 									</li>
 								))
@@ -122,10 +130,14 @@ const { job } = Astro.props
 								<li>{job.me.address}</li>
 								<li>{job.me.city}</li>
 								<li>
-									<a href={job.me.tel.link}>{job.me.tel.value}</a>
+									<a href={job.me.tel.link}>
+										{job.me.tel.value}
+									</a>
 								</li>
 								<li>
-									<a href={job.me.email.link}>{job.me.email.value}</a>
+									<a href={job.me.email.link}>
+										{job.me.email.value}
+									</a>
 								</li>
 							</ul>
 						</section>
@@ -146,10 +158,10 @@ const { job } = Astro.props
 						<p id="when">
 							Fait à {job.letter.from}, le
 							<time datetime={new Date().toISOString()}>
-								{new Date().toLocaleDateString('fr', {
-									year: 'numeric',
-									month: '2-digit',
-									day: 'numeric',
+								{new Date().toLocaleDateString("fr", {
+									year: "numeric",
+									month: "2-digit",
+									day: "numeric",
 								})}
 							</time>
 						</p>
@@ -253,7 +265,7 @@ const { job } = Astro.props
 				z-index: -1;
 				width: 100%;
 				height: 100%;
-				content: '';
+				content: "";
 			}
 		}
 

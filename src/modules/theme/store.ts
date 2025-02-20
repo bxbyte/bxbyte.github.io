@@ -1,7 +1,7 @@
-import { persistentAtom } from '@nanostores/persistent'
+import { persistentAtom } from "@nanostores/persistent"
 
 /** Current theme, true for light theme, false for dark */
-export const $theme = persistentAtom('theme', false, {
+export const $theme = persistentAtom("theme", false, {
 	encode: JSON.stringify,
 	decode: JSON.parse,
 })
@@ -18,8 +18,8 @@ export function toggleTheme() {
  * @param theme true for light, false for dark
  */
 function setTheme(theme: boolean) {
-	document.documentElement.classList.toggle('light', theme)
+	document.documentElement.classList.toggle("light", theme)
 }
 
 $theme.subscribe(setTheme) // Set theme on store update
-document.addEventListener('astro:after-swap', () => setTheme($theme.value)) // Fix with astro router
+document.addEventListener("astro:after-swap", () => setTheme($theme.value)) // Fix with astro router

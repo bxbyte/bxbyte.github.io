@@ -1,9 +1,9 @@
-@use '@/styles/layout.module.scss';
+@use "@/styles/layout.module.scss";
 
 .grid-layout {
 	@media screen and (max-width: (layout.$window-max-width * 0.6)) {
 		grid-template-columns: 1fr !important;
-		grid-template-areas: 'a' 'b' !important;
+		grid-template-areas: "a" "b" !important;
 	}
 }
 

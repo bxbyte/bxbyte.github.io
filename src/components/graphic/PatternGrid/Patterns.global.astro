@@ -1,16 +1,16 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types"
 
-import { urlIdCollection } from '@/libs/server/urlid'
+import { urlIdCollection } from "@/libs/server/urlid"
 
 export const patterns = urlIdCollection(
 	{
-		grid: 'grid',
-		corner1: 'corner1',
-		corner2: 'corner2',
-		cross: 'cross',
+		grid: "grid",
+		corner1: "corner1",
+		corner2: "corner2",
+		cross: "cross",
 	},
-	'pattern',
+	"pattern"
 )
 
 export const patternIds = Object.values(patterns)
@@ -19,8 +19,8 @@ const octaves = 1,
 	commonAttributes = {
 		width: `${100 / octaves}%`,
 		height: `${100 / octaves}%`,
-		viewBox: '0 0 10 10',
-	} as HTMLAttributes<'pattern'>
+		viewBox: "0 0 10 10",
+	} as HTMLAttributes<"pattern">
 ---
 
 <svg

@@ -1,1 +1,1 @@
-export { default as layout } from './layout.module.scss'
+export { default as layout } from "./layout.module.scss"

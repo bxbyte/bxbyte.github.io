@@ -1,8 +1,8 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
-import Route from './Route.astro'
+import type { HTMLAttributes } from "astro/types"
+import Route from "./Route.astro"
 
-interface Props extends HTMLAttributes<'nav'> {
+interface Props extends HTMLAttributes<"nav"> {
 	path?: string
 	displayPath?: string
 }
@@ -10,8 +10,8 @@ interface Props extends HTMLAttributes<'nav'> {
 let { path = Astro.url.pathname, displayPath, ...props } = Astro.props
 displayPath ||= path
 
-let pathChunk = path.split('/').filter(Boolean),
-	displayPathChunk = displayPath.split('/').filter(Boolean)
+let pathChunk = path.split("/").filter(Boolean),
+	displayPathChunk = displayPath.split("/").filter(Boolean)
 
 // Remove local
 if (pathChunk.at(0) == Astro.currentLocale) {
@@ -21,7 +21,7 @@ if (pathChunk.at(0) == Astro.currentLocale) {
 
 if (pathChunk.length != displayPathChunk.length)
 	throw new Error(
-		`Display path and real path are not equals:\n\t${pathChunk} \n\t${displayPathChunk}`,
+		`Display path and real path are not equals:\n\t${pathChunk} \n\t${displayPathChunk}`
 	)
 ---
 
@@ -36,7 +36,7 @@ if (pathChunk.length != displayPathChunk.length)
 					<Route
 						match="equal"
 						label={chunk}
-						href={'/' + pathChunk.slice(0, i + 1).join('/')}
+						href={"/" + pathChunk.slice(0, i + 1).join("/")}
 					/>
 				</li>
 			))
@@ -65,7 +65,7 @@ if (pathChunk.length != displayPathChunk.length)
 				position: absolute;
 				top: 0;
 				left: calc(100% + $gap);
-				content: '>';
+				content: ">";
 			}
 		}
 	}

@@ -1,50 +1,56 @@
-import { REPOSITERY_URL } from 'astro:env/client'
-import { REPOSITERY_OWNER } from 'astro:env/server'
+import infos from "@/data/infos"
 
-import infos from '@/data/infos'
+import { REPOSITERY_URL } from "astro:env/client"
+import { REPOSITERY_OWNER } from "astro:env/server"
 
 export default {
 	navLinks: [
-		{ label: { fr: 'Accueil', en: 'Home' }, href: '/', match: 'equal' },
+		{ label: { fr: "Accueil", en: "Home" }, href: "/", match: "equal" },
 		{
-			label: { fr: 'Posts', en: 'Posts' },
-			href: '/posts',
-			match: 'start',
+			label: { fr: "Posts", en: "Posts" },
+			href: "/posts",
+			match: "start",
 		},
 		{
-			label: { fr: 'Contact', en: 'Contact' },
-			href: '/#contact',
-			match: 'start',
+			label: { fr: "Contact", en: "Contact" },
+			href: "/#contact",
+			match: "start",
 		},
 	],
 	footer: {
 		links: [
 			{
-				name: { fr: 'Infos de Site', en: 'Website Infos' },
+				name: { fr: "Infos de Site", en: "Website Infos" },
 				links: [
 					{
-						label: { fr: "Condition d'utilisation", en: 'Terms of Service' },
-						href: '/tos',
+						label: {
+							fr: "Condition d'utilisation",
+							en: "Terms of Service",
+						},
+						href: "/tos",
 					},
 					{
-						label: { fr: 'Politique de Cookies', en: 'Privacy Policy' },
-						href: '/policy',
+						label: {
+							fr: "Politique de Cookies",
+							en: "Privacy Policy",
+						},
+						href: "/policy",
 					},
 					{
-						label: { fr: 'Depôt Github', en: 'Github Repositery' },
+						label: { fr: "Depôt Github", en: "Github Repositery" },
 						href: REPOSITERY_URL,
 					},
 				],
 			},
 			{
-				name: { fr: 'Infos de Contact', en: 'Contact Infos' },
+				name: { fr: "Infos de Contact", en: "Contact Infos" },
 				links: [
 					{
-						label: 'Github',
+						label: "Github",
 						href: `https://github.com/${REPOSITERY_OWNER}`,
 					},
 					{
-						label: 'Email',
+						label: "Email",
 						href: `mailto:${infos.owner.email}`,
 					},
 				],
@@ -57,10 +63,10 @@ export default {
 			},
 			license: {
 				label: {
-					fr: 'Tout Droits Reservés',
-					en: 'All Rights Reserved',
+					fr: "Tout Droits Reservés",
+					en: "All Rights Reserved",
 				},
-				href: '/license',
+				href: "/license",
 			},
 		},
 		asciiArt: `

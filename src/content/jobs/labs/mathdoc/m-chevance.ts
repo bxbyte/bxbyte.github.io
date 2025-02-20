@@ -1,17 +1,16 @@
-import logo from './logo.png?url'
+import logo from "./logo.png?url"
 
 export default {
-	id: 'mathdoc',
+	id: "mathdoc",
 	letter: {
 		coorp: {
-			name: 'Mathdoc',
-			location: '38058 Grenoble',
+			name: "Mathdoc",
+			location: "38058 Grenoble",
 			logo,
-			resp: 'M. Simon Chevance',
+			resp: "M. Simon Chevance",
 		},
-		object:
-			'Candidature de stage - Automatisation de tests pour le workflow du centre Mersenne',
-		from: 'Grenoble',
+		object: "Candidature de stage - Automatisation de tests pour le workflow du centre Mersenne",
+		from: "Grenoble",
 		content: `
 			Monsieur Chevance,
 			
@@ -63,8 +62,7 @@ export default {
 			`,
 	},
 	cv: {
-		object:
-			'Stage - Mise en place de tests automatiques pour le workflow du centre Mersenne',
+		object: "Stage - Mise en place de tests automatiques pour le workflow du centre Mersenne",
 		description: `
 			Étudiant en deuxième année de BUT Informatique,
 			je suis à la recherche d'un sujet de stage
@@ -73,19 +71,19 @@ export default {
 		`,
 		skills: [
 			[
-				'Concevoir, réaliser et maintenir des solutions logicielles',
-				'Analyser, implémenter et optimiser des algorithmes',
-				'Installer, interroger et sécuriser une BDD',
+				"Concevoir, réaliser et maintenir des solutions logicielles",
+				"Analyser, implémenter et optimiser des algorithmes",
+				"Installer, interroger et sécuriser une BDD",
 			],
 			[
 				"Collaborer au sein d'une équipe",
-				'Suivre un projet avec la méthodologie agile',
+				"Suivre un projet avec la méthodologie agile",
 				"Communiquer efficacement à l'écrit et à l'oral, anglais compris",
 			],
 		],
 		experiences: [
 			{
-				title: 'Musigma - Application de gestion de festival',
+				title: "Musigma - Application de gestion de festival",
 				description: `
 					Réalisé en collaboration avec 5 camarades :
 					- **Cahier des charges** (fonctionnel, technique, marketing)
@@ -93,18 +91,18 @@ export default {
 					- Maquettes **IHM** respectant les **critères ergonomiques**
 					- Implémentation en **Java**, en collaboration sur **Gitlab**
 					- Présentations en français / anglais (Lean Canvas, démo, ...)`,
-				start: new Date('2024/06'),
-				metadata: '4 semaines, IUT2 Grenoble (projet tutoré)',
+				start: new Date("2024/06"),
+				metadata: "4 semaines, IUT2 Grenoble (projet tutoré)",
 			},
 			{
-				title: 'Étude du nutriscore',
+				title: "Étude du nutriscore",
 				description: `
 					Réalisé lors de ce projet en solo :
 					- Extraction de données d'une **BDD PostgreSQL**
 					- Formattage et **analyse statistique** des données
 					- Présentation des résultats en anglais en **RMarkdown**`,
-				start: new Date('2024/05'),
-				metadata: '4 jours, IUT2 Grenoble (projet tutoré)',
+				start: new Date("2024/05"),
+				metadata: "4 jours, IUT2 Grenoble (projet tutoré)",
 			},
 			{
 				title: "Étude d'algorithmes de classification",
@@ -113,28 +111,28 @@ export default {
 					- Implémentation en **Java** d'algorithmes de classification
 					- Analyse et optimisation desdits algorithmes
 					- Rédaction d'un compte-rendu des performances en **LaTeX**`,
-				start: new Date('2023/10'),
-				metadata: '1 semaines, IUT2 Grenoble (projet tutoré)',
+				start: new Date("2023/10"),
+				metadata: "1 semaines, IUT2 Grenoble (projet tutoré)",
 			},
 		],
 		techs: [
-			['Python, Jupyter', 'R, Quarto'],
-			['C, C++', 'Java'],
+			["Python, Jupyter", "R, Quarto"],
+			["C, C++", "Java"],
 			[
-				'HTML, PHP, JSX',
-				'CSS, SCSS',
-				'JavaScript, TypeScript',
-				'Astro.JS, Next.JS',
+				"HTML, PHP, JSX",
+				"CSS, SCSS",
+				"JavaScript, TypeScript",
+				"Astro.JS, Next.JS",
 			],
-			['Cypress, Puppeteer'],
-			['SQL, PostgreSQL'],
+			["Cypress, Puppeteer"],
+			["SQL, PostgreSQL"],
 			[
-				'Git, Github, Gitlab',
-				'Github Actions, Docker',
-				'Linux system & utils',
-				'VS Code, JetBrains IDEs',
+				"Git, Github, Gitlab",
+				"Github Actions, Docker",
+				"Linux system & utils",
+				"VS Code, JetBrains IDEs",
 			],
-			['Latex, Overleaf', 'UML, BPMN', 'Office 365'],
+			["Latex, Overleaf", "UML, BPMN", "Office 365"],
 		],
 	},
 } satisfies Job

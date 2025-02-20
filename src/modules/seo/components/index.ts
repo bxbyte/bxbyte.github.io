@@ -1,1 +1,1 @@
-export { default as SeoHeaders } from './SeoHeaders.astro'
+export { default as SeoHeaders } from "./SeoHeaders.astro"

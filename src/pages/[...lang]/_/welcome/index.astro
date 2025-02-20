@@ -1,11 +1,11 @@
 ---
-import { Section } from '@/layouts'
-import { getLocaleContent } from '@/modules/i18n/content'
-import locales from './locales'
-import { GridImage } from '@/components'
-import { grainUrl } from '@/styles/theme'
-import sharp from 'sharp'
-import backImgPath from './back.png?path'
+import { Section } from "@/layouts"
+import { getLocaleContent } from "@/modules/i18n/content"
+import locales from "./locales"
+import { GridImage } from "@/components"
+import backImgPath from "./back.png?path"
+import { grainUrl } from "@/styles/theme"
+import sharp from "sharp"
 
 const content = getLocaleContent(locales, Astro)
 ---
@@ -28,23 +28,23 @@ const content = getLocaleContent(locales, Astro)
 						.resize({
 							width: (Math.round(width * imgScale) >> 1) << 1,
 							height: (Math.round(height * imgScale) >> 1) << 1,
-							fit: 'contain',
+							fit: "contain",
 						})
 						.greyscale()
 						.webp({
 							quality: 1,
 							alphaQuality: 0,
 						})
-						.toBuffer(),
+						.toBuffer()
 				)
 			}}
 		/>
 		<div
 			style={{
 				maskImage: [
-					'linear-gradient(#000 80%, #fff)',
+					"linear-gradient(#000 80%, #fff)",
 					grainUrl,
-					'linear-gradient(#fff, #fff)',
+					"linear-gradient(#fff, #fff)",
 				].join(),
 			}}
 		>
@@ -64,7 +64,7 @@ const content = getLocaleContent(locales, Astro)
 	<p class="footer">{content.easteregg}</p>
 
 	<style lang="scss">
-		@use '@/styles/layout.module.scss';
+		@use "@/styles/layout.module.scss";
 
 		:global(.back) {
 			display: flex;
@@ -96,11 +96,11 @@ const content = getLocaleContent(locales, Astro)
 		:global(#welcome) {
 			display: grid;
 			grid-template-areas:
-				'. .'
-				'. .'
-				'a a'
-				'b b'
-				'. f';
+				". ."
+				". ."
+				"a a"
+				"b b"
+				". f";
 			// display: flex;
 			// align-items: center;
 			clip-path: inset(0 0 0 0);

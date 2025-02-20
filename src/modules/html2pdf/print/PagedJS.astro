@@ -1,8 +1,8 @@
 ---
-import { layout } from '../styles'
-import type { RawPageSize } from '../server/pagesize'
+import { layout } from "../styles"
+import type { RawPageSize } from "../server/pagesize"
 
-export const IS_RENDERED_CLASSNAME = 'rendered'
+export const IS_RENDERED_CLASSNAME = "rendered"
 
 export interface Props {
 	targetSelector: string
@@ -33,48 +33,49 @@ export type ScriptParams = typeof param;
 />
 
 <script>
-	import type { ScriptParams } from './PagedJS.astro'
-	import pagedUrl from '!/node_modules/pagedjs/dist/paged.esm?url'
+	import type { ScriptParams } from "./PagedJS.astro"
+	import pagedUrl from "!/node_modules/pagedjs/dist/paged.esm?url"
 
 	const Paged = await import(/* @vite-ignore */ pagedUrl)
 
 	function waitReady() {
 		return new Promise((res) => {
 			if (
-				document.readyState === 'interactive' ||
-				document.readyState === 'complete'
+				document.readyState === "interactive" ||
+				document.readyState === "complete"
 			)
 				return res(document.readyState)
 
-			document.addEventListener('readystatechange', () => {
-				if (document.readyState === 'interactive') res(document.readyState)
+			document.addEventListener("readystatechange", () => {
+				if (document.readyState === "interactive")
+					res(document.readyState)
 			})
 		})
 	}
 
 	function fitPagesToWindow(
 		parentElement: HTMLElement,
-		pages: { element: HTMLDivElement }[],
+		pages: { element: HTMLDivElement }[]
 	) {
 		new ResizeObserver(() => {
 			const parentWidth = parseFloat(
-				window.getComputedStyle(parentElement).getPropertyValue('width'),
+				window.getComputedStyle(parentElement).getPropertyValue("width")
 			)
 			pages.forEach(({ element }) => {
 				let sheet = element.firstElementChild as HTMLDivElement,
 					scale = sheet.clientWidth / parentWidth
 				if (scale > 1) {
 					sheet.style.transform = `scale(${1 / scale})`
-					sheet.style.transformOrigin = 'top left'
+					sheet.style.transformOrigin = "top left"
 					let bbox = sheet.getBoundingClientRect()
-					element.style.width = bbox.width + 'px'
-					element.style.height = bbox.height + 'px'
+					element.style.width = bbox.width + "px"
+					element.style.height = bbox.height + "px"
 				} else {
 					sheet.style.transform =
 						sheet.style.transformOrigin =
 						element.style.width =
 						element.style.height =
-							''
+							""
 				}
 			})
 		}).observe(parentElement)
@@ -88,11 +89,11 @@ export type ScriptParams = typeof param;
 		doublePageClass,
 	}: ScriptParams) {
 		// Detect if the viewer is a printer
-		const isPrinted = window.matchMedia('print').matches
+		const isPrinted = window.matchMedia("print").matches
 
 		// Resize for printing
 		const pageStyleEl = document.head.appendChild(
-			document.createElement('style'),
+			document.createElement("style")
 		)
 
 		pageStyleEl.textContent = (
@@ -126,7 +127,7 @@ export type ScriptParams = typeof param;
 @page {
 	size: ${size.width}${size.unit} ${size.height}${size.unit};
 }`
-		).replace(/\s+/gm, ' ')
+		).replace(/\s+/gm, " ")
 
 		// Paged.js loading
 		window.render = new Promise((res) => (window.resolveRender = res))
@@ -137,55 +138,65 @@ export type ScriptParams = typeof param;
 			class extends Paged.Handler {
 				afterRendered() {
 					// Handle double page layout
-					document.querySelectorAll('.' + doublePageClass).forEach((el) => {
-						const clonedFigure = el.cloneNode(true),
-							rightPage = this.chunker.addPage()
-						rightPage.area.appendChild(clonedFigure)
-					})
-					document.documentElement.classList.toggle(IS_RENDERED_CLASSNAME, true)
+					document
+						.querySelectorAll("." + doublePageClass)
+						.forEach((el) => {
+							const clonedFigure = el.cloneNode(true),
+								rightPage = this.chunker.addPage()
+							rightPage.area.appendChild(clonedFigure)
+						})
+					document.documentElement.classList.toggle(
+						IS_RENDERED_CLASSNAME,
+						true
+					)
 				}
 				afterPreview(pages: { element: HTMLDivElement }[]) {
 					if (!isPrinted) {
 						fitPagesToWindow(
-							document.querySelector(targetSelector) as HTMLElement,
-							pages,
+							document.querySelector(
+								targetSelector
+							) as HTMLElement,
+							pages
 						)
 					}
 					window.resolveRender()
 				}
-			},
+			}
 		)
 		const template = document.querySelector(
-			targetSelector + '>template',
+			targetSelector + ">template"
 		) as HTMLTemplateElement
 		if (isPrinted) {
 			// Get hidden elements (svg refs, ...)
 			const hiddenHTML = [...document.querySelectorAll(`[hidden]`)]
 				.map((el) => el.outerHTML)
-				.join('')
+				.join("")
 			document.body.innerHTML = template.innerHTML
 			await previewer.preview()
 
 			// Reappend hidden element in the first page
-			;(document.querySelector('.pagedjs_page') as HTMLDivElement).innerHTML +=
-				hiddenHTML
+			;(
+				document.querySelector(".pagedjs_page") as HTMLDivElement
+			).innerHTML += hiddenHTML
 		} else {
 			await previewer.preview(
 				template.content,
 				undefined,
-				document.querySelector(targetSelector + '>div') as Element,
+				document.querySelector(targetSelector + ">div") as Element
 			)
 		}
 	}
 
 	async function main() {
-		const paramEl = document.getElementById('pagedjs-param')
+		const paramEl = document.getElementById("pagedjs-param")
 
 		if (paramEl) {
-			await renderPage(JSON.parse((paramEl as any).textContent) as ScriptParams)
+			await renderPage(
+				JSON.parse((paramEl as any).textContent) as ScriptParams
+			)
 		}
 	}
 
 	waitReady().then(main) // Render the first time loaded
-	document.addEventListener('astro:after-swap', main) // Render every other time
+	document.addEventListener("astro:after-swap", main) // Render every other time
 </script>

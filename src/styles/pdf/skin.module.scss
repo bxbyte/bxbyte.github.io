@@ -3,7 +3,7 @@
 // *:has(.noMarginContent) {
 :global(.pagedjs_sheet):has(.noMarginContent)
 	:global(.pagedjs_margin-content)::after {
-	content: '' !important;
+	content: "" !important;
 }
 
 // Boxes
@@ -18,7 +18,7 @@
 	&::before {
 		position: absolute;
 		z-index: -1;
-		content: '';
+		content: "";
 	}
 
 	&::before {
@@ -47,7 +47,7 @@
 
 // Remove outline when no margin
 @each $pseudo,
-	$sides in (('after', ('top', 'bottom')), ('before', ('left', 'right')))
+	$sides in (("after", ("top", "bottom")), ("before", ("left", "right")))
 {
 	@each $side in $sides {
 		@container style(--pagedjs-margin-#{$side}: 0%) {
@@ -61,14 +61,14 @@
 // Links
 
 .namedLink::after {
-	content: '(see ' target-text(attr(href url)) ')';
+	content: "(see " target-text(attr(href url)) ")";
 }
 
 .pagedLink::after {
-	content: '(see page n° ' target-counter(attr(href url), page) ')';
+	content: "(see page n° " target-counter(attr(href url), page) ")";
 }
 
 .quote::before {
-	content: '“' target-text(attr(href url)) '”  (see page n° '
-		target-counter(attr(href url), page) ')';
+	content: "“" target-text(attr(href url)) "”  (see page n° "
+		target-counter(attr(href url), page) ")";
 }

@@ -1,6 +1,6 @@
 ---
-import seo from '../config'
-import merge from 'deepmerge'
+import seo from "../config"
+import merge from "deepmerge"
 
 type MetaData_<T> = Record<string, string | string[] | T | undefined>
 interface MetaData extends MetaData_<MetaData> {}
@@ -14,18 +14,18 @@ export interface Props {
 
 const { title, meta, link, script } = merge(seo, Astro.props) as Props
 
-function metaProp(meta: MetaData, propPrefix = ''): string {
-	if (propPrefix) propPrefix += ':'
+function metaProp(meta: MetaData, propPrefix = ""): string {
+	if (propPrefix) propPrefix += ":"
 	return Object.entries(meta)
-		.filter(([_, content]) => typeof content !== 'undefined')
+		.filter(([_, content]) => typeof content !== "undefined")
 		.map(([name, content]) =>
-			typeof content === 'string'
+			typeof content === "string"
 				? `<meta name="${propPrefix + name}" content="${content}"/>`
 				: content instanceof Array
-					? `<meta name="${propPrefix + name}" content="${content.join(' ')}"/>`
-					: metaProp(content as MetaData, propPrefix + name),
+					? `<meta name="${propPrefix + name}" content="${content.join(" ")}"/>`
+					: metaProp(content as MetaData, propPrefix + name)
 		)
-		.join('')
+		.join("")
 }
 ---
 

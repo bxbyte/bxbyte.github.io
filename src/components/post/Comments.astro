@@ -7,13 +7,13 @@ const { discussion } = Astro.props
 ---
 
 <script>
-	import { REPOSITERY } from 'astro:env/client'
-	import { $theme } from '@/modules/theme/store'
-	import { $locale } from '@/modules/i18n/store'
+	import { REPOSITERY } from "astro:env/client"
+	import { $theme } from "@/modules/theme/store"
+	import { $locale } from "@/modules/i18n/store"
 
 	const enum Giscus {
-		SESSION_KEY = 'giscus-session',
-		ORIGIN = 'https://giscus.app',
+		SESSION_KEY = "giscus-session",
+		ORIGIN = "https://giscus.app",
 		SUGGESTION = `Please consider reporting this error at https://github.com/giscus/giscus/issues/new.`,
 	}
 
@@ -23,20 +23,23 @@ const { discussion } = Astro.props
 		clearEvents!: Function
 
 		connectedCallback() {
-			this.addEventListener('load', () => {
-				this.style.removeProperty('opacity')
+			this.addEventListener("load", () => {
+				this.style.removeProperty("opacity")
 			})
 
 			// Set up session and clear the session param on load
 			const url = new URL(location.href)
-			let session = url.searchParams.get('giscus') || ''
+			let session = url.searchParams.get("giscus") || ""
 			this.savedSession = localStorage.getItem(Giscus.SESSION_KEY)
-			url.searchParams.delete('giscus')
-			url.hash = ''
+			url.searchParams.delete("giscus")
+			url.hash = ""
 			const cleanedLocation = url.toString()
 
 			if (session) {
-				localStorage.setItem(Giscus.SESSION_KEY, JSON.stringify(session))
+				localStorage.setItem(
+					Giscus.SESSION_KEY,
+					JSON.stringify(session)
+				)
 				history.replaceState(undefined, document.title, cleanedLocation)
 			} else if (this.savedSession) {
 				try {
@@ -51,17 +54,17 @@ const { discussion } = Astro.props
 				origin: cleanedLocation,
 				session,
 				theme: this.getThemeName($theme.value),
-				reactionsEnabled: '0',
-				emitMetadata: '0',
-				inputPosition: 'bottom',
+				reactionsEnabled: "0",
+				emitMetadata: "0",
+				inputPosition: "bottom",
 				repo: REPOSITERY,
-				strict: '0',
+				strict: "0",
 				term: this.dataset.discussion,
 			} as Record<string, string>
 
 			// Check messages from the iframe
 			const messageCallback = this.messageCallback.bind(this)
-			window.addEventListener('message', messageCallback)
+			window.addEventListener("message", messageCallback)
 
 			// Update iframe theme on change
 			const removeThemeListener = $theme.listen((isDark) => {
@@ -73,12 +76,12 @@ const { discussion } = Astro.props
 							},
 						},
 					},
-					'https://giscus.app',
+					"https://giscus.app"
 				)
 			})
 
 			this.clearEvents = () => {
-				window.removeEventListener('message', messageCallback)
+				window.removeEventListener("message", messageCallback)
 				removeThemeListener()
 			}
 
@@ -93,7 +96,7 @@ const { discussion } = Astro.props
 			if (event.origin !== Giscus.ORIGIN) return
 
 			const { data } = event
-			if (!(typeof data === 'object' && data.giscus)) return
+			if (!(typeof data === "object" && data.giscus)) return
 
 			if (data.giscus.resizeHeight) {
 				this.style.height = `${data.giscus.resizeHeight}px`
@@ -101,7 +104,7 @@ const { discussion } = Astro.props
 
 			if (data.giscus.signOut) {
 				localStorage.removeItem(Giscus.SESSION_KEY)
-				console.warn('User has logged out. Session has been cleared.')
+				console.warn("User has logged out. Session has been cleared.")
 				this.signOut()
 				return
 			}
@@ -109,9 +112,9 @@ const { discussion } = Astro.props
 			if (!data.giscus.error) return
 			const message = data.giscus.error
 			if (
-				message.includes('Bad credentials') ||
-				message.includes('Invalid state value') ||
-				message.includes('State has expired')
+				message.includes("Bad credentials") ||
+				message.includes("Invalid state value") ||
+				message.includes("State has expired")
 			) {
 				// Might be because token is expired or other causes
 				if (localStorage.getItem(Giscus.SESSION_KEY) !== null) {
@@ -120,14 +123,14 @@ const { discussion } = Astro.props
 					this.signOut()
 				} else if (!this.savedSession) {
 					console.error(
-						`${message}. No session is stored initially. ${Giscus.SUGGESTION}`,
+						`${message}. No session is stored initially. ${Giscus.SUGGESTION}`
 					)
 				}
-			} else if (message.includes('Discussion not found')) {
+			} else if (message.includes("Discussion not found")) {
 				console.error(
-					`[giscus] ${message}. A new discussion will be created if a comment/reaction is submitted.`,
+					`[giscus] ${message}. A new discussion will be created if a comment/reaction is submitted.`
 				)
-			} else if (message.includes('API rate limit exceeded')) {
+			} else if (message.includes("API rate limit exceeded")) {
 				console.error(message)
 			} else {
 				console.error(`${message}. ${Giscus.SUGGESTION}`)
@@ -144,11 +147,11 @@ const { discussion } = Astro.props
 		}
 
 		getThemeName(isDark: boolean): string {
-			return isDark ? 'light' : 'dark'
+			return isDark ? "light" : "dark"
 		}
 	}
 
-	customElements.define('giscus-frame', GiscusFrame, { extends: 'iframe' })
+	customElements.define("giscus-frame", GiscusFrame, { extends: "iframe" })
 </script>
 
 <iframe
@@ -161,7 +164,7 @@ const { discussion } = Astro.props
 </iframe>
 
 <style lang="scss">
-	[is='giscus-frame'] {
+	[is="giscus-frame"] {
 		width: 100%;
 		color-scheme: dark;
 	}

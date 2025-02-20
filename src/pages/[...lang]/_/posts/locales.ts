@@ -1,11 +1,11 @@
 const content = {
 	title: {
-		fr: 'Dernier posts',
-		en: 'Latests posts',
+		fr: "Dernier posts",
+		en: "Latests posts",
 	},
 	more: {
-		fr: 'En voir plus',
-		en: 'See more',
+		fr: "En voir plus",
+		en: "See more",
 	},
 }
 

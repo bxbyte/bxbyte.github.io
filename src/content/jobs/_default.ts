@@ -1,6 +1,6 @@
-import meImgUrl from './me.png?url'
+import type Timeline from "@/components/docs/Timeline"
 
-import type Timeline from '@/components/docs/Timeline'
+import meImgUrl from "./me.png?url"
 
 interface Link {
 	value: string
@@ -10,33 +10,33 @@ interface Link {
 
 const contacts = {
 	tel: {
-		icon: 'mdi:telephone',
-		value: '06 68 10 76 04',
-		link: 'tel:+3306687604',
+		icon: "mdi:telephone",
+		value: "06 68 10 76 04",
+		link: "tel:+3306687604",
 	},
 	email: {
-		icon: 'mdi:email',
-		value: 'iut@lucas-maillet.com',
-		link: 'mailto:iut@lucas-maillet.com',
+		icon: "mdi:email",
+		value: "iut@lucas-maillet.com",
+		link: "mailto:iut@lucas-maillet.com",
 	},
 	linkedin: {
-		icon: 'mdi:linkedin',
-		value: 'linkedin.com/in/mailletl',
-		link: 'https://www.linkedin.com/in/mailletl/',
+		icon: "mdi:linkedin",
+		value: "linkedin.com/in/mailletl",
+		link: "https://www.linkedin.com/in/mailletl/",
 	},
 	location: {
-		icon: 'mdi:location',
-		value: 'Grenoble (38)',
-		link: 'https://maps.app.goo.gl/LJpNcQuBueWpSTD98',
+		icon: "mdi:location",
+		value: "Grenoble (38)",
+		link: "https://maps.app.goo.gl/LJpNcQuBueWpSTD98",
 	},
 } satisfies Record<string, Link>
 
 const defaultJob = {
 	me: {
-		name: 'Lucas Maillet',
+		name: "Lucas Maillet",
 		img: meImgUrl,
-		address: '20 avenue Edmond Esmonin',
-		city: '38000 Grenoble',
+		address: "20 avenue Edmond Esmonin",
+		city: "38000 Grenoble",
 		...contacts,
 		contacts: [
 			contacts.tel,
@@ -45,32 +45,32 @@ const defaultJob = {
 			contacts.location,
 		] as Link[],
 		interests: [
-			'Randonnée',
-			'Minéralogie',
-			'Cuisine',
-			'Bricolage',
-			'Design 2D/3D',
-			'Informatique',
+			"Randonnée",
+			"Minéralogie",
+			"Cuisine",
+			"Bricolage",
+			"Design 2D/3D",
+			"Informatique",
 		],
 	},
 	cv: {
 		diplomas: [
 			{
-				title: 'BUT informatique - IUT2',
-				metadata: 'Grenoble',
+				title: "BUT informatique - IUT2",
+				metadata: "Grenoble",
 				description:
 					"Parcours réalisation d'applications + Option Maths Avancés",
-				start: new Date('2023'),
+				start: new Date("2023"),
 				end: "Aujourd'hui",
 			},
 			{
-				title: 'BAC général - Lycée Louis Armand',
-				metadata: 'Villefranche sur Saône',
-				description: 'Spécialités Maths et NSI + Option Maths Expertes',
-				start: new Date('2020'),
-				end: new Date('2023'),
+				title: "BAC général - Lycée Louis Armand",
+				metadata: "Villefranche sur Saône",
+				description: "Spécialités Maths et NSI + Option Maths Expertes",
+				start: new Date("2020"),
+				end: new Date("2023"),
 			},
-		] as component.Props_<typeof Timeline>['items'],
+		] as component.Props_<typeof Timeline>["items"],
 	},
 }
 export default defaultJob
@@ -98,7 +98,7 @@ declare global {
 			description: string
 			skills: string[][]
 			techs: string[][]
-			experiences: component.Props_<typeof Timeline>['items']
+			experiences: component.Props_<typeof Timeline>["items"]
 		}
 	} & PartialRecursive<typeof defaultJob>
 }

@@ -10,7 +10,7 @@ function divideMaze(
 		dx: number
 		y: number
 		dy: number
-	},
+	}
 ) {
 	if (cell.dx - cell.x <= 1) return
 	if (cell.dy - cell.y <= 1) return
@@ -49,7 +49,7 @@ function divideMaze(
 function generateMazeGrid(width: number, height: number) {
 	// const cvs = createCanvas(width, height)
 	const maze: boolean[][] = Array.from({ length: height }, () =>
-		new Array(width).fill(false),
+		new Array(width).fill(false)
 	)
 	divideMaze(maze, {
 		x: 1,
@@ -59,8 +59,8 @@ function generateMazeGrid(width: number, height: number) {
 	})
 
 	maze.forEach((row) => {
-		row.forEach((v) => process.stdout.write(v ? ' ' : 'x'))
-		process.stdout.write('\n')
+		row.forEach((v) => process.stdout.write(v ? " " : "x"))
+		process.stdout.write("\n")
 	})
 }
 

@@ -1,23 +1,23 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
-import { p } from '@/modules/composer/server'
+import type { HTMLAttributes } from "astro/types"
+import { p } from "@/modules/composer/server"
 
-type Props = HTMLAttributes<'a'> & {
+type Props = HTMLAttributes<"a"> & {
 	label?: string
-	direction?: 'left' | 'center' | 'right'
+	direction?: "left" | "center" | "right"
 	defaultActive?: boolean
 }
 
 const {
 	label,
-	direction = 'left',
+	direction = "left",
 	defaultActive = false,
 	...rawProps
 } = Astro.props
 
 const props = p(rawProps)
-	.with('class', defaultActive && 'active')
-	.with('class', direction && direction != 'left' && direction)
+	.with("class", defaultActive && "active")
+	.with("class", direction && direction != "left" && direction)
 	.end()
 ---
 

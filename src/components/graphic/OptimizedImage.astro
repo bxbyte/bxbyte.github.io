@@ -1,42 +1,42 @@
 ---
-import { Picture } from 'astro:assets' // Use Astro native solution in the background
-import { p } from '@/modules/composer/server'
+import { Picture } from "astro:assets" // Use Astro native solution in the background
+import { p } from "@/modules/composer/server"
 
 type PictureProps = component.Props_<typeof Picture>
 
 type Props = Pick<
 	component.Props_<typeof Picture>,
-	'src' | 'alt' | 'width' | 'height'
+	"src" | "alt" | "width" | "height"
 > &
-	PictureProps['pictureAttributes']
+	PictureProps["pictureAttributes"]
 
 const { src, alt, width, height, ...rawProps } = Astro.props,
-	props = p(rawProps).with('is', 'optimized-image').with('class', 'loading')
+	props = p(rawProps).with("is", "optimized-image").with("class", "loading")
 ---
 
 <script>
-	import { define } from '@/modules/composer/client'
+	import { define } from "@/modules/composer/client"
 
-	@define('optimized-image', { extends: 'picture' })
+	@define("optimized-image", { extends: "picture" })
 	class OptimizedImage extends HTMLPictureElement {
 		connectedCallback() {
 			const img = this.lastElementChild as HTMLImageElement
 			if (img.complete) this.setLoaded()
 			else
-				img.addEventListener('load', this.setLoaded.bind(this), {
+				img.addEventListener("load", this.setLoaded.bind(this), {
 					once: true,
 				})
 		}
 
 		setLoaded() {
-			this.classList.remove('loading')
+			this.classList.remove("loading")
 		}
 	}
 </script>
 
 <Picture
 	format="avif"
-	formats={['avif', 'webp', 'jpg']}
+	formats={["avif", "webp", "jpg"]}
 	fallbackFormat="webp"
 	src={src as ImageMetadata}
 	alt={alt}
@@ -63,7 +63,7 @@ const { src, alt, width, height, ...rawProps } = Astro.props,
 			left: 0;
 			align-content: center;
 			background-color: theme.$color-grey;
-			content: 'loading...';
+			content: "loading...";
 			text-align: center;
 		}
 	}

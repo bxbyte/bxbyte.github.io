@@ -1,16 +1,16 @@
 ---
-import authors from '@/data/authors.json'
+import authors from "@/data/authors.json"
 
-import { getEntry } from 'astro:content'
+import { getEntry } from "astro:content"
 
 interface Props {
-	id: (typeof authors)[number]['id']
+	id: (typeof authors)[number]["id"]
 }
 
 const { id } = Astro.props,
-	author = await getEntry('authors', id)
+	author = await getEntry("authors", id)
 
-if (!author) throw new Error('Author id noexistent')
+if (!author) throw new Error("Author id noexistent")
 ---
 
 <a href={author.data.social} title={`${author.data.name} social link`}>

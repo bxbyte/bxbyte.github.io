@@ -1,5 +1,5 @@
 ---
-import type { HTMLAttributes, HTMLTag } from 'astro/types'
+import type { HTMLAttributes, HTMLTag } from "astro/types"
 
 type Props<T extends HTMLTag> = HTMLAttributes<T> & {
 	el: T
@@ -8,12 +8,12 @@ type Props<T extends HTMLTag> = HTMLAttributes<T> & {
 const { el: Element, class: class_, ...props } = Astro.props
 ---
 
-<Element class:list={['block', class_]} {...props}>
+<Element class:list={["block", class_]} {...props}>
 	<slot />
 </Element>
 
 <style lang="scss">
-	@use '@/styles/layout.module.scss';
+	@use "@/styles/layout.module.scss";
 
 	.block {
 		padding: layout.$window-padding-y layout.$window-padding-x;

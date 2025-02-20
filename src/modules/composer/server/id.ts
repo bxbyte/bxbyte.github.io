@@ -1,7 +1,7 @@
 const idAlphabet =
-	'0123456789azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_-'
+	"0123456789azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_-"
 
-export const $elementIds: { id: number } = ((global as any)['$elementIds'] ||= {
+export const $elementIds: { id: number } = ((global as any)["$elementIds"] ||= {
 	id: 0,
 })
 
@@ -19,5 +19,5 @@ export function newId(): string {
 		}
 	}
 
-	return id.map((k) => idAlphabet[k]).join('')
+	return id.map((k) => idAlphabet[k]).join("")
 }

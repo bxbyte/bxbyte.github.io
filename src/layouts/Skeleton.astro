@@ -1,19 +1,19 @@
 ---
-import '@/styles/Global.astro'
+import "@/styles/Global.astro"
 
-import { ThemeHeaders } from '@/modules/theme/components'
-import { LocaleHeaders } from '@/modules/i18n/components'
-import type { HTMLAttributes } from 'astro/types'
-import { SeoHeaders } from '@/modules/seo/components'
-import { ClientRouter } from 'astro:transitions'
-import type { AstroInstance } from 'astro'
+import { ThemeHeaders } from "@/modules/theme/components"
+import { LocaleHeaders } from "@/modules/i18n/components"
+import type { HTMLAttributes } from "astro/types"
+import { SeoHeaders } from "@/modules/seo/components"
+import { ClientRouter } from "astro:transitions"
+import type { AstroInstance } from "astro"
 
-export interface Props extends HTMLAttributes<'body'> {
+export interface Props extends HTMLAttributes<"body"> {
 	head?: component.Props_<typeof SeoHeaders>
 }
 
 let globalComponents = (await Promise.all(
-	Object.values(import.meta.glob('@/**/*.global.astro')).map((v) => v()),
+	Object.values(import.meta.glob("@/**/*.global.astro")).map((v) => v())
 )) as AstroInstance[]
 
 const { head, ...props } = Astro.props

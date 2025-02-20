@@ -1,22 +1,22 @@
-import type { AstroIntegration } from 'astro'
-import { dirname, join } from 'path'
-import { SassString } from 'sass-embedded'
+import type { AstroIntegration } from "astro"
+import { dirname, join } from "path"
+import { SassString } from "sass-embedded"
 
-const variablesUrl = join(dirname(import.meta.url), './styles/variables.scss')
+const variablesUrl = join(dirname(import.meta.url), "./styles/variables.scss")
 
 /**
  * Define theme related variables (colors, shades, ...)
  */
 export default {
-	name: 'theme',
+	name: "theme",
 	hooks: {
-		async 'astro:config:setup'({ updateConfig }) {
+		async "astro:config:setup"({ updateConfig }) {
 			updateConfig({
 				vite: {
 					css: {
 						preprocessorOptions: {
 							scss: {
-								api: 'modern-compiler',
+								api: "modern-compiler",
 								additionalData:
 									// Import theme variables in every scss code file/chunk
 									`@use '${variablesUrl}' as theme;`,
@@ -26,15 +26,22 @@ export default {
 									 * @param svgs the svg string
 									 * @returns the uri-base64 encoded svg's string
 									 */
-									'svg($svg)': function ([svg]: [SassString]) {
+									"svg($svg)": function ([svg]: [
+										SassString,
+									]) {
 										return new SassString(
 											`data:image/svg+xml;base64,${Buffer.from(
 												svg.asList
 													.map((v) =>
-														v.toString().replace(/^\s*["']|["']\s*$/gm, ''),
+														v
+															.toString()
+															.replace(
+																/^\s*["']|["']\s*$/gm,
+																""
+															)
 													)
-													.join(''),
-											).toString('base64')}`,
+													.join("")
+											).toString("base64")}`
 										)
 									},
 								},
@@ -45,8 +52,8 @@ export default {
 				markdown: {
 					shikiConfig: {
 						themes: {
-							light: 'github-light',
-							dark: 'dark-plus',
+							light: "github-light",
+							dark: "dark-plus",
 						},
 						defaultColor: false,
 					},

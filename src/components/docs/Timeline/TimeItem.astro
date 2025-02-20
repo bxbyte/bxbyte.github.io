@@ -1,7 +1,7 @@
 ---
-import styles from './styles.module.scss'
+import styles from "./styles.module.scss"
 
-import { md } from '@/modules/composer/server'
+import { md } from "@/modules/composer/server"
 
 interface Props {
 	title: string
@@ -14,8 +14,8 @@ interface Props {
 const { title, description, start, end, metadata } = Astro.props
 
 function dateFormat(date: Date): string {
-	const formater = { year: 'numeric' } as Intl.DateTimeFormatOptions
-	if (date.getMonth() != 0) formater.month = 'long'
+	const formater = { year: "numeric" } as Intl.DateTimeFormatOptions
+	if (date.getMonth() != 0) formater.month = "long"
 	return date.toLocaleDateString(Astro.currentLocale, formater)
 }
 ---
@@ -29,7 +29,9 @@ function dateFormat(date: Date): string {
 					<Fragment>
 						-
 						{end instanceof Date ? (
-							<time datetime={end.toISOString()}>{dateFormat(end)}</time>
+							<time datetime={end.toISOString()}>
+								{dateFormat(end)}
+							</time>
 						) : (
 							end
 						)}
@@ -39,7 +41,7 @@ function dateFormat(date: Date): string {
 		</p>
 		<Fragment set:html={md(description)} />
 		{
-			Astro.slots.has('default') && (
+			Astro.slots.has("default") && (
 				<div>
 					<slot />
 				</div>

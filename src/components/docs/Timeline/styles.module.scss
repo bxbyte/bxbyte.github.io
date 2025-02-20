@@ -17,7 +17,7 @@ $last-dot-border-width: 1px;
 	&::before,
 	&::after {
 		position: absolute;
-		content: '';
+		content: "";
 	}
 
 	&::before {
@@ -41,7 +41,7 @@ $last-dot-border-width: 1px;
 
 .timeItem {
 	p {
-		&[role='heading'] {
+		&[role="heading"] {
 			position: relative;
 			font-weight: bold;
 
@@ -55,7 +55,7 @@ $last-dot-border-width: 1px;
 				background-color: theme.$color-black;
 				width: $dot-size;
 				height: $dot-size;
-				content: '';
+				content: "";
 			}
 		}
 
@@ -67,7 +67,7 @@ $last-dot-border-width: 1px;
 
 			&[data-metadata]::after {
 				margin-left: -0.5ch;
-				content: ', ' attr(data-metadata);
+				content: ", " attr(data-metadata);
 				text-transform: none;
 			}
 		}

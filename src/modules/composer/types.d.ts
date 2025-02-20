@@ -1,6 +1,6 @@
-import type { ComponentProps } from 'astro/types'
+import type { ComponentProps } from "astro/types"
 
-import type { localeDefs } from './config'
+import type { localeDefs } from "./config"
 
 declare global {
 	declare namespace component {

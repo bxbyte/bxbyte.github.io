@@ -1,1 +1,1 @@
-export { default } from './PatternGrid.astro'
+export { default } from "./PatternGrid.astro"

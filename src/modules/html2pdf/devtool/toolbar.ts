@@ -1,9 +1,9 @@
-import { METADATA_ID } from '../print/Metadata.astro'
-import type Renderer from '../server/renderer'
+import { METADATA_ID } from "../print/Metadata.astro"
+import type Renderer from "../server/renderer"
 
-import { defineToolbarApp } from 'astro/toolbar'
+import { defineToolbarApp } from "astro/toolbar"
 
-import { MSG } from './msg'
+import { MSG } from "./msg"
 
 export default defineToolbarApp({
 	init(_, app, server) {
@@ -13,7 +13,7 @@ export default defineToolbarApp({
 			if (state) {
 				// Retrieve metadata from html element
 				const metadataEl = document.getElementById(METADATA_ID)
-				if (!metadataEl) throw Error('Missing metadata element')
+				if (!metadataEl) throw Error("Missing metadata element")
 				const metadata = JSON.parse(metadataEl.innerHTML) || {}
 
 				// Rendering attached to a special uuid to avoid opening results on all page
@@ -24,7 +24,7 @@ export default defineToolbarApp({
 					uuid,
 					url: window.location.href,
 					...metadata,
-				} as Parameters<(typeof Renderer)['render']>[0])
+				} as Parameters<(typeof Renderer)["render"]>[0])
 
 				// Reset toggle
 				app.toggleState({ state: false })
@@ -33,7 +33,7 @@ export default defineToolbarApp({
 
 		server.on(MSG.RESULT, (param: { uuid: string; pdfPath: string }) => {
 			if (pageUUIDs.has(param.uuid)) {
-				window.open(param.pdfPath, '_blank')?.focus()
+				window.open(param.pdfPath, "_blank")?.focus()
 				pageUUIDs.delete(param.uuid)
 			}
 		})

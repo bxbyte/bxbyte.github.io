@@ -1,2 +1,2 @@
 // Proxy exported variables
-export { default } from './styles/variables.module.scss'
+export { default } from "./styles/variables.module.scss"

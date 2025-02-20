@@ -1,24 +1,30 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
-import { newId } from '@/modules/composer/server'
+import type { HTMLAttributes } from "astro/types"
+import { newId } from "@/modules/composer/server"
 
-type Props<T extends 'input' | 'textarea' = 'input'> = HTMLAttributes<T> & {
+type Props<T extends "input" | "textarea" = "input"> = HTMLAttributes<T> & {
 	el?: T
 	name?: string
 	placeholder?: string
 }
 
 const id = newId()
-const { el: Element = 'input', name, placeholder, ...props } = Astro.props
+const { el: Element = "input", name, placeholder, ...props } = Astro.props
 ---
 
 <div>
-	<Element {...props} class={props.class} id={id} name={name} placeholder="" />
+	<Element
+		{...props}
+		class={props.class}
+		id={id}
+		name={name}
+		placeholder=""
+	/>
 	<label for={id}>{placeholder}</label>
 </div>
 
 <style lang="scss">
-	[class^='astro-'] {
+	[class^="astro-"] {
 		$label-size: 0.8em;
 		$input-padding: 0.5em;
 
@@ -48,8 +54,8 @@ const { el: Element = 'input', name, placeholder, ...props } = Astro.props
 		textarea {
 			border: 1px solid #{theme.$color-grey};
 			border-radius: 0.2em;
-			padding: calc($label-size + $input-padding) $input-padding $input-padding
-				$input-padding;
+			padding: calc($label-size + $input-padding) $input-padding
+				$input-padding $input-padding;
 			width: calc(100% - $input-padding * 2);
 		}
 	}

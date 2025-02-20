@@ -1,19 +1,19 @@
 ---
-import type { HTMLAttributes, HTMLTag } from 'astro/types'
-import { p } from '@/modules/composer/server'
+import type { HTMLAttributes, HTMLTag } from "astro/types"
+import { p } from "@/modules/composer/server"
 
-type Props<T extends HTMLTag = 'button'> = HTMLAttributes<T> & {
+type Props<T extends HTMLTag = "button"> = HTMLAttributes<T> & {
 	el?: T
-	variant?: 'primary' | 'secondary' | 'tag'
+	variant?: "primary" | "secondary" | "tag"
 }
 
-const { variant, el: Element = 'button', ...rawProps } = Astro.props
+const { variant, el: Element = "button", ...rawProps } = Astro.props
 const props = p(rawProps)
 	.with(
-		'class',
-		variant == 'primary' ? null : variant, // As primary is the default variant
+		"class",
+		variant == "primary" ? null : variant // As primary is the default variant
 	)
-	.with('role', Element != 'button' && 'button')
+	.with("role", Element != "button" && "button")
 	.end()
 ---
 
@@ -22,7 +22,7 @@ const props = p(rawProps)
 </Element>
 
 <style lang="scss">
-	[class^='astro-'] {
+	[class^="astro-"] {
 		display: flex;
 		align-items: center;
 		gap: 1em;

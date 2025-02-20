@@ -1,9 +1,9 @@
 ---
-import { Section } from '@/layouts'
-import { getLocaleContent } from '@/modules/i18n/content'
-import locales from './locales'
-import { PostCard } from '@/components'
-import { getPostsByLocale } from '@/content'
+import { Section } from "@/layouts"
+import { getLocaleContent } from "@/modules/i18n/content"
+import locales from "./locales"
+import { PostCard } from "@/components"
+import { getPostsByLocale } from "@/content"
 
 const content = getLocaleContent(locales, Astro)
 const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]

@@ -1,1 +1,1 @@
-export { default } from './PDF.astro'
+export { default } from "./PDF.astro"

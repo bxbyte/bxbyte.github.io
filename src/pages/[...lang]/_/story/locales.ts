@@ -1,18 +1,18 @@
 const content = {
 	title: {
-		fr: 'Mon parcours',
-		en: 'My story',
+		fr: "Mon parcours",
+		en: "My story",
 	},
 	description: {
-		fr: 'Culpa adipisicing Lorem elit labore magna ea aliquip labore non laboris velit aute. Dolor magna exercitation voluptate consequat eiusmod esse adipisicing quis.Pariatur non anim ullamco labore minim aliqua.Officia non voluptate ex fugiat sint qui sit voluptate ut ipsum magna. Laborum nulla sit nulla magna ex dolor duis enim enim duis nulla qui adipisicing. Deserunt fugiat qui velit cupidatat nisi. Anim sit deserunt nisi ut ad voluptate est consequat dolore reprehenderit aliqua. Ut culpa enim velit qui qui sint in ea id amet minim mollit. In sunt dolor ullamco nostrud ex voluptate consectetur. Ipsum fugiat amet culpa eiusmod. Ex ullamco aliqua commodo adipisicing eiusmod. Laboris sunt ea aute mollit ullamco officia reprehenderit qui.',
-		en: 'Culpa adipisicing Lorem elit labore magna ea aliquip labore non laboris velit aute. Dolor magna exercitation voluptate consequat eiusmod esse adipisicing quis.Pariatur non anim ullamco labore minim aliqua.Officia non voluptate ex fugiat sint qui sit voluptate ut ipsum magna. Laborum nulla sit nulla magna ex dolor duis enim enim duis nulla qui adipisicing. Deserunt fugiat qui velit cupidatat nisi. Anim sit deserunt nisi ut ad voluptate est consequat dolore reprehenderit aliqua. Ut culpa enim velit qui qui sint in ea id amet minim mollit. In sunt dolor ullamco nostrud ex voluptate consectetur. Ipsum fugiat amet culpa eiusmod. Ex ullamco aliqua commodo adipisicing eiusmod. Laboris sunt ea aute mollit ullamco officia reprehenderit qui.',
+		fr: "Culpa adipisicing Lorem elit labore magna ea aliquip labore non laboris velit aute. Dolor magna exercitation voluptate consequat eiusmod esse adipisicing quis.Pariatur non anim ullamco labore minim aliqua.Officia non voluptate ex fugiat sint qui sit voluptate ut ipsum magna. Laborum nulla sit nulla magna ex dolor duis enim enim duis nulla qui adipisicing. Deserunt fugiat qui velit cupidatat nisi. Anim sit deserunt nisi ut ad voluptate est consequat dolore reprehenderit aliqua. Ut culpa enim velit qui qui sint in ea id amet minim mollit. In sunt dolor ullamco nostrud ex voluptate consectetur. Ipsum fugiat amet culpa eiusmod. Ex ullamco aliqua commodo adipisicing eiusmod. Laboris sunt ea aute mollit ullamco officia reprehenderit qui.",
+		en: "Culpa adipisicing Lorem elit labore magna ea aliquip labore non laboris velit aute. Dolor magna exercitation voluptate consequat eiusmod esse adipisicing quis.Pariatur non anim ullamco labore minim aliqua.Officia non voluptate ex fugiat sint qui sit voluptate ut ipsum magna. Laborum nulla sit nulla magna ex dolor duis enim enim duis nulla qui adipisicing. Deserunt fugiat qui velit cupidatat nisi. Anim sit deserunt nisi ut ad voluptate est consequat dolore reprehenderit aliqua. Ut culpa enim velit qui qui sint in ea id amet minim mollit. In sunt dolor ullamco nostrud ex voluptate consectetur. Ipsum fugiat amet culpa eiusmod. Ex ullamco aliqua commodo adipisicing eiusmod. Laboris sunt ea aute mollit ullamco officia reprehenderit qui.",
 	},
 	timeline: [
 		{
-			start: new Date('2020-03-17'),
+			start: new Date("2020-03-17"),
 			title: {
-				fr: 'Là où tout commence',
-				en: 'Where it all started',
+				fr: "Là où tout commence",
+				en: "Where it all started",
 			},
 			description: {
 				fr: `Pendant ce premier confinement du COVID, 
@@ -36,11 +36,11 @@ const content = {
 			},
 		},
 		{
-			start: new Date('2020-09-02'),
-			end: new Date('2023-06-20'),
+			start: new Date("2020-09-02"),
+			end: new Date("2023-06-20"),
 			title: {
-				fr: 'Baccalauréat Général',
-				en: 'High School Diploma',
+				fr: "Baccalauréat Général",
+				en: "High School Diploma",
 			},
 			description: {
 				fr: `Pendant ces 3 années, j'ai étudié afin de partir en études sups.`,
@@ -60,14 +60,14 @@ const content = {
 			},
 		},
 		{
-			start: new Date('2023-09-02'),
+			start: new Date("2023-09-02"),
 			end: {
 				fr: "Aujourd'hui",
-				en: 'Today',
+				en: "Today",
 			},
 			title: {
-				fr: 'BUT en Informatique',
-				en: 'Major in Computer Sciences',
+				fr: "BUT en Informatique",
+				en: "Major in Computer Sciences",
 			},
 			description: {
 				fr: `Étudié et mis en pratique les bases de l'informatique,

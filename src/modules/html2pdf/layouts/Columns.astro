@@ -2,9 +2,9 @@
 type Enumerate<
 	N extends number,
 	Acc extends number[] = [],
-> = Acc['length'] extends N
+> = Acc["length"] extends N
 	? Acc[number]
-	: Enumerate<N, [...Acc, Acc['length']]>
+	: Enumerate<N, [...Acc, Acc["length"]]>
 
 type IntRange<F extends number, T extends number> = Exclude<
 	Enumerate<T>,
@@ -18,7 +18,7 @@ interface Props {
 const { n } = Astro.props
 ---
 
-<div class={'col' + n}>
+<div class={"col" + n}>
 	<slot />
 </div>
 

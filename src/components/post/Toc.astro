@@ -33,20 +33,20 @@ const { name, items, track = false } = Astro.props
 					io: new IntersectionObserver((entries) =>
 						entries.map((entry) => {
 							let item = this.track.items.get(
-								entry.target as HTMLLIElement,
+								entry.target as HTMLLIElement
 							) as Item
 							if (entry.isIntersecting) {
 								this.track.targetInViewport.add(item)
 							} else this.track.targetInViewport.delete(item)
-						}),
+						})
 					),
 				}
 
 				// Set default item
-				this.track.current.classList.add('active')
+				this.track.current.classList.add("active")
 
-				this.querySelectorAll('a').forEach(async (el, order) => {
-					const targetId = el.href.replace(/[^#]*#/, '')
+				this.querySelectorAll("a").forEach(async (el, order) => {
+					const targetId = el.href.replace(/[^#]*#/, "")
 					let target: HTMLElement | null,
 						tryIdx = 0
 					while (
@@ -66,18 +66,18 @@ const { name, items, track = false } = Astro.props
 
 				// Update current item on scroll
 				const onScroll = this.onScroll.bind(this)
-				document.addEventListener('scroll', onScroll)
+				document.addEventListener("scroll", onScroll)
 
 				// Make sure to destroy the events
 				this.disconnectedCallback = () => {
-					document.removeEventListener('scroll', onScroll)
+					document.removeEventListener("scroll", onScroll)
 				}
 			}
 		}
 
 		onScroll() {
 			const item = [...this.track.targetInViewport].sort(
-				(a, b) => a.order - b.order,
+				(a, b) => a.order - b.order
 			)[0]
 			if (item) {
 				this.setCurrentItem(item)
@@ -85,13 +85,13 @@ const { name, items, track = false } = Astro.props
 		}
 
 		setCurrentItem(item: Item) {
-			this.track.current?.classList.toggle('active', false)
+			this.track.current?.classList.toggle("active", false)
 			this.track.current = item.ref
-			this.track.current.classList.toggle('active', true)
+			this.track.current.classList.toggle("active", true)
 		}
 	}
 
-	customElements.define('ul-toc', Toc, { extends: 'ul' })
+	customElements.define("ul-toc", Toc, { extends: "ul" })
 </script>
 
 <ul is="ul-toc" data-track={track}>
@@ -99,7 +99,7 @@ const { name, items, track = false } = Astro.props
 	<ul>
 		{
 			items.map((item) => {
-				if (typeof item == 'string') return <li>{item}</li>
+				if (typeof item == "string") return <li>{item}</li>
 
 				let { text, lvl, ...props_ } = item,
 					props = props_ as any
@@ -125,7 +125,7 @@ const { name, items, track = false } = Astro.props
 <style lang="scss">
 	$border-size: 1px;
 
-	[is='ul-toc'] {
+	[is="ul-toc"] {
 		--lvl: 1;
 
 		position: relative;
@@ -150,7 +150,11 @@ const { name, items, track = false } = Astro.props
 				border-left: $border-size solid theme.$color-grey;
 
 				&:hover {
-					background: color-mix(in srgb, theme.$color-grey, transparent 50%);
+					background: color-mix(
+						in srgb,
+						theme.$color-grey,
+						transparent 50%
+					);
 				}
 
 				&.active {

@@ -1,20 +1,20 @@
 ---
-import { Ref } from '@/components'
-import { locales } from '../config'
+import { Ref } from "@/components"
+import { locales } from "../config"
 ---
 
 <script>
-	import { $locale } from '../store'
-	import { define } from '@/modules/composer/client'
+	import { $locale } from "../store"
+	import { define } from "@/modules/composer/client"
 
-	define('locale-link', { extends: 'a' })(
+	define("locale-link", { extends: "a" })(
 		class extends HTMLAnchorElement {
 			connectedCallback() {
-				this.addEventListener('click', () =>
-					$locale.set(this.dataset.locale as i18n.Locales),
+				this.addEventListener("click", () =>
+					$locale.set(this.dataset.locale as i18n.Locales)
 				)
 			}
-		},
+		}
 	)
 </script>
 

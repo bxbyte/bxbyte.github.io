@@ -1,11 +1,11 @@
 ---
-import type { PostHydrated } from '@/content'
-import { PatternGrid } from '@/components/graphic'
-import { getRelativeLocaleUrl } from 'astro:i18n'
-import { getLocaleContent } from '@/modules/i18n/content'
-import { localeDefs } from '@/modules/i18n/config'
-import { Button, SharpImage } from '@/components'
-import { Icon } from 'astro-icon/components'
+import type { PostHydrated } from "@/content"
+import { PatternGrid } from "@/components/graphic"
+import { getRelativeLocaleUrl } from "astro:i18n"
+import { getLocaleContent } from "@/modules/i18n/content"
+import { localeDefs } from "@/modules/i18n/config"
+import { Button, SharpImage } from "@/components"
+import { Icon } from "astro-icon/components"
 
 interface Props {
 	post: PostHydrated
@@ -14,26 +14,26 @@ interface Props {
 const content = getLocaleContent(
 	{
 		actionCall: {
-			fr: 'Lire plus',
-			en: 'Read more',
+			fr: "Lire plus",
+			en: "Read more",
 		},
 		share: {
-			fr: 'Partager',
-			en: 'Share',
+			fr: "Partager",
+			en: "Share",
 		},
 	},
-	Astro,
+	Astro
 )
 
 const MAX_DESCRIPTION_CHAR_LENGHT = 144,
 	MAX_DESCRIPTION_REGEXP = new RegExp(
-		`^.{1,${MAX_DESCRIPTION_CHAR_LENGHT}}\\w+`,
+		`^.{1,${MAX_DESCRIPTION_CHAR_LENGHT}}\\w+`
 	)
 
 function formatDescription(description: string) {
 	return description.length < MAX_DESCRIPTION_CHAR_LENGHT
 		? description
-		: description.match(MAX_DESCRIPTION_REGEXP) + '...'
+		: description.match(MAX_DESCRIPTION_REGEXP) + "..."
 }
 
 const {
@@ -45,7 +45,7 @@ const {
 } = Astro.props
 ---
 
-<a href={getRelativeLocaleUrl(Astro.currentLocale as string, '/posts/' + hash)}>
+<a href={getRelativeLocaleUrl(Astro.currentLocale as string, "/posts/" + hash)}>
 	<article>
 		{
 			cover ? (
@@ -57,7 +57,7 @@ const {
 						img.greyscale().resize({
 							width: 1920,
 							height: 1080,
-							fit: 'cover',
+							fit: "cover",
 						})
 					}
 				/>
@@ -131,13 +131,13 @@ const {
 		}
 
 		p {
-			&[role='heading'] {
+			&[role="heading"] {
 				justify-content: space-between;
 				font-weight: bold;
 				text-wrap: balance;
 			}
 
-			&:not([role='heading']) {
+			&:not([role="heading"]) {
 				display: -webkit-box;
 				overflow: hidden;
 				-webkit-line-clamp: 1;

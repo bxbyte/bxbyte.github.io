@@ -13,9 +13,12 @@ export type URLIDCollection<T extends { readonly [k in keyof T]: T[k] }> = {
 
 export function urlIdCollection<T extends { readonly [k in keyof T]: T[k] }>(
 	ids: T,
-	prefix = '',
+	prefix = ""
 ): URLIDCollection<T> {
 	return Object.fromEntries(
-		Object.entries(ids).map(([k, v]) => [k, new URLID([prefix, v].join('-'))]),
+		Object.entries(ids).map(([k, v]) => [
+			k,
+			new URLID([prefix, v].join("-")),
+		])
 	) as URLIDCollection<T>
 }

@@ -1,20 +1,20 @@
 ---
-import { useLocaleContents } from '@/modules/i18n/content'
-import { getPostsByLocale } from '@/content'
+import { useLocaleContents } from "@/modules/i18n/content"
+import { getPostsByLocale } from "@/content"
 
-import PDF from '@/modules/html2pdf/print'
-import { Main, Block } from '@/layouts'
-import { BreadCrumbs, Comments, Toc } from '@/components'
-import type { BlogPosting } from 'schema-dts'
+import PDF from "@/modules/html2pdf/print"
+import { Main, Block } from "@/layouts"
+import { BreadCrumbs, Comments, Toc } from "@/components"
+import type { BlogPosting } from "schema-dts"
 
-import './_page.scss'
-import postStyles from './_post.module.scss'
-import contentStyles from './_content.module.scss'
+import "./_page.scss"
+import postStyles from "./_post.module.scss"
+import contentStyles from "./_content.module.scss"
 
-import renderPostMdx from '@/libs/server/post-renderer'
+import renderPostMdx from "@/libs/server/post-renderer"
 
-import type { PostHydrated } from '@/content'
-import { Image } from 'astro:assets'
+import type { PostHydrated } from "@/content"
+import { Image } from "astro:assets"
 
 interface Props {
 	post: PostHydrated
@@ -24,27 +24,28 @@ export const { getStaticPaths, getLocaleContent } = useLocaleContents(
 	{
 		toc: {
 			headings: {
-				fr: 'Table des matières',
-				en: 'Table of content',
+				fr: "Table des matières",
+				en: "Table of content",
 			},
 			figures: {
-				fr: 'Table des figures',
-				en: 'Table of figure',
+				fr: "Table des figures",
+				en: "Table of figure",
 			},
 			tables: {
-				fr: 'Table des tableaux',
-				en: 'Table of table',
+				fr: "Table des tableaux",
+				en: "Table of table",
 			},
 		},
 	},
 	async () => {
-		return Object.entries(await getPostsByLocale()).flatMap(([locale, posts]) =>
-			posts.map((post) => ({
-				params: { locale, hash: post.hash },
-				props: { post },
-			})),
+		return Object.entries(await getPostsByLocale()).flatMap(
+			([locale, posts]) =>
+				posts.map((post) => ({
+					params: { locale, hash: post.hash },
+					props: { post },
+				}))
 		)
-	},
+	}
 )
 
 const {
@@ -56,11 +57,11 @@ const {
 
 var pdfData: Parameters<typeof PDF>[0] | undefined
 
-if (type == 'pdf')
+if (type == "pdf")
 	pdfData = {
 		...rawFrontmatter,
 		authors: data.authors && data.authors.map(({ name }) => name),
-		targetSelector: '.pdf',
+		targetSelector: ".pdf",
 	}
 ---
 
@@ -72,16 +73,16 @@ if (type == 'pdf')
 			og: {
 				title,
 				description,
-				type: 'article',
+				type: "article",
 			},
 			keywords,
 		},
 		script: [
 			{
-				type: 'application/ld+json',
+				type: "application/ld+json",
 				content: JSON.stringify({
-					'@context': 'https://schema.org',
-					'@type': 'BlogPosting',
+					"@context": "https://schema.org",
+					"@type": "BlogPosting",
 					headline: title,
 					datePublished: date.toDateString(),
 				} as BlogPosting),
@@ -91,14 +92,17 @@ if (type == 'pdf')
 >
 	<Block el="section">
 		<header>
-			<h1 transition:name={hash + '-t'} style="grid-area:title">{title}</h1>
+			<h1 transition:name={hash + "-t"} style="grid-area:title">
+				{title}
+			</h1>
 			<BreadCrumbs
-				displayPath={Astro.url.pathname.replace(/[^/]*\/?$/, '') + title}
+				displayPath={Astro.url.pathname.replace(/[^/]*\/?$/, "") +
+					title}
 			/>
 			{
 				cover && (
 					<Image
-						transition:name={hash + '-i'}
+						transition:name={hash + "-i"}
 						alt="Illustration cover"
 						src={cover}
 					/>
@@ -106,7 +110,7 @@ if (type == 'pdf')
 			}
 			{
 				description && (
-					<p transition:name={hash + '-d'} style="grid-area:desc">
+					<p transition:name={hash + "-d"} style="grid-area:desc">
 						{description}
 					</p>
 				)
@@ -114,7 +118,7 @@ if (type == 'pdf')
 		</header>
 		{
 			pdfData ? (
-				<section class:list={['pdf', contentStyles.content]}>
+				<section class:list={["pdf", contentStyles.content]}>
 					<PDF {...pdfData}>
 						<Fragment set:html={rendered} />
 					</PDF>
@@ -129,7 +133,11 @@ if (type == 'pdf')
 			<div>
 				{
 					toc.headings.length > 0 && (
-						<Toc name={content.toc.headings} track items={toc.headings} />
+						<Toc
+							name={content.toc.headings}
+							track
+							items={toc.headings}
+						/>
 					)
 				}{
 					toc.figures.length > 0 && (
@@ -149,7 +157,7 @@ if (type == 'pdf')
 </Main>
 
 <style lang="scss">
-	@use '@/styles/layout.module.scss' as layout;
+	@use "@/styles/layout.module.scss" as layout;
 
 	main {
 		display: flex;
@@ -158,9 +166,9 @@ if (type == 'pdf')
 		& > section {
 			display: grid;
 			grid-template-areas:
-				'h h h'
-				'c c s'
-				'f f f';
+				"h h h"
+				"c c s"
+				"f f f";
 			grid-auto-columns: 1fr 1fr minmax(8rem, 1fr);
 			gap: 2em;
 

@@ -1,15 +1,15 @@
-import sitemap from '@astrojs/sitemap'
+import sitemap from "@astrojs/sitemap"
 
-import type { AstroIntegration } from 'astro'
-import robotsTxt from 'astro-robots-txt'
+import type { AstroIntegration } from "astro"
+import robotsTxt from "astro-robots-txt"
 
 /**
  * Define seo related content
  */
 export default {
-	name: 'seo',
+	name: "seo",
 	hooks: {
-		async 'astro:config:setup'({ updateConfig }) {
+		async "astro:config:setup"({ updateConfig }) {
 			updateConfig({
 				integrations: [robotsTxt(), sitemap()],
 			})

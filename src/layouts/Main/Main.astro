@@ -1,17 +1,17 @@
 ---
-import layout from '@/styles/layout.module.scss'
-import locales from './locales'
-import { ThemeToggle } from '@/modules/theme/components'
+import layout from "@/styles/layout.module.scss"
+import locales from "./locales"
+import { ThemeToggle } from "@/modules/theme/components"
 
-import { Route } from '@/components'
-import type { HTMLAttributes } from 'astro/types'
-import type { SeoHeaders } from '@/modules/seo/components'
-import { LocaleNav } from '@/modules/i18n/components'
+import { Route } from "@/components"
+import type { HTMLAttributes } from "astro/types"
+import type { SeoHeaders } from "@/modules/seo/components"
+import { LocaleNav } from "@/modules/i18n/components"
 
-import { useLocaleContents } from '@/modules/i18n/content'
-import { Block, Skeleton } from '@/layouts'
+import { useLocaleContents } from "@/modules/i18n/content"
+import { Block, Skeleton } from "@/layouts"
 
-export interface Props extends HTMLAttributes<'main'> {
+export interface Props extends HTMLAttributes<"main"> {
 	head?: i18n.NestedLocaleContent<component.Props_<typeof SeoHeaders>>
 }
 
@@ -31,7 +31,9 @@ const { head, ...props } = Astro.props
 				{
 					content.navLinks.map((props) => (
 						<li>
-							<Route {...(props as component.Props_<typeof Route>)} />
+							<Route
+								{...(props as component.Props_<typeof Route>)}
+							/>
 						</li>
 					))
 				}
@@ -71,7 +73,7 @@ const { head, ...props } = Astro.props
 </Skeleton>
 
 <style lang="scss">
-	@use '@/styles/layout.module.scss' as layout;
+	@use "@/styles/layout.module.scss" as layout;
 
 	body {
 		display: flex;

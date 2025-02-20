@@ -1,17 +1,17 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
-import sharp, { type Sharp } from 'sharp'
-import { readFile } from 'fs/promises'
+import type { HTMLAttributes } from "astro/types"
+import sharp, { type Sharp } from "sharp"
+import { readFile } from "fs/promises"
 
-import { compute } from '@/modules/compute/compute'
-import OptimizedImage from './OptimizedImage.astro'
-import type { Metadata } from './types'
+import { compute } from "@/modules/compute/compute"
+import OptimizedImage from "./OptimizedImage.astro"
+import type { Metadata } from "./types"
 
-interface Props extends HTMLAttributes<'svg'> {
+interface Props extends HTMLAttributes<"svg"> {
 	src: string | URL
 	rows: number
 	cols: number
-	type?: 'webp' | 'png' | 'jpeg'
+	type?: "webp" | "png" | "jpeg"
 	imgProcessing?: (img: Sharp) => Promise<Sharp> | Sharp
 }
 
@@ -19,7 +19,7 @@ let {
 	src,
 	rows,
 	cols,
-	type = 'webp',
+	type = "webp",
 	imgProcessing = (v) => v,
 	...props
 } = Astro.props
@@ -54,14 +54,14 @@ let { width, height, format, chunks } = await compute(
 									[type]()
 									.toBuffer(),
 								type,
-								`${x},${y}`,
+								`${x},${y}`
 							),
-						})),
-					).flat(),
+						}))
+					).flat()
 				)
 			).sort(({ idx: a }, { idx: b }) => a - b),
 		}
-	},
+	}
 )
 ---
 
@@ -72,8 +72,8 @@ let { width, height, format, chunks } = await compute(
 >
 	<foreignObject
 		style={{
-			'--cols': cols,
-			'--rows': rows,
+			"--cols": cols,
+			"--rows": rows,
 		}}
 	>
 		<div>

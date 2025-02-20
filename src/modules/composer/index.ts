@@ -1,10 +1,10 @@
-import type { AstroIntegration } from 'astro'
-import { existsSync } from 'fs'
-import { dirname, join, resolve } from 'path'
-import { normalizePath } from 'vite'
+import type { AstroIntegration } from "astro"
+import { existsSync } from "fs"
+import { dirname, join, resolve } from "path"
+import { normalizePath } from "vite"
 
-const name = 'composer',
-	loaderSuffix = '?path'
+const name = "composer",
+	loaderSuffix = "?path"
 
 /**
  * Define composer related config.
@@ -20,17 +20,17 @@ export default function () {
 		 * Add a custom loader "*?path" to import url path to server only ressources
 		 */
 		hooks: {
-			async 'astro:config:setup'({ updateConfig }) {
+			async "astro:config:setup"({ updateConfig }) {
 				updateConfig({
 					vite: {
 						plugins: [
 							{
 								name,
-								enforce: 'pre',
+								enforce: "pre",
 								load(id) {
 									if (!id.endsWith(loaderSuffix)) return
 									return `export default new URL("${urlById.get(
-										normalizePath(id),
+										normalizePath(id)
 									)}");`
 								},
 								resolveId(id, importer: string) {
@@ -40,13 +40,17 @@ export default function () {
 												dirname(importer),
 												normalizedId.slice(
 													0,
-													normalizedId.length - loaderSuffix.length,
-												),
+													normalizedId.length -
+														loaderSuffix.length
+												)
 											)
 										if (existsSync(absolutePath)) {
 											urlById.set(
 												normalizedId,
-												join('file://', encodeURI(absolutePath)),
+												join(
+													"file://",
+													encodeURI(absolutePath)
+												)
 											)
 											return normalizedId
 										}
@@ -59,14 +63,14 @@ export default function () {
 				})
 			},
 
-			async 'astro:config:done'({ injectTypes }) {
+			async "astro:config:done"({ injectTypes }) {
 				injectTypes({
-					filename: 'types.d.ts',
+					filename: "types.d.ts",
 					content: `
 					declare module '*${loaderSuffix}' {
 						const path: string;
 						export default path;
-					}`.replace(/\s+/g, ' '),
+					}`.replace(/\s+/g, " "),
 				})
 			},
 		},
