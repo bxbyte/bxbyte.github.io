@@ -18,28 +18,30 @@ interface Props extends HTMLAttributes<"svg"> {
 
 const { width, height, seed, animated, ...props } = Astro.props
 
-const { maskId, tiles } = await compute([width, height, seed], () => {
-	const random = getRandom(seed)
-	return {
-		maskId: (
-			getRandom(seed + "/" + width + "/" + height)() *
-			(1 << 16)
-		).toString(32),
-		tiles: Array.from({ length: width }, (_, x) =>
-			Array.from({ length: height }, (_, y) => {
-				let rotation = new Array(3).fill(0)
-				rotation[~~(3 * random())] = [1, -1][Math.round(random())]
-				return {
-					x,
-					y,
-					r: rotation.join(),
-					fill: patternValues[
-						Math.round(random() * (patternValues.length - 1))
-					],
-				}
-			})
-		).flat(),
-	}
+const { maskId, tiles } = await compute(
+	Astro.props,
+	() => {
+		const random = getRandom(seed)
+		return {
+			maskId: (
+				getRandom(seed + "/" + width + "/" + height)() *
+				(1 << 16)
+			).toString(32),
+			tiles: Array.from({ length: width }, (_, x) =>
+				Array.from({ length: height }, (_, y) => {
+					let rotation = new Array(3).fill(0)
+					rotation[~~(3 * random())] = [1, -1][Math.round(random())]
+					return {
+						x,
+						y,
+						r: rotation.join(),
+						fill: patternValues[
+							Math.round(random() * (patternValues.length - 1))
+						],
+					}
+				})
+			).flat(),
+		}
 })
 ---
 

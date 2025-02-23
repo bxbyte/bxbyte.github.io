@@ -22,7 +22,7 @@ const {
 } = loadSharpProps(Astro.props)
 
 let { width, height, format, chunks } = await compute(
-	Astro.props, // Used as cache key
+	Astro.props,
 	async (add) => {
 		const src = await loadSharp()
 
@@ -79,6 +79,7 @@ let { width, height, format, chunks } = await compute(
 					<Image
 						src={{ src, width, height, format }}
 						alt={idx.toString()}
+						noPlaceholder
 					/>
 				))
 			}

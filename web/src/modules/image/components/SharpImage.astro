@@ -9,7 +9,7 @@ type Props = component.Props_<typeof Image> & SharpImageProps
 const { loadSharp, props } = loadSharpProps(Astro.props)
 
 const src = await compute(
-	Astro.props, // Used as cache key
+	Astro.props,
 	async (add) => {
 		const src = await loadSharp()
 		let { width, height, format } = (await src.metadata()) as Metadata
