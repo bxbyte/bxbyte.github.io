@@ -1,7 +1,5 @@
-import { existsSync } from "fs"
 import { writeFile } from "fs/promises"
 import hashObject from "object-hash"
-import { dirname } from "path"
 
 /**
  * Computed artefact informations

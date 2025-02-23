@@ -1,0 +1,27 @@
+---
+import { Image } from "."
+
+import { compute } from "@/modules/compute/compute"
+import { loadSharpProps, type Metadata, type SharpImageProps } from "./sharp"
+
+type Props = component.Props_<typeof Image> & SharpImageProps
+
+const { loadSharp, props } = loadSharpProps(Astro.props)
+
+const src = await compute(
+	Astro.props, // Used as cache key
+	async (add) => {
+		const src = await loadSharp()
+		let { width, height, format } = (await src.metadata()) as Metadata
+
+		return {
+			width,
+			height,
+			src: await add(await src.toBuffer(), format),
+			format,
+		}
+	}
+)
+---
+
+<Image {...props} src={src} />

@@ -4,7 +4,8 @@ import { PatternGrid } from "@/components/graphic"
 import { getRelativeLocaleUrl } from "astro:i18n"
 import { getLocaleContent } from "@/modules/i18n/content"
 import { localeDefs } from "@/modules/i18n/config"
-import { Button, SharpImage } from "@/components"
+import { Button } from "@/components"
+import { SharpImage } from "@/modules/image/components"
 import { Icon } from "astro-icon/components"
 
 interface Props {
@@ -53,7 +54,7 @@ const {
 					src={cover}
 					alt="cover"
 					class="cover"
-					imgProcessing={(img) =>
+					computeImg={(img) =>
 						img.greyscale().resize({
 							width: 1920,
 							height: 1080,

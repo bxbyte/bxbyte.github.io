@@ -1,35 +1,32 @@
 ---
 import type { HTMLAttributes } from "astro/types"
-import sharp, { type Sharp } from "sharp"
-import { readFile } from "fs/promises"
 
 import { compute } from "@/modules/compute/compute"
-import OptimizedImage from "./OptimizedImage.astro"
-import type { Metadata } from "./types"
+import { Image } from "."
+import { loadSharpProps, getMeta, type SharpImageProps } from "./sharp"
 
-interface Props extends HTMLAttributes<"svg"> {
-	src: string | URL
+type Props = HTMLAttributes<"svg"> & SharpImageProps & {
 	rows: number
 	cols: number
 	type?: "webp" | "png" | "jpeg"
-	imgProcessing?: (img: Sharp) => Promise<Sharp> | Sharp
 }
 
-let {
-	src,
-	rows,
-	cols,
-	type = "webp",
-	imgProcessing = (v) => v,
-	...props
-} = Astro.props
+const {
+	loadSharp,
+	props: {
+		rows,
+		cols,
+		type = "webp",
+		...props
+	}
+} = loadSharpProps(Astro.props)
 
 let { width, height, format, chunks } = await compute(
-	[src, type, imgProcessing.toString()], // Used as cache key
+	Astro.props, // Used as cache key
 	async (add) => {
-		const img = await imgProcessing(sharp(await readFile(src)))
+		const src = await loadSharp()
 
-		let { width, height, format } = (await img.metadata()) as Metadata
+		let { width, height, format } = await getMeta(src)
 		width = Math.floor(width / cols)
 		height = Math.floor(height / rows)
 
@@ -43,7 +40,7 @@ let { width, height, format, chunks } = await compute(
 						Array.from({ length: rows }, async (_, y) => ({
 							idx: x + y * cols,
 							src: await add(
-								await img
+								await src
 									.clone()
 									.extract({
 										width,
@@ -79,7 +76,7 @@ let { width, height, format, chunks } = await compute(
 		<div>
 			{
 				chunks.map(({ src, idx }) => (
-					<OptimizedImage
+					<Image
 						src={{ src, width, height, format }}
 						alt={idx.toString()}
 					/>

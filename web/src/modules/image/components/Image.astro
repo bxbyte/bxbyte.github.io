@@ -18,7 +18,7 @@ const { src, alt, width, height, ...rawProps } = Astro.props,
 	import { define } from "@/modules/composer/client"
 
 	@define("optimized-image", { extends: "picture" })
-	class OptimizedImage extends HTMLPictureElement {
+	class Image extends HTMLPictureElement {
 		connectedCallback() {
 			const img = this.lastElementChild as HTMLImageElement
 			if (img.complete) this.setLoaded()

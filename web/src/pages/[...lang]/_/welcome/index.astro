@@ -2,54 +2,47 @@
 import { Section } from "@/layouts"
 import { getLocaleContent } from "@/modules/i18n/content"
 import locales from "./locales"
-import { GridImage } from "@/components"
+import { GridImage, getMeta, withCanvas, withSteps } from "@/modules/image/components"
 import backImgPath from "./back.png?path"
-import { grainUrl } from "@/styles/theme"
-import sharp from "sharp"
 
 const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="welcome">
-	<div slot="back">
-		<GridImage
-			src={backImgPath}
-			rows={2}
-			cols={8}
-			preserveAspectRatio="xMidYMin slice"
-			imgProcessing={async (img) => {
-				const imgScale = 0.4
-				const { width, height } = (await img.metadata()) as Record<
-					string,
-					number
-				>
-				return sharp(
-					await img
+	<GridImage
+		slot="back"
+		src={backImgPath}
+		rows={2}
+		cols={8}
+		preserveAspectRatio="xMidYMin slice"
+		computeImg={
+			withSteps(
+				async (src) => {
+					const scale = 0.4
+					let {width, height} = await getMeta(src)
+					width = (Math.round(width * scale) >> 1) << 1
+					height = (Math.round(height * scale) >> 1) << 1
+					return src
 						.resize({
-							width: (Math.round(width * imgScale) >> 1) << 1,
-							height: (Math.round(height * imgScale) >> 1) << 1,
+							width,
+							height,
 							fit: "contain",
 						})
 						.greyscale()
-						.webp({
-							quality: 1,
-							alphaQuality: 0,
-						})
-						.toBuffer()
-				)
-			}}
-		/>
-		<div
-			style={{
-				maskImage: [
-					"linear-gradient(#000 80%, #fff)",
-					grainUrl,
-					"linear-gradient(#fff, #fff)",
-				].join(),
-			}}
-		>
-		</div>
-	</div>
+						.png({ quality: 1, compressionLevel: 9, palette: true })
+				},
+				withCanvas(async (ctx, cvs) => {
+					const d = ctx.getImageData(0, 0, cvs.width, cvs.height)
+					for (let i = 3; i < d.data.length; i += 4) {
+						if (d.data[i] && Math.round(Math.random() * 2))
+							d.data[i] = 0
+					}
+					ctx.putImageData(d, 0, 0)
+				}),
+				src => src.webp({quality: 50, alphaQuality: 0})
+			)
+		}
+	/>
 
 	<div class="hi">
 		<p>{content.hi}</p>
@@ -69,27 +62,15 @@ const content = getLocaleContent(locales, Astro)
 		:global(.back) {
 			display: flex;
 			align-items: flex-end;
+			background-color: theme.$color-white;
 			user-select: none;
+			mask: linear-gradient(#fff 80%, transparent);
 
-			& > div {
-				overflow: hidden;
-
-				& > div {
-					mask-mode: luminance;
-					mask-size: 800px;
-					mask-composite: add, exclude;
-					background-color: theme.$color-white;
-					height: 100%;
-				}
-
-				svg {
-					position: absolute;
-					bottom: 0;
-					filter: contrast(calc(0.75 + 1 * theme.$bool-is-dark))
-						brightness(calc(0.5 + (1 - theme.$bool-is-dark)));
-					width: 100%;
-					height: 50%;
-				}
+			svg {
+				filter: contrast(calc(0.75 + 1 * theme.$bool-is-dark))
+					brightness(calc(0.5 + (1 - theme.$bool-is-dark)));
+				width: 100%;
+				height: 50%;
 			}
 		}
 
@@ -101,8 +82,6 @@ const content = getLocaleContent(locales, Astro)
 				"a a"
 				"b b"
 				". f";
-			// display: flex;
-			// align-items: center;
 			clip-path: inset(0 0 0 0);
 			min-height: min(100vh, layout.$window-max-width / 1.33);
 		}
