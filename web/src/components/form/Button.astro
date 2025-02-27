@@ -31,18 +31,20 @@ const props = p(rawProps)
 		padding: 0.5em;
 		text-wrap: nowrap;
 
-		&:global(:not(.tag, .secondary)) {
+		&:not(.tag, .secondary) {
 			background-color: theme.$color-black;
 			color: theme.$color-white;
 		}
 
-		&:global(.secondary) {
+		&.secondary {
 			border: solid 1px theme.$color-grey;
 		}
 
-		&:global(.tag) {
+		&.tag {
 			border: solid 1px theme.$color-grey;
+			background: theme.$color-white;
 			font-family: monospace;
+			font-size: .9em;
 		}
 
 		svg {
