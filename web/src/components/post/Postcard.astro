@@ -7,6 +7,7 @@ import { localeDefs } from "@/modules/i18n/config"
 import { Button } from "@/components"
 import { SharpImage } from "@/modules/image/components"
 import { Icon } from "astro-icon/components"
+import PLine from "../docs/PLine.astro"
 
 interface Props {
 	post: PostHydrated
@@ -26,17 +27,6 @@ const content = getLocaleContent(
 	Astro
 )
 
-const MAX_DESCRIPTION_CHAR_LENGHT = 144,
-	MAX_DESCRIPTION_REGEXP = new RegExp(
-		`^.{1,${MAX_DESCRIPTION_CHAR_LENGHT}}\\w+`
-	)
-
-function formatDescription(description: string) {
-	return description.length < MAX_DESCRIPTION_CHAR_LENGHT
-		? description
-		: description.match(MAX_DESCRIPTION_REGEXP) + "..."
-}
-
 const {
 	post: {
 		hash,
@@ -47,9 +37,15 @@ const {
 ---
 
 <a href={getRelativeLocaleUrl(Astro.currentLocale as string, "/posts/" + hash)}>
-	<article>
+	<article title={title}>
+		<header>
+			<Button variant="tag">
+				{content.share}
+				<Icon name="mdi:share-variant" />
+			</Button>
+		</header>
 		{
-			cover ? (
+			cover && (
 				<SharpImage
 					src={cover}
 					alt="cover"
@@ -62,105 +58,81 @@ const {
 						})
 					}
 				/>
-			) : (
-				<PatternGrid
-					preserveAspectRatio="xMidYMin slice"
-					width={6}
-					height={4}
-					seed={hash}
-					class="cover"
-				/>
-			)
+			) 
 		}
-		<div>
-			<p role="heading">{title}</p>
-			{description && <p>{formatDescription(description)}</p>}
-			<footer>
-				<Button variant="tag">
-					{content.actionCall}
-					{
-						Astro.currentLocale != locale &&
-							` (${(localeDefs[locale] as any)[Astro.currentLocale as any]})`
-					}
-				</Button>
-				<Button variant="tag">
-					{content.share}
-					<Icon name="mdi:share-variant" />
-				</Button>
-			</footer>
-		</div>
+		<footer>
+			<p role="heading">
+				<span>{title}</span>
+				{Astro.currentLocale != locale && `(${localeDefs[locale][Astro.currentLocale as any]})`}
+			</p>
+			{description && <PLine text={description} />}
+		</footer>
 	</article>
 </a>
 
 <style lang="scss">
 	article {
-		display: grid;
+		--open: 0;
+		--transition: .2s ease-in-out;
+
+		border: 1px solid theme.$color-grey;		
+		border-radius: .5rem;
 		position: relative;
-		grid-template-rows: 1fr auto;
-		grid-template-columns: 1fr;
-		gap: 1rem;
-		box-sizing: border-box;
-		border: 1px solid theme.$color-grey;
-		border-radius: 1rem;
-		padding: 1rem;
-		width: 100%;
+		overflow: hidden;
+		display: flex;
 		height: 100%;
+		align-items: flex-end;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 1rem;
+		box-sizing: border-box;
 
-		&,
-		* {
-			transition: 0.2s ease-in-out;
-			transition-property: grid, gap;
-		}
-
-		& > :is(picture, svg) {
-			box-sizing: border-box;
-			border-radius: 0.5rem;
-			aspect-ratio: 16 / 9;
+		picture {
+			height: 100%;
 			width: 100%;
-			height: 100%;
+			left: 0;
+			top: 0;
+			z-index: -1;
+			position: absolute;
+			mask: linear-gradient(to top, transparent, #fff);
+			filter: opacity(calc(.8 - var(--open) * .2));
+			transition: filter var(--transition);
 		}
-
-		& > div {
-			display: flex;
-			flex-direction: column;
-			height: max-content;
-			height: 100%;
-
-			& > * {
-				margin-bottom: 0.5rem;
-			}
-		}
-
-		p {
-			&[role="heading"] {
-				justify-content: space-between;
-				font-weight: bold;
-				text-wrap: balance;
-			}
-
-			&:not([role="heading"]) {
-				display: -webkit-box;
-				overflow: hidden;
-				-webkit-line-clamp: 1;
-				-webkit-box-orient: vertical;
-			}
+		
+		header {
+			display: flex; 
+			flex-direction: row;
+			gap: 1rem;
 		}
 
 		footer {
 			display: flex;
-			align-items: end;
-			gap: 1em;
-			margin-top: auto;
-			font-size: 0.85em;
+			flex-direction: column;
+			gap: .5rem;
+			position: relative;
+			width: 100%;
+			transform: scale(calc(1 + var(--open) * .01));
+			transition: transform var(--transition);
+
+			&::before {
+				background: linear-gradient(to top, theme.$color-white, theme.$color-white 3em, transparent);
+				position: absolute;
+				content: '';
+				width: 200%;
+				left: -50%;
+				height: 250%;
+				top: -100%;
+				z-index: -1;
+			}
+
+			p[role=heading] span {
+				text-wrap: balance;
+				font-weight: bold;
+			}
 		}
 
 		&:hover {
-			grid-template-rows: 0fr auto;
-			gap: 0;
-
-			p:last-of-type {
-				display: inline;
-			}
+			--open: 1;
 		}
 	}
 </style>
