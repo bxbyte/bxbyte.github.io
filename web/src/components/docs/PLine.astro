@@ -1,0 +1,42 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends HTMLAttributes<'p'> {
+    text: string
+}
+
+const { text, ...props } = Astro.props
+---
+
+<p {...props} data-text={text} >
+    <slot />
+</p>
+
+<style lang="scss">
+    p {
+        position: relative; 
+        
+        &, &::after, &::before {
+            max-height: calc(var(--open) * 10rem + 1.5rem);
+            overflow: hidden;
+            transition: .2s ease-in-out;
+        }
+
+        &::after {
+            content: attr(data-text);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            position: absolute;
+            top: 0;
+            filter: opacity(calc(1 - var(--open)));
+            transition-property: filter;
+        }
+
+        &::before {
+            content: attr(data-text);
+            filter: opacity(var(--open));
+            transition-property: max-height, filter;
+        }
+    }
+</style>
