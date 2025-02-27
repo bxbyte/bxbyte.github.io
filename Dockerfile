@@ -28,7 +28,7 @@ RUN find ./dist -type f ! -name "*.br" -exec sh -c 'brotli -Zkf "$1" && [ $(stat
 FROM runtime
 COPY ./nginx.conf /etc/nginx/nginx.conf
 WORKDIR /usr/share/nginx/html
-COPY --from=build-static /web/dist .
 COPY --from=build-gzip /web/dist .
 COPY --from=build-brotli /web/dist .
+COPY --from=build-static /web/dist .
 EXPOSE 4321
