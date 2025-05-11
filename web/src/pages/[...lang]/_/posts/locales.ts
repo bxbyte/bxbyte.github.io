@@ -1,7 +1,7 @@
 const content = {
 	title: {
 		fr: "Dernier posts",
-		en: "Latests posts",
+		en: "Latest posts",
 	},
 	more: {
 		fr: "En voir plus",

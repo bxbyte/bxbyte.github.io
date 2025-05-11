@@ -5,14 +5,13 @@ import Block from "./Block.astro"
 
 interface Props extends Omit<component.Props_<typeof Block>, "el"> {
 	layout?: keyof typeof layouts
-	"wrapper-attr"?: HTMLAttributes<"div">
+	"section-props"?: HTMLAttributes<"section">
 }
 
-var { layout, "wrapper-attr": wrapAttr, ...props } = Astro.props
-wrapAttr ||= {}
+var { layout, "section-props": props = {}, class:_, ...blockProps } = Astro.props
 ---
 
-<div {...wrapAttr} class:list={[wrapAttr["class"], layout && layouts[layout]]}>
+<section {...props}>
 	{
 		Astro.slots.has("back") && (
 			<div class="back">
@@ -20,32 +19,24 @@ wrapAttr ||= {}
 			</div>
 		)
 	}
-	<Block {...props} el="section">
+	<Block {...blockProps} el="div" class:list={[layout && layouts[layout]]}>
 		<slot />
 	</Block>
-</div>
+</section>
 
 <style lang="scss">
-	@use "@/styles/layout.module.scss";
-
-	.back {
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: -1;
-		width: 100%;
-		height: 100%;
-
-		:global(> *) {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	}
-
-	div:not(.back) {
+	section {
 		display: flex;
 		position: relative;
 		justify-content: center;
+
+		.back {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			width: 100%;
+			height: 100%;
+		}
 	}
 </style>

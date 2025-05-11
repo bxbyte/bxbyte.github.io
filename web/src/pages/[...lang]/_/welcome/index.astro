@@ -2,17 +2,14 @@
 import { Section } from "@/layouts"
 import { getLocaleContent } from "@/modules/i18n/content"
 import locales from "./locales"
-import { GridImage, getMeta, withCanvas, withSteps } from "@/modules/image/components"
+import { GridPicture, getMeta, withCanvas, withSteps } from "@/modules/picture/components"
 import backImgPath from "./back.png?path"
-
-import grainImg from "./grain.svg?raw"
-import { Image } from "canvas"
 
 const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="welcome">
-	<GridImage
+	<GridPicture
 		slot="back"
 		src={backImgPath}
 		rows={2}
@@ -35,33 +32,10 @@ const content = getLocaleContent(locales, Astro)
 						.png({ quality: 1, compressionLevel: 9, palette: true })
 				},
 				withCanvas(async (ctx, cvs) => {
-					// return new Promise(res => {
-					// 	const i = new Image()
-					// 	i.onload = () => {
-					// 		// console.log("A")
-					// 		// const data = ctx.getImageData(0, 0, cvs.width, cvs.height)
-					// 		const data = cvs.toBuffer()
-					// 		ctx.clearRect(0, 0, cvs.width, cvs.height)
-					// 		// ctx.drawImage(i, 0, 0)
-					// 		const pt = ctx.createPattern(i, 'repeat')
-					// 		ctx.fillStyle = pt;
-					// 		ctx.fillRect(0, 0, cvs.width, cvs.height)
-					// 		ctx.globalCompositeOperation = 'source-out'
-
-					// 		const i2 = new Image()
-					// 		i2.onload = () => {
-					// 			ctx.drawImage(i2, 0, 0)
-					// 			res()
-					// 		}
-					// 		i2.src = data
-					// 	}
-					// 	i.src = "data:image/svg+xml;base64," + btoa(grainImg)
-					// })
-
 					const d = ctx.getImageData(0, 0, cvs.width, cvs.height)
 					for (let i = 3; i < d.data.length; i += 4) {
 						if (d.data[i] && Math.round(Math.random() * 2))
-							d.data[i] = 0
+							d.data[i] = .5
 					}
 					ctx.putImageData(d, 0, 0)
 				}),

@@ -17,10 +17,11 @@ interface Props {
 export const { getStaticPaths } = useLocaleContents(
 	{},
 	async (): Promise<{ params: { id: string }; props: { job: JobProps } }[]> =>
-		(await getJobs()).map((job) => ({
+	(await getJobs()).map((job) => ({
 			params: { id: job.id },
 			props: { job },
 		}))
+		
 )
 
 const { job } = Astro.props

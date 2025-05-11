@@ -8,8 +8,7 @@ RUN bun install --production --frozen-lockfile
 
 # Install runtime dependencies
 FROM nginx:alpine-slim AS runtime
-RUN apk del -r nginx
-RUN apk add nginx-mod-http-brotli
+RUN apk del -r nginx && apk add nginx-mod-http-brotli
 
 # Generate static content
 FROM build-deps AS build-static

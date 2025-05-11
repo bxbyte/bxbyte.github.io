@@ -60,7 +60,7 @@ export default class Renderer {
 
 		// Preloading
 		await page.evaluateOnNewDocument(() => {
-			// Image loading
+			// Picture loading
 			document.addEventListener("astro:color-swap", () => {
 				window.images = (async () => {
 					await Promise.all(

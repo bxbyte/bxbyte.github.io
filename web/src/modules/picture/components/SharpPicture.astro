@@ -1,10 +1,10 @@
 ---
-import { Image } from "."
+import { Picture } from "."
 
 import { compute } from "@/modules/compute/compute"
 import { loadSharpProps, type Metadata, type SharpImageProps } from "./sharp"
 
-type Props = component.Props_<typeof Image> & SharpImageProps
+type Props = component.Props_<typeof Picture> & SharpImageProps
 
 const { loadSharp, props } = loadSharpProps(Astro.props)
 
@@ -17,11 +17,11 @@ const src = await compute(
 		return {
 			width,
 			height,
-			src: await add(await src.toBuffer(), format),
+			src: add(await src.toBuffer(), format),
 			format,
 		}
 	}
 )
 ---
 
-<Image {...props} src={src} />
+<Picture {...props} src={src} />

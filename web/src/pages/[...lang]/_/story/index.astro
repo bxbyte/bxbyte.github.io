@@ -12,13 +12,13 @@ const content = getLocaleContent(locales, Astro)
 <Section id="history" layout="col2">
 	<div>
 		<h1>{content.title}</h1>
-		<PatternGrid
+		<!-- <PatternGrid
 			animated
-			width={12}
+			width={16}
 			height={4}
 			seed="hello "
 			style="border-radius: 0.5rem"
-		/>
+		/> -->
 		<p>{content.description}</p>
 	</div>
 	<Timeline items={content.timeline} />

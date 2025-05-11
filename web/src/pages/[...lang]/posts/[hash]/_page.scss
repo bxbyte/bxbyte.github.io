@@ -130,7 +130,7 @@
 		}
 	}
 
-	// Image
+	// Picture
 
 	img {
 		object-fit: cover;
@@ -156,7 +156,7 @@
 		&:has(img) {
 			figcaption {
 				&::before {
-					content: "Image " counter(fig-img) " : ";
+					content: "Picture " counter(fig-img) " : ";
 					font-weight: bold;
 				}
 			}

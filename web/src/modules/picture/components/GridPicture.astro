@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from "astro/types"
 
 import { compute } from "@/modules/compute/compute"
-import { Image } from "."
+import { Picture } from "."
 import { loadSharpProps, getMeta, type SharpImageProps } from "./sharp"
 
 type Props = HTMLAttributes<"svg"> & SharpImageProps & {
@@ -39,8 +39,8 @@ let { width, height, format, chunks } = await compute(
 					Array.from({ length: cols }, (_, x) =>
 						Array.from({ length: rows }, async (_, y) => ({
 							idx: x + y * cols,
-							src: await add(
-								await src
+							src: add(
+								src
 									.clone()
 									.extract({
 										width,
@@ -76,7 +76,7 @@ let { width, height, format, chunks } = await compute(
 		<div>
 			{
 				chunks.map(({ src, idx }) => (
-					<Image
+					<Picture
 						src={{ src, width, height, format }}
 						alt={idx.toString()}
 						noPlaceholder

@@ -1,11 +1,11 @@
 ---
-import { Picture } from "astro:assets" // Use Astro native solution in the background
+import { Picture as AstroPicture } from "astro:assets" // Use Astro native solution in the background
 import { p } from "@/modules/composer/server"
 
-type PictureProps = component.Props_<typeof Picture>
+type PictureProps = component.Props_<typeof AstroPicture>
 
 type Props = Pick<
-	component.Props_<typeof Picture>,
+	component.Props_<typeof AstroPicture>,
 	"src" | "alt" | "width" | "height"
 > & PictureProps["pictureAttributes"] & {
 	noPlaceholder?: boolean
@@ -22,7 +22,7 @@ const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
 	import { define } from "@/modules/composer/client"
 
 	@define("optimized-image", { extends: "picture" })
-	class Image extends HTMLPictureElement {
+	class Picture extends HTMLPictureElement {
 		connectedCallback() {
 			const img = this.lastElementChild as HTMLImageElement
 			if (img.complete) this.setLoaded()
@@ -38,7 +38,7 @@ const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
 	}
 </script>
 
-<Picture
+<AstroPicture
 	format="avif"
 	formats={["avif", "webp", "jpg"]}
 	fallbackFormat="webp"
@@ -46,6 +46,7 @@ const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
 	alt={alt}
 	width={width}
 	height={height}
+	densities={[.5, 1]}
 	pictureAttributes={props.end()}
 />
 
@@ -59,7 +60,7 @@ const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			transition: opacity .2s ease-in-out;
+			transition: opacity .25s ease-in-out;
 		}
 
 		&:not(.nop)::after {
@@ -67,8 +68,9 @@ const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
 			top: 0;
 			left: 0;
 			align-content: center;
-			background-color: theme.$color-grey;
-			content: "loading...";
+			content: '';
+			background-image: theme.$texture-checkboard;
+			color: theme.$color-black;
 			text-align: center;
 		}
 

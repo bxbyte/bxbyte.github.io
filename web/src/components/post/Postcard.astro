@@ -1,11 +1,10 @@
 ---
 import type { PostHydrated } from "@/content"
-import { PatternGrid } from "@/components/graphic"
 import { getRelativeLocaleUrl } from "astro:i18n"
 import { getLocaleContent } from "@/modules/i18n/content"
 import { localeDefs } from "@/modules/i18n/config"
 import { Button } from "@/components"
-import { SharpImage } from "@/modules/image/components"
+import { SharpPicture } from "@/modules/picture/components"
 import { Icon } from "astro-icon/components"
 import PLine from "../docs/PLine.astro"
 
@@ -31,7 +30,7 @@ const {
 	post: {
 		hash,
 		locale,
-		data: { title, description, cover },
+		data: { title, description, cover, type },
 	},
 } = Astro.props
 ---
@@ -39,6 +38,10 @@ const {
 <a href={getRelativeLocaleUrl(Astro.currentLocale as string, "/posts/" + hash)}>
 	<article title={title}>
 		<header>
+			<Icon name={{
+				pdf: 'mdi:book',
+				post: 'mdi:text'
+			}[type]} />
 			<Button variant="tag">
 				{content.share}
 				<Icon name="mdi:share-variant" />
@@ -46,17 +49,13 @@ const {
 		</header>
 		{
 			cover && (
-				<SharpImage
+				<SharpPicture
 					src={cover}
 					alt="cover"
 					class="cover"
-					computeImg={(img) =>
-						img.greyscale().resize({
-							width: 1920,
-							height: 1080,
-							fit: "cover",
-						})
-					}
+					width={1920}
+					height={1080}
+					computeImg={(img) => img.greyscale()}
 				/>
 			) 
 		}
@@ -73,7 +72,7 @@ const {
 <style lang="scss">
 	article {
 		--open: 0;
-		--transition: .2s ease-in-out;
+		--transition: .25s ease-in-out;
 
 		border: 1px solid theme.$color-grey;		
 		border-radius: .5rem;
@@ -87,22 +86,23 @@ const {
 		padding: 1rem;
 		box-sizing: border-box;
 
-		picture {
-			height: 100%;
-			width: 100%;
-			left: 0;
-			top: 0;
-			z-index: -1;
-			position: absolute;
-			mask: linear-gradient(to top, transparent, #fff);
-			filter: opacity(calc(.8 - var(--open) * .2));
-			transition: filter var(--transition);
+		&:not(:has(picture)) {
+			background-image: theme.$texture-cross;
 		}
-		
+
 		header {
 			display: flex; 
 			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
 			gap: 1rem;
+			z-index: 1;
+
+			&>svg {
+				color: color-mix(in srgb, theme.$color-black calc(var(--open) * 100%), transparent);
+				transition: color var(--transition);
+			}
 		}
 
 		footer {
@@ -114,7 +114,30 @@ const {
 			transform: scale(calc(1 + var(--open) * .01));
 			transition: transform var(--transition);
 
-			&::before {
+			p[role=heading] span {
+				text-wrap: balance;
+				font-weight: bold;
+			}
+		}
+
+		// Add gradient mask if picture provided
+		&:has(picture) {
+			picture {
+				height: 100%;
+				width: 100%;
+				left: 0;
+				top: 0;
+				z-index: -1;
+				position: absolute;
+				filter: opacity(calc(.8 - var(--open) * .2));
+				transition: filter var(--transition);
+
+				&:not(.loading) {
+					mask: linear-gradient(to top, transparent, #fff);
+				}
+			}
+
+			picture:not(.loading) ~ footer::before {
 				background: linear-gradient(to top, theme.$color-white, theme.$color-white 3em, transparent);
 				position: absolute;
 				content: '';
@@ -125,10 +148,6 @@ const {
 				z-index: -1;
 			}
 
-			p[role=heading] span {
-				text-wrap: balance;
-				font-weight: bold;
-			}
 		}
 
 		&:hover {

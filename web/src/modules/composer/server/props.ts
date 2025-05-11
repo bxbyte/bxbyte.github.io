@@ -2,7 +2,7 @@ export function p<T extends Object>(props: T) {
 	const wrapper = {
 		with<K extends keyof T>(
 			attr: K,
-			...values: (T[K] | undefined | null | false)[]
+			...values: (T[K] | undefined | null | false | 0)[]
 		) {
 			const mask =
 				typeof props[attr] == "string" ? props[attr].split(" ") : []

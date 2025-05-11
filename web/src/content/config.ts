@@ -54,14 +54,17 @@ export const collections = {
 	jobs: defineCollection<JobProps[]>({
 		loader: async () =>
 			await Promise.all(
-				Object.values(
-					import.meta.glob(["jobs/**/*.ts", "!jobs/**/_*.ts"], {
+				Object.entries(
+					await import.meta.glob("./jobs/**/*.ts", {
 						import: "default",
+						eager: true,
 					})
-				).map(
-					async (v: any) =>
-						deepmerge(defaultJob, await v()) as unknown as JobProps
 				)
+					.filter(([k]) => !k.includes("_"))
+					.map(
+						async ([k, v]: any) =>
+							deepmerge(defaultJob, v) as JobProps
+					)
 			),
 	}),
 }

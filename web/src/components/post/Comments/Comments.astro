@@ -11,6 +11,8 @@ const { discussion } = Astro.props
 	import { $theme } from "@/modules/theme/store"
 	import { $locale } from "@/modules/i18n/store"
 
+	import themeRaw from "./theme.css?raw"
+
 	const enum Giscus {
 		SESSION_KEY = "giscus-session",
 		ORIGIN = "https://giscus.app",
@@ -135,11 +137,17 @@ const { discussion } = Astro.props
 			} else {
 				console.error(`${message}. ${Giscus.SUGGESTION}`)
 			}
+
+			console.log(11, this.doc, this, this.contentWindow?.document)
 		}
 
 		signOut() {
 			delete this.params.session
 			this.load()
+		}
+
+		get doc() {
+			return this.contentWindow?.document as Document
 		}
 
 		load() {

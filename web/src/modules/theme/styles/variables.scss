@@ -28,36 +28,54 @@ $bool-is-dark: theme.define(bool-is-dark, 1, 0);
 /// Textures
 
 // prettier-ignore
-// $texture-checkboard: theme.define(
-// 	texture-checkboard,
-// 	// url(svg(
-// 	// 	'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-// 	// 		'<g fill="' #0000001c '">'
-// 	// 			'<rect x="0" y="0" width="2" height="2"/>'
-// 	// 			'<rect x="2" y="2" width="2" height="2"/>'
-// 	// 		'</g>'
-// 	// 	'</svg>'
-// 	// )),
-// 	// url(svg(
-// 	// 	'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-// 	// 		'<g fill="' #ffffff1c '">'
-// 	// 			'<rect x="0" y="0" width="2" height="2"/>'
-// 	// 			'<rect x="2" y="2" width="2" height="2"/>'
-// 	// 		'</g>'
-// 	// 	'</svg>'
-// 	// ))
-// 	url(svg(
-// 		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-// 			'<g stroke="' #0000001c '" stroke-width=".3">'
-// 				'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
-// 			'</g>'
-// 		'</svg>'
-// 	)),
-// 	url(svg(
-// 		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg">'
-// 			'<g stroke="' #ffffff1c '" stroke-width=".3">'
-// 				'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
-// 			'</g>'
-// 		'</svg>'
-// 	))
-// );
+$texture-checkboard: theme.define(
+	texture-checkboard,
+	url(svg(
+		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg" '
+        'fill="' #e2e2e21c '">'
+			'<rect x="0" y="0" width="2" height="2"/>'
+			'<rect x="2" y="2" width="2" height="2"/>' 
+        "</svg>"
+	)),
+	url(svg(
+		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg" '
+        'fill="' #0000001c '">' 
+            '<rect x="0" y="0" width="2" height="2"/>'
+			'<rect x="2" y="2" width="2" height="2"/>' 
+        "</svg>"
+	))
+);
+
+// prettier-ignore
+$texture-dash: theme.define(
+	texture-dash,
+	url(svg(
+		'<svg width="1em" height="1em"  viewBox="0 0 4 4" xmlns="http://www.w3.org/2000/svg" '
+			'stroke="' #ffffff1c '" stroke-width=".3">'
+			'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
+        "</svg>"
+	)),
+	url(svg(
+		'<svg width="1em" height="1em" viewBox="0 0 4 4" zzzzzzzzzzzzxmlns="http://www.w3.org/2000/svg" '
+			'stroke="' #0000001c '" stroke-width=".3">'
+			'<path d="M-1,1 L1,-1 M4,0 L0,4 M3,5 L5,3"/>'
+        "</svg>"
+	))
+);
+
+// prettier-ignore
+$texture-cross: theme.define(
+	texture-cross,
+	url(svg(
+		'<svg width="1em" height="1em"  viewBox="0 0 5 5" xmlns="http://www.w3.org/2000/svg" '
+        'fill="' #ffffff1c '" stroke="none">'
+			'<circle cx="3" cy="3" r=".3"/>'
+        "</svg>"
+	)),
+	url(svg(
+		'<svg width="1em" height="1em" viewBox="0 0 5 5" xmlns="http://www.w3.org/2000/svg" '
+        'fill="' #0000004b '" stroke="none">'
+            '<circle cx="3" cy="3" r=".3"/>'
+        "</svg>"
+	))
+);

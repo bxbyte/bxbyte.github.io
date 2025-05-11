@@ -2,11 +2,6 @@ import { writeFile } from "fs/promises"
 import hashObject from "object-hash"
 
 /**
- * Computed artefact informations
- */
-export type ArtefactMetadata = { hash: string; id: string; ext: string }
-
-/**
  * Artefact possible data type
  */
 type ArtefactData = Buffer | string
@@ -22,8 +17,11 @@ export const $compute: {
 	computed: {},
 })
 
-export const filenameFormat = ({ hash, id, ext }: ArtefactMetadata) =>
-	`${hash}-${id}.${ext}`
+export const filenameFormat = ({
+	hash,
+	filetype,
+	id,
+}: Record<string, string>) => `${hash}-${id}.${filetype}`
 
 /**
  * Compute data & store it in cache
@@ -36,10 +34,10 @@ export async function compute<T>(
 	key: any,
 	computer: (
 		add: (
-			data: ArtefactData,
+			data: ArtefactData | Promise<ArtefactData>,
 			filetype: string,
 			id?: string
-		) => Promise<string>
+		) => string
 	) => T
 ): Promise<T> {
 	const hash = hashObject(key)
@@ -48,21 +46,24 @@ export async function compute<T>(
 	// If not already computed & cached
 	if (!computed) {
 		let lastId = 0
+		const promised: (() => Promise<void>)[] = []
 		computed = $compute.computed[hash] = await computer(
-			async (value, ext, id) => {
-				id ||= `${lastId++}` // In case no id was provided
+			(data, filetype, id = `${lastId++}`) => {
+				const filename = filenameFormat({ hash, filetype, id })
 
 				// Write artefact
-				const filename = filenameFormat({ hash, ext, id })
-				await writeFile(
-					$compute.getArtefactAbsolutePath(filename),
-					value as any
+				promised.push(async () =>
+					writeFile(
+						$compute.getArtefactAbsolutePath(filename),
+						(await data) as any
+					)
 				)
 
 				// Return path to artefact
 				return $compute.getArtefactRelativePath(filename)
 			}
 		)
+		await Promise.all(promised.map((c) => c())) // Wait for all concurrent promise
 	}
 
 	return computed
