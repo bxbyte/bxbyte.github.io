@@ -32,7 +32,9 @@ jobs:
       - name: Build with docker
         run: |
           docker build --target build-static . -t build
-          docker cp build:/web/dist /tmp/build
+          docker create --name tmp build
+          docker cp tmp:/web/dist /tmp/build
+          docker rm tmp
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
