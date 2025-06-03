@@ -16,26 +16,16 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    # Assembling repositery
-    assemble:
+    # Building & publishing website
+    build:
         permissions:
             contents: read
         runs-on: ubuntu-latest
-        outputs:
-            workingPath: ${{ steps.dir.outputs.workingPath }}
         steps:
-            - name: Checkout
+            - name: Checkout repository with git
               uses: actions/checkout@v4
-              with:
-                  token: ${{ secrets.PAT }}
-                  submodules: recursive
-
-            - name: Update git submodules
-              working-directory:
-              run: |
-                  git submodule update --force --recursive --init --remote
-
-            - name: Create & set .env for build
+            
+            - name: Generating env. file
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
@@ -44,62 +34,19 @@ jobs:
                   echo REPOSITERY_OWNER="${{ github.repository_owner }}" >> .env
                   echo SERVER_URL="${{ github.server_url }}" >> .env
 
-            - name: Set absolute working directory path
-              id: dir
+            - name: Build with docker
               run: |
-                  echo "workingPath=$(pwd)" >> $GITHUB_OUTPUT
+                docker build --target build-static -t build .
+                docker cp build:/web/dist /tmp/build
+            
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
 
-            - name: List working directory
-              run: |
-                  echo Working directory : ${{ steps.dir.outputs.workingPath }}
-                  echo Content :
-                  tree
-
-            - name: Upload artifacts
-              uses: actions/upload-artifact@main
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
               with:
-                  name: "."
-                  path: ${{ steps.dir.outputs.workingPath }}
-                  overwrite: true
-                  retention-days: 1 # Keep artifacts for only a day
-                  compression-level: 9
+                path: /tmp/build
 
-    # Building & publishing website
-    build:
-        runs-on: ubuntu-latest
-        needs: assemble
-        steps:
-            - name: Checkout your repository using git
-              uses: actions/checkout@v4
-            - name: Install, build, and upload your site
-              uses: withastro/action@v3
-
-    # Update repositery if needed
-    update:
-        runs-on: ubuntu-latest
-        needs:
-            - assemble
-            - build
-        permissions:
-            contents: write
-            # pull-requests: write
-        steps:
-            - name: Restore artifacts
-              uses: actions/download-artifact@main
-              with:
-                  name: "."
-                  path: ${{ needs.assemble.outputs.workingPath }}
-
-            - name: Checkout
-              uses: actions/checkout@v4
-
-            - name: Setup git
-              run: |
-                  git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
-                  git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
-
-            - name: Commit & push to repositery
-              run: |
-                  git add .
-                  git commit -m '${{ env.commit_update_message }}' || echo No update needed.
-                  git push origin ${{ github.ref_name }}
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
