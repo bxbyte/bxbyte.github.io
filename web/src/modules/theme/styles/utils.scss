@@ -1,4 +1,5 @@
 @use "sass:list";
+@use "sass:meta";
 
 $theme-variables: ();
 
@@ -22,15 +23,33 @@ $theme-variables: ();
 	@return var(--#{$name});
 }
 
+@function is-ld-able($val) {
+	$type: meta.type-of($val);
+	@return $type == "string";
+}
+
 // Implement variables
 @mixin implement-variables {
+	color-scheme: dark;
+
 	@each $var in $theme-variables {
+		// @if meta.type-of(list.nth($var, 2)) != "string" {
+		// 	--#{list.nth($var, 1)}: light-dark(
+		// 		#{list.nth($var, 2)},
+		// 		#{list.nth($var, 3)}
+		// 	);
+		// } @else {
 		--#{list.nth($var, 1)}: #{list.nth($var, 2)};
+		// }
 	}
 
 	&.light {
+		color-scheme: light;
+
 		@each $var in $theme-variables {
+			// @if meta.type-of(list.nth($var, 2)) == "string" {
 			--#{list.nth($var, 1)}: #{list.nth($var, 3)};
+			// }
 		}
 	}
 }
