@@ -1,4 +1,4 @@
-import { REPOSITERY_URL } from "astro:env/client"
+import { REPOSITERY } from "astro:env/client"
 import { REPOSITERY_OWNER } from "astro:env/server"
 
 import infos from "@/data/infos"
@@ -38,7 +38,7 @@ export default {
 					},
 					{
 						label: { fr: "Depôt Github", en: "Github Repositery" },
-						href: REPOSITERY_URL,
+						href: `https://github.com/${REPOSITERY}`,
 					},
 				],
 			},

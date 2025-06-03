@@ -1,14 +1,8 @@
 name: Build & publish Astrojs site to Github Pages
 
 on:
-    # Run on pushes from other repo
-    repository_dispatch:
     # Manually run from the Actions tab
     workflow_dispatch:
-
-# Environment variables
-env:
-    commit_update_message: Publishing update
 
 # Allow only one concurrent deployment
 concurrency:
@@ -29,10 +23,10 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  echo REPOSITERY_PAGE="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> .env
-                  echo REPOSITERY_URL="${{ github.repository }}" >> .env
-                  echo REPOSITERY_OWNER="${{ github.repository_owner }}" >> .env
-                  echo SERVER_URL="${{ github.server_url }}" >> .env
+                  echo REPOSITERY_PAGE="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> web/.env
+                  echo REPOSITERY="${{ github.repository }}" >> web/.env
+                  echo REPOSITERY_OWNER="${{ github.repository_owner }}" >> web/.env
+                  echo SERVER_URL="${{ github.server_url }}" >> web/.env
 
             - name: Build with docker
               run: |
