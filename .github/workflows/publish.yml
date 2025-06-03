@@ -1,46 +1,47 @@
 name: Build & publish Astrojs site to Github Pages
 
 on:
-    # Manually run from the Actions tab
-    workflow_dispatch:
+  # Manually run from the Actions tab
+  workflow_dispatch:
+  push:
 
 # Allow only one concurrent deployment
 concurrency:
-    group: pages
-    cancel-in-progress: true
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-    # Building & publishing website
-    build:
-        permissions:
-            contents: read
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout repository with git
-              uses: actions/checkout@v4
-            
-            - name: Generating env. file
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                  echo REPOSITERY_PAGE="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> web/.env
-                  echo REPOSITERY="${{ github.repository }}" >> web/.env
-                  echo REPOSITERY_OWNER="${{ github.repository_owner }}" >> web/.env
-                  echo SERVER_URL="${{ github.server_url }}" >> web/.env
+  # Building & publishing website
+  build:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository with git
+        uses: actions/checkout@v4
+      
+      - name: Generating env. file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo REPOSITERY_PAGE="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> web/.env
+          echo REPOSITERY="${{ github.repository }}" >> web/.env
+          echo REPOSITERY_OWNER="${{ github.repository_owner }}" >> web/.env
+          echo SERVER_URL="${{ github.server_url }}" >> web/.env
 
-            - name: Build with docker
-              run: |
-                docker build --target build-static -t build .
-                docker cp build:/web/dist /tmp/build
-            
-            - name: Setup Pages
-              uses: actions/configure-pages@v5
+      - name: Build with docker
+        run: |
+          docker build --target build-static .
+          docker cp build-static:/web/dist /tmp/build
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
-              with:
-                path: /tmp/build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/build
 
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
