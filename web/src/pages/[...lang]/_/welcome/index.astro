@@ -2,8 +2,10 @@
 import { Section } from "@/layouts"
 import { getLocaleContent } from "@/modules/i18n/content"
 import locales from "./locales"
-import { GridPicture, getMeta, withCanvas, withSteps } from "@/modules/picture/components"
+import { GridPicture, SharpPicture, getMeta, withCanvas, withSteps } from "@/modules/picture/components"
 import backImgPath from "./back.png?path"
+import ppImgPath from "./pp.png"
+import { md } from "@/modules/composer/server"
 
 function mulberry32(a) {
   return function() {
@@ -61,7 +63,16 @@ const content = getLocaleContent(locales, Astro)
 	</div>
 
 	<div class="infos">
-		<p>{content.what}</p>
+		<div>
+			<SharpPicture 
+				src={ppImgPath}
+				computeImg={img => img.greyscale()}
+				alt="Picture profile"
+				width="512"
+				height="512"
+			/>
+		</div>
+		<Fragment set:html={md(content.what)}>
 	</div>
 
 	<p class="footer">{content.easteregg}</p>
@@ -115,6 +126,13 @@ const content = getLocaleContent(locales, Astro)
 			padding: 0.75rem;
 			width: 100%;
 			height: fit-content;
+
+			div {
+				width: 3em;
+				height: 3em;
+				margin: .5em;
+				float: inline-start;
+			}
 		}
 
 		.footer {

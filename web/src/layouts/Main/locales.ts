@@ -62,6 +62,7 @@ export default {
 				href: `https://github.com/${REPOSITERY}`,
 			},
 		},
+		asciiArtTitle: "Meoww",
 		asciiArt: `
         ／l、
        (°､ₒ︎ ７

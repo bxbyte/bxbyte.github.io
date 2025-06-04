@@ -1,0 +1,180 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+type Props = HTMLAttributes<'object'> & {
+    scale?: number
+    label?: string
+} 
+
+const { scale = 500, label, ...props } = Astro.props
+---
+
+<script>
+	import { define } from "@/modules/composer/client"
+    import { select, schemePastel1, scaleOrdinal, forceSimulation, forceLink, forceManyBody, forceX, forceY, drag} from "d3"
+
+    type Link = { source: any, target: any }
+    type Node = { id: any, radius: number, color: string }
+    type NodeWithCoord = Node & { x: number, y: number, fx?: number, fy?: number }
+    type NodeEvent = {active: boolean, x: number, y: number, subject: NodeWithCoord}
+    
+    const color = scaleOrdinal(schemePastel1);
+    let nodes = Array.from({length: 200}, (_, id) => ({
+        id,
+        name: 'Test',
+        // color: '#fff',
+        color: color(Math.round(Math.random() * 10)),
+        radius: (1 + Math.round(Math.random() * 4)),
+    })) as Node[]
+
+    let links = Array.from({length: 240}, () => ({
+        source: Math.floor(Math.random() * nodes.length),
+        target: Math.floor(Math.random() * nodes.length),
+    })) as Link[]
+
+    @define("svg-graph", { extends: "object" })
+	class SVGGraph extends HTMLObjectElement {
+        simulation
+        svg
+        tooltip
+        
+		constructor() {
+			super()
+            this.simulation = SVGGraph.getSimulation(nodes, links)
+            this.svg = select(this.firstElementChild as SVGSVGElement)
+            this.tooltip = this.genTooltip();
+
+            const SVGlinks = this.genSVGLinks(links),
+                SVGNodes = this.genSVGNodes(nodes)
+
+            SVGNodes.append("title")
+                .text(d => d.id)
+            
+            // Render simulation
+            this.simulation.on("tick", () => {
+                SVGlinks
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                SVGNodes
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+            });
+
+            // Add controls
+            SVGNodes
+                .call(drag()
+                .on("start", this.#dragstarted.bind(this))
+                .on("drag", this.#dragged.bind(this))
+                .on("end", this.#dragended.bind(this)))
+                .on("mouseover", this.#updateTooltip.bind(this))
+                .on("mouseleave", this.#disableTooltip.bind(this))
+		}
+
+        static getSimulation(nodes: Node[], links: Link[]) {
+            const linkForce = forceLink(links)
+            linkForce.strength(2)
+            return forceSimulation(nodes)
+                .force("link", linkForce.id(d => d.id))
+                .force("charge", forceManyBody())
+                .force("x", forceX())
+                .force("y", forceY());
+        }
+
+        genTooltip() {
+            return this.svg.append("text")
+                .attr("class", "tooltip")
+                .style("pointer-events", "none")
+                .style("display", "none");
+        }
+
+        #updateTooltip(ev: MouseEvent, node: NodeWithCoord) {
+            this.tooltip
+                .style("display", null)
+                .attr("x", node.x)
+                .attr("y", node.y)
+                .text(node.name)
+        }
+
+        #disableTooltip(ev: MouseEvent, node: NodeWithCoord) {
+            this.tooltip.style("display", "none");
+        }
+
+        genSVGLinks(links: Link[]) {
+            return this.svg.append("g")
+                .attr("stroke", "currentColor")
+                .attr("stroke-opacity", 0.4)
+                .selectAll("line")
+                .data(links)
+                .join("line")
+                .attr("stroke-width", d => Math.sqrt(d.value));
+        }
+
+        genSVGNodes(nodes: Node[]) {
+            return this.svg.append("g")
+                .attr("stroke", "currentColor")
+                .attr("stroke-width", 1)
+                .attr("stroke-opacity", 0.4)
+                .selectAll("circle")
+                .data(nodes)
+                .join("circle")
+                .attr("r", d => d.radius)
+                .attr("fill", d => d.color);
+        }
+
+        #dragstarted(event: NodeEvent) {
+            if (!event.active) this.simulation.alphaTarget(0.5).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+        }
+
+        #dragged(event: NodeEvent) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+        }
+
+        #dragended(event: NodeEvent) {
+            if (!event.active) this.simulation.alphaTarget(0);
+            event.subject.fx = undefined
+            event.subject.fy = undefined
+        }
+	}
+</script>
+
+<object is="svg-graph" aria-hidden="true" {...props}>
+    <svg viewBox={[-.5, -.5, 1, 1].map(v => v * scale).join(' ')} preserveAspectRatio="xMidYMid meet"></svg>
+    {label ? <p>{label}</p> : ''}
+</object>
+
+<style lang="scss">
+	[is=svg-graph] {
+		border-radius: 1rem;
+		background: theme.$texture-cross;
+		border: theme.$color-grey 1px solid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+
+        svg {
+            width: 100%;
+            height: 100%;
+
+            :global(.tooltip) {
+                fill: currentColor;
+            }
+        }
+
+        p {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-style: italic;
+            padding: .25em .75em;
+            backdrop-filter: blur(.25em);
+        }
+	}
+</style>

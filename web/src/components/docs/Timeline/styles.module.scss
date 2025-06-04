@@ -1,6 +1,6 @@
 $dot-size: 0.35em;
 $dot-space: 0.2em;
-$gap-y: 2em;
+$gap-y: 1em;
 $border-width: 1px;
 $dot-radius: 25%;
 $last-dot-border-width: 1px;
@@ -12,6 +12,8 @@ $last-dot-border-width: 1px;
 	position: relative;
 	flex-direction: column;
 	gap: $gap-y;
+
+	border-left: $border-width solid theme.$color-black;
 	padding-left: calc(var(--pad-left));
 
 	&::before,
@@ -21,22 +23,37 @@ $last-dot-border-width: 1px;
 	}
 
 	&::before {
-		top: calc($dot-size + $dot-space);
-		left: calc($border-width / -2);
-		border-left: $border-width solid theme.$color-black;
-		height: calc(100% - $dot-size - $dot-space * 2);
+		bottom: calc(100% - 0.5em);
+		left: -0.5em;
+		background-color: theme.$color-white;
+		width: 1em;
+		height: 1em;
 	}
 
-	// &::after {
-	// 	top: calc(100% - $dot-size - $dot-space);
-	// 	left: calc($dot-size / -2);
-	// 	outline: $dot-space solid theme.$color-white;
-	// 	border: $last-dot-border-width solid theme.$color-black;
-	// 	border-radius: $dot-radius;
-	// 	background: theme.$color-white;
-	// 	width: calc($dot-size - $last-dot-border-width * 2);
-	// 	height: calc($dot-size - $last-dot-border-width * 2);
-	// }
+	.timeList {
+		$deg: 55deg;
+
+		&::before,
+		&::after {
+			border-left: $border-width solid theme.$color-black;
+			background-color: transparent;
+			height: 1.9em;
+		}
+
+		&::before {
+			bottom: 100%;
+			left: 0;
+			transform: rotate(-$deg);
+			transform-origin: 0 100%;
+		}
+
+		&::after {
+			top: 100%;
+			left: 0;
+			transform: rotate($deg);
+			transform-origin: 0 0;
+		}
+	}
 }
 
 .timeItem {
@@ -74,10 +91,6 @@ $last-dot-border-width: 1px;
 	}
 
 	& > section > div {
-		margin-top: $gap-y;
-	}
-
-	:global(ul > li) {
-		list-style: disc inside;
+		padding: $gap-y 0;
 	}
 }

@@ -3,22 +3,12 @@ import locales from "./locales"
 import { Section } from "@/layouts"
 import Timeline from "@/components/docs/Timeline"
 import { getLocaleContent } from "@/modules/i18n/content"
+import { Title } from "@/components"
 
 const content = getLocaleContent(locales, Astro)
 ---
 
-<Section id="history" layout="col2">
-	<div>
-		<h1>{content.title}</h1>
-		<p>{content.description}</p>
-	</div>
+<Section id="story" layout="col2">
+	<Title title={content.title} description={content.description}/>
 	<Timeline items={content.timeline} />
 </Section>
-
-<style>
-	div {
-		display: flex;
-		flex-direction: column;
-		gap: 1em;
-	}
-</style>

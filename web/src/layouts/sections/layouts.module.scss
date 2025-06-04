@@ -1,7 +1,12 @@
 @use "@/styles/layout.module.scss";
 
 .grid-layout {
-	@media screen and (max-width: (layout.$window-max-width * 0.6)) {
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	gap: 2em;
+
+	@media screen and (max-width: (layout.$window-max-width * 0.7)) {
 		grid-template-columns: 1fr !important;
 		grid-template-areas: "a" "b" !important;
 	}
@@ -9,11 +14,14 @@
 
 .col2 {
 	@extend .grid-layout;
-
-	display: grid;
-	grid-template-rows: 1fr;
 	grid-template-columns: 1fr 1fr;
-	justify-content: center;
-	align-items: center;
-	gap: 2em;
+}
+
+.col2i {
+	@extend .col2;
+	direction: rtl;
+
+	* {
+		direction: ltr;
+	}
 }

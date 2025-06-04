@@ -1,0 +1,43 @@
+---
+interface Props {
+    title?: string
+    description?: string
+}
+
+const { title, description } = Astro.props
+---
+
+<div>
+    <div>
+		<slot name="pre"/>
+        <h1>{title}</h1>
+        <p>{description}</p>
+		<slot/>
+    </div>
+</div>
+
+<style lang="scss">
+	div {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
+		div {
+			display: flex;
+			flex-direction: column;
+			width: min-content;
+			gap: 1em;
+
+			* {
+				flex-grow: 1;
+				text-wrap: balance;
+				text-align: center;
+
+				&:is(h1) {
+					text-wrap: nowrap;
+					padding: 0 1em;
+				}
+			}
+		}
+	}
+</style>
