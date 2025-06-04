@@ -30,26 +30,30 @@ $theme-variables: ();
 
 // Implement variables
 @mixin implement-variables {
+	$light-dark-types: "color";
+
 	color-scheme: dark;
 
 	@each $var in $theme-variables {
-		// @if meta.type-of(list.nth($var, 2)) != "string" {
-		// 	--#{list.nth($var, 1)}: light-dark(
-		// 		#{list.nth($var, 2)},
-		// 		#{list.nth($var, 3)}
-		// 	);
-		// } @else {
-		--#{list.nth($var, 1)}: #{list.nth($var, 2)};
-		// }
+		@if list.index($light-dark-types, meta.type-of(list.nth($var, 2))) {
+			--#{list.nth($var, 1)}: light-dark(
+				#{list.nth($var, 3)},
+				#{list.nth($var, 2)}
+			);
+		} @else {
+			--#{list.nth($var, 1)}: #{list.nth($var, 2)};
+		}
 	}
 
 	&.light {
 		color-scheme: light;
 
 		@each $var in $theme-variables {
-			// @if meta.type-of(list.nth($var, 2)) == "string" {
-			--#{list.nth($var, 1)}: #{list.nth($var, 3)};
-			// }
+			@if not
+				list.index($light-dark-types, meta.type-of(list.nth($var, 2)))
+			{
+				--#{list.nth($var, 1)}: #{list.nth($var, 3)};
+			}
 		}
 	}
 }
