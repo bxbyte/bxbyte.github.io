@@ -13,6 +13,17 @@ export const localePaths = Object.fromEntries(
 )
 
 /**
+ * Switch between different url locale
+ */
+export function replaceLocaleUrl(
+	url: URL,
+	locale: (typeof locales)[number]
+): URL {
+	const matcher = new RegExp(`(?<=^${url.origin})\/\\w*\/?`)
+	return new URL(url.href.replace(matcher, localePaths[locale]))
+}
+
+/**
  * Generate default static routes for lang pages.
  *
  * @returns default static routes

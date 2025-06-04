@@ -1,6 +1,7 @@
 ---
 import { Ref } from "@/components"
 import { locales } from "../config"
+import { replaceLocaleUrl } from "../content"
 ---
 
 <script>
@@ -10,7 +11,7 @@ import { locales } from "../config"
 	define("locale-link", { extends: "a" })(
 		class extends HTMLAnchorElement {
 			connectedCallback() {
-				this.addEventListener("click", () =>
+				this.addEventListener("click", () => 
 					$locale.set(this.dataset.locale as i18n.Locales)
 				)
 			}
@@ -20,15 +21,20 @@ import { locales } from "../config"
 
 <nav>
 	{
-		locales.map((locale) => (
-			<Ref
-				is="locale-link"
-				translate="no"
-				data-locale={locale}
-				defaultActive={Astro.currentLocale == locale}
-				label={locale}
-			/>
-		))
+		locales.map((locale) => {
+			const attrs = locale == Astro.currentLocale ? {defaultActive: true} : {
+				is: "locale-link",
+				href: replaceLocaleUrl(Astro.url, locale) // Allow prefetching
+			}
+			return (
+				<Ref
+					translate="no"
+					data-locale={locale}
+					label={locale}
+					{...attrs}
+				/>
+			)
+		})
 	}
 </nav>
 
