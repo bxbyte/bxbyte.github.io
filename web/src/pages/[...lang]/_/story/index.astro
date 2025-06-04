@@ -1,8 +1,6 @@
 ---
 import locales from "./locales"
 import { Section } from "@/layouts"
-
-import { PatternGrid } from "@/components/graphic"
 import Timeline from "@/components/docs/Timeline"
 import { getLocaleContent } from "@/modules/i18n/content"
 
@@ -12,13 +10,6 @@ const content = getLocaleContent(locales, Astro)
 <Section id="history" layout="col2">
 	<div>
 		<h1>{content.title}</h1>
-		<!-- <PatternGrid
-			animated
-			width={16}
-			height={4}
-			seed="hello "
-			style="border-radius: 0.5rem"
-		/> -->
 		<p>{content.description}</p>
 	</div>
 	<Timeline items={content.timeline} />

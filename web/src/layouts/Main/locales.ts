@@ -1,5 +1,4 @@
 import { REPOSITERY } from "astro:env/client"
-import { REPOSITERY_OWNER } from "astro:env/server"
 
 import infos from "@/data/infos"
 
@@ -20,38 +19,30 @@ export default {
 	footer: {
 		links: [
 			{
-				name: { fr: "Infos de Site", en: "Website Infos" },
-				links: [
-					{
-						label: {
-							fr: "Condition d'utilisation",
-							en: "Terms of Service",
-						},
-						href: "/tos",
-					},
-					{
-						label: {
-							fr: "Politique de Cookies",
-							en: "Privacy Policy",
-						},
-						href: "/policy",
-					},
-					{
-						label: { fr: "Depôt Github", en: "Github Repositery" },
-						href: `https://github.com/${REPOSITERY}`,
-					},
-				],
+				name: "Contacts",
+				links: infos.links,
 			},
 			{
-				name: { fr: "Infos de Contact", en: "Contact Infos" },
+				name: { fr: "Infos sur le site", en: "Website infos" },
 				links: [
+					// {
+					// 	label: {
+					// 		fr: "Condition d'utilisation",
+					// 		en: "Terms of Service",
+					// 	},
+					// 	href: "/tos",
+					// },
+					// {
+					// 	label: {
+					// 		fr: "Politique de Cookies",
+					// 		en: "Privacy Policy",
+					// 	},
+					// 	href: "/policy",
+					// },
 					{
-						label: "Github",
-						href: `https://github.com/${REPOSITERY_OWNER}`,
-					},
-					{
-						label: "Email",
-						href: `mailto:${infos.owner.email}`,
+						label: { fr: "Depôt Github", en: "Github Repositery" },
+						icon: "mdi:git",
+						href: `https://github.com/${REPOSITERY}`,
 					},
 				],
 			},

@@ -8,8 +8,14 @@ const content = {
 		en: "Contact me !",
 	},
 	content: {
-		fr: "Vous pouvez aussi me contacter sur mes réseaux :",
-		en: "You can also contact me on my networks:",
+		fr: `
+			Une question, un renseignement ? N'hésitez pas ! <br>
+			Pour des informations sensibles, envoyer un email à cette addresse :
+		`,
+		en: `
+			A question, need an informations ? Don't hesitate ! <br>
+			For sensible informations, please send a mail to this address :
+		`,
 	},
 	form: {
 		name: { fr: "Nom", en: "Name" },

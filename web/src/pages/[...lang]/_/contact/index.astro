@@ -3,15 +3,28 @@ import { Section } from "@/layouts"
 import { getLocaleContent } from "@/modules/i18n/content"
 import ContactForm from "./ContactForm.astro"
 import locales from "./locales"
+import { md } from "@/modules/composer/server"
+import infos from "@/data/infos"
+import { Ref } from "@/components"
 
 const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="contact" layout="col2">
 	<div>
-		<p style="font-size: 1.75rem;">{content.still}</p>
+		<p role="heading" style="font-size: 1.75rem;">{content.still}</p>
 		<h1>{content.title}</h1>
-		<p>{content.content}</p>
+		<Fragment>
+			<Fragment set:html={md(content.content)}>
+		</Fragment>
+		<Ref href={infos.owner.email} label={infos.owner.email}/>
 	</div>
 	<ContactForm />
 </Section>
+
+<style lang="scss">
+	a {
+		margin-top: .5em;
+		color: theme.$color-main;
+	}
+</style>

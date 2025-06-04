@@ -1,15 +1,18 @@
 ---
 import type { HTMLAttributes } from "astro/types"
 import { p } from "@/modules/composer/server"
+import { Icon } from "astro-icon/components"
 
 type Props = HTMLAttributes<"a"> & {
 	label?: string
 	direction?: "left" | "center" | "right"
 	defaultActive?: boolean
+	icon ?: string,
 }
 
 const {
 	label,
+	icon,
 	direction = "left",
 	defaultActive = false,
 	...rawProps
@@ -22,26 +25,42 @@ const props = p(rawProps)
 ---
 
 <a {...props}>
-	{label}
+	{icon ? <Icon name={icon} /> : ''}
+	<span>{label}</span>
 	<slot />
 </a>
 
 <style lang="scss">
 	a {
-		$line-width: 0.05em;
-		$line-color: theme.$color-main;
 		--x: 0;
 
-		box-decoration-break: clone;
-		gap: 1em;
-		background: linear-gradient(
-			transparent calc(100% - $line-width),
-			$line-color $line-width,
-			$line-color 0%
-		);
-		background-position: calc(var(--x) * 100%) 0;
-		background-size: 0 100%;
-		background-repeat: no-repeat;
+		display: inline-flex;
+		align-items: center;
+		gap: .5em;
+
+		span {
+			$line-width: 0.05em;
+			$line-color: theme.$color-main;
+
+			box-decoration-break: clone;
+			background: linear-gradient(
+				transparent calc(100% - $line-width),
+				$line-color $line-width,
+				$line-color 0%
+			);
+			background-position: calc(var(--x) * 100%) 0;
+			background-size: 0 100%;
+			background-repeat: no-repeat;
+			transition: background-size 0.1s ease-in-out;
+		}
+
+		svg {
+			$size: 1.1em;
+			height: $size;
+			width: $size;
+			padding: .1em;
+			transition: color 0.1s ease-in-out;
+		}
 
 		&.center {
 			--x: 0.5;
@@ -51,10 +70,13 @@ const props = p(rawProps)
 			--x: 1;
 		}
 
-		&:hover,
-		&.active {
-			transition: background-size 0.1s ease-in-out;
-			background-size: 100% 100%;
+		&:is(:hover, .active) {
+			span { 
+				background-size: 100% 100%;
+			}
+			svg {
+				color: theme.$color-main;
+			}
 		}
 	}
 </style>
