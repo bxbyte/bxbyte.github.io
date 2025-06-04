@@ -8,8 +8,22 @@ const content = {
 		en: "Contact me !",
 	},
 	content: {
-		fr: "Aliqua eu nostrud nisi consequat adipisicing irure nisi do sunt.",
-		en: "Aliqua eu nostrud nisi consequat adipisicing irure nisi do sunt.",
+		fr: "Vous pouvez aussi me contacter sur mes réseaux :",
+		en: "You can also contact me on my networks:",
+	},
+	form: {
+		name: { fr: "Nom", en: "Name" },
+		email: "Email",
+		subject: { fr: "Sujet", en: "Subject" },
+		message: "Message",
+		send: {
+			en: "Send",
+			fr: "Envoyer",
+		},
+		clear: {
+			en: "Delete",
+			fr: "Supprimer",
+		},
 	},
 }
 

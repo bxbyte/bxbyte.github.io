@@ -1,5 +1,9 @@
 ---
 import { Button, Field } from "@/components"
+import locales from "./locales"
+import { getLocaleContent } from "@/modules/i18n/content"
+
+const content = getLocaleContent(locales, Astro)
 ---
 
 <script>
@@ -26,38 +30,50 @@ import { Button, Field } from "@/components"
 </script>
 
 <form is="contact-form" onsubmit="return false">
-	<div>
-		<Field name="name" required placeholder="Name" />
-		<Field name="email" type="email" required placeholder="Email" />
-	</div>
-	<Field name="subject" required placeholder="Subject" />
+	<fieldset>
+		<Field name="name" required placeholder={content.form.name} />
+		<Field name="email" type="email" required placeholder={content.form.email} />
+	</fieldset>
+	<Field name="subject" required placeholder={content.form.subject} />
 	<Field
 		el="textarea"
 		name="message"
 		required
-		placeholder="Message"
+		placeholder={content.form.message}
 		rows="8"
 	/>
-	<div>
-		<Button type="submit"> Send Message </Button>
-		<Button variant="secondary" type="reset"> Clear All </Button>
-	</div>
+	<fieldset>
+		<Button type="submit">{content.form.send}</Button>
+		<Button variant="secondary" type="reset">{content.form.clear}</Button>
+	</fieldset>
 </form>
 
-<style>
+<style lang="scss">
 	form {
 		display: flex;
 		flex-direction: column;
 		gap: 1em;
 
-		div {
+		& > fieldset {
 			display: flex;
-			flex-direction: row;
+			flex-flow: row wrap;
 			gap: 1em;
+
+			&:global(>div) {
+				
+				&:has([name="name"]) {
+					flex-grow: 1;
+					width: 16ch;
+				}
+
+				&:not(:has([name="name"])) {
+					flex-grow: 2;
+				}
+			}
 		}
 
 		textarea {
-			resize: vertical;
+			resize: none;
 		}
 	}
 </style>
