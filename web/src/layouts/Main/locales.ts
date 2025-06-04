@@ -1,3 +1,4 @@
+import type { AstroGlobal } from "astro"
 import { REPOSITERY } from "astro:env/client"
 
 import infos from "@/data/infos"
@@ -19,45 +20,46 @@ export default {
 	footer: {
 		links: [
 			{
+				name: "Networks",
+				links: infos.networks,
+			},
+			{
 				name: "Contacts",
 				links: infos.links,
 			},
-			{
-				name: { fr: "Infos sur le site", en: "Website infos" },
-				links: [
-					// {
-					// 	label: {
-					// 		fr: "Condition d'utilisation",
-					// 		en: "Terms of Service",
-					// 	},
-					// 	href: "/tos",
-					// },
-					// {
-					// 	label: {
-					// 		fr: "Politique de Cookies",
-					// 		en: "Privacy Policy",
-					// 	},
-					// 	href: "/policy",
-					// },
-					{
-						label: { fr: "Depôt Github", en: "Github Repositery" },
-						icon: "mdi:git",
-						href: `https://github.com/${REPOSITERY}`,
-					},
-				],
-			},
+			// {
+			// 	name: { fr: "Infos sur le site", en: "Website infos" },
+			// 	links: [
+			// 		// {
+			// 		// 	label: {
+			// 		// 		fr: "Condition d'utilisation",
+			// 		// 		en: "Terms of Service",
+			// 		// 	},
+			// 		// 	href: "/tos",
+			// 		// },
+			// 		// {
+			// 		// 	label: {
+			// 		// 		fr: "Politique de Cookies",
+			// 		// 		en: "Privacy Policy",
+			// 		// 	},
+			// 		// 	href: "/policy",
+			// 		// },
+			// 		{
+			// 			label: { fr: "Depôt Github", en: "Github Repositery" },
+			// 			icon: "mdi:git",
+			// 			href: `https://github.com/${REPOSITERY}`,
+			// 		},
+			// 	],
+			// },
 		],
 		copyrigth: {
 			whenwho: {
-				fr: `© ${new Date().getFullYear()} Par ${infos.owner.name},`,
-				en: `© ${new Date().getFullYear()} By ${infos.owner.name},`,
+				fr: `© ${new Date().getFullYear()}, hébergé sur`,
+				en: `© ${new Date().getFullYear()}, hosted on`,
 			},
 			license: {
-				label: {
-					fr: "Tout Droits Reservés",
-					en: "All Rights Reserved",
-				},
-				href: "/license",
+				label: "Github Pages",
+				href: `https://github.com/${REPOSITERY}`,
 			},
 		},
 		asciiArt: `

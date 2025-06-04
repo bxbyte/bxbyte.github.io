@@ -6,11 +6,12 @@ const owner = {
 	jobTitle: "IT Student",
 	affiliation: "IUT 2 Grenoble",
 	email: "mailletl@etu.univ-grenoble-alpes.fr",
+	tel: "+33 06 68 10 76 04",
 }
 
 export default {
 	owner,
-	links: [
+	networks: [
 		{
 			label: "Linkedin",
 			icon: "mdi:linkedin",
@@ -22,9 +23,21 @@ export default {
 			href: `https://github.com/${REPOSITERY_OWNER}`,
 		},
 		{
-			label: "Email",
+			label: "Gitlab",
+			icon: "mdi:gitlab",
+			href: `https://gitlab.com/bxbyte1`,
+		},
+	],
+	links: [
+		{
+			label: owner.email,
 			icon: "mdi:email",
 			href: `mailto:${owner.email}`,
+		},
+		{
+			label: owner.tel,
+			icon: "mdi:telephone",
+			href: `tel:${owner.tel.replace(/\s+/g, "")}`,
 		},
 	],
 }

@@ -23,8 +23,13 @@ const content = getLocaleContent(locales, Astro)
 </Section>
 
 <style lang="scss">
-	a {
-		margin-top: .5em;
-		color: theme.$color-main;
+	[class*="astro-"] {
+		a {
+			margin-top: .5em;
+			color: theme.$color-main;
+		}
+		:global(p) {
+			text-wrap: balance;
+		}
 	}
 </style>
