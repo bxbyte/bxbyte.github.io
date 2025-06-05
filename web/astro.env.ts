@@ -18,9 +18,5 @@ export const env = {
 			context: "server",
 			access: "public",
 		}),
-		SERVER_URL: envField.string({
-			context: "server",
-			access: "public",
-		}),
 	},
 }

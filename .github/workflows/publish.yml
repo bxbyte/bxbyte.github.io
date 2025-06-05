@@ -27,7 +27,6 @@ jobs:
           echo REPOSITERY_PAGE="$(gh api 'repos/${{ github.repository }}/pages' --jq '.html_url')" >> web/.env
           echo REPOSITERY="${{ github.repository }}" >> web/.env
           echo REPOSITERY_OWNER="${{ github.repository_owner }}" >> web/.env
-          echo SERVER_URL="${{ github.server_url }}" >> web/.env
 
       - name: Build with docker
         run: |

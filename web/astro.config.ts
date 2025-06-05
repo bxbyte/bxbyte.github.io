@@ -18,7 +18,7 @@ import theme from "./src/modules/theme"
 
 export default defineConfig({
 	env,
-	site: process.env.SERVER_URL,
+	site: process.env.REPOSITERY_PAGE,
 	experimental: { contentIntellisense: true },
 	output: "static",
 	scopedStyleStrategy: "class",
