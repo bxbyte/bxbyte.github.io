@@ -15,7 +15,7 @@ export default {
 		{
 			label: "Linkedin",
 			icon: "mdi:linkedin",
-			href: "www.linkedin.com/in/mailletl",
+			href: "https://www.linkedin.com/in/mailletl",
 		},
 		{
 			label: "Github",

@@ -18,20 +18,20 @@ type PostEntry = Omit<CollectionEntry<"posts">, "data"> & {
 }
 
 export type PostHydrated = Omit<CollectionEntry<"posts">, "data"> & {
-	hash: string
+	slug: string
 	locale: i18n.Locales
 	data: Omit<PostData, "authors"> & {
 		authors?: AuthorData[]
 	}
 }
 
-function getHash(value: string) {
+function hashSlug(slug: string) {
 	return encodeURIComponent(
-		createHash("sha256").update(value).digest("hex").slice(0, 16)
+		createHash("sha256").update(slug).digest("hex").slice(0, 16)
 	)
 }
 
-export function unDatafied<T>({ data }: { data: T }): T {
+export function unpack<T>({ data }: { data: T }): T {
 	return data
 }
 
@@ -44,24 +44,24 @@ export async function getPostsByLocale(): Promise<{
 				localeMatch = matchLocalePath(filePath)
 
 			var locale = defaultLocale,
-				toHash = filePath
+				slugBase = filePath
 
 			// If the path match a locale specific content
 			if (localeMatch) {
 				locale = localeMatch[0]
 				// Make sure the hash stay the same for any other locales
-				toHash = filePath.replace(localeMatch[1], "")
+				slugBase = filePath.replace(localeMatch[1], "")
 			}
 
 			return {
 				...post,
-				hash: getHash(toHash),
+				slug: hashSlug(slugBase),
 				locale,
 				data: {
 					...post.data,
 					authors: post.data.authors
 						? (await getEntries(post.data.authors)).map(
-								unDatafied<AuthorData>
+								unpack<AuthorData>
 							)
 						: undefined,
 				},
@@ -69,9 +69,9 @@ export async function getPostsByLocale(): Promise<{
 		})
 	)
 
-	let postByHash = (
+	let postById = (
 		Object.values(
-			Object.groupBy(posts, ({ hash }) => hash)
+			Object.groupBy(posts, ({ slug }) => slug)
 		) as PostHydrated[][]
 	).map((posts) =>
 		Object.fromEntries(posts.map((post) => [post.locale, post]))
@@ -80,7 +80,7 @@ export async function getPostsByLocale(): Promise<{
 	let postByLocal = Object.fromEntries(
 		locales.map((locale) => [
 			locale,
-			postByHash.map(
+			postById.map(
 				(posts) =>
 					// Local selection order: current locale > default locale > only locale
 					posts[locale] ||
@@ -96,5 +96,5 @@ export async function getPostsByLocale(): Promise<{
 }
 
 export async function getJobs(): Promise<JobProps[]> {
-	return (await getCollection("jobs")).map(unDatafied<JobProps>)
+	return (await getCollection("jobs")).map(unpack<JobProps>)
 }

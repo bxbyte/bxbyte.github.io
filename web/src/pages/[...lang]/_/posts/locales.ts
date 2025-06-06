@@ -3,6 +3,10 @@ const content = {
 		fr: "Publications",
 		en: "Publications",
 	},
+	seeAll: {
+		fr: "Voir toutes les publications",
+		en: "See all publications",
+	},
 	description: {
 		fr: "Posts, articles et revus de mes projets, vous trouverez un peu de tout.",
 		en: "Posts, articles and project reviews, you'll find a little bit of everything.",

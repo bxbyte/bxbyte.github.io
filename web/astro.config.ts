@@ -12,7 +12,7 @@ import pkg from "./package.json"
 import composer from "./src/modules/composer"
 import compute from "./src/modules/compute"
 import html2pdf from "./src/modules/html2pdf"
-import i18n from "./src/modules/i18n"
+import i18n, { remarki18n } from "./src/modules/i18n"
 import seo from "./src/modules/seo"
 import theme from "./src/modules/theme"
 

@@ -19,6 +19,7 @@ export default {
 						fallbackType: "rewrite",
 					},
 				},
+				prefetch: true,
 			})
 		},
 	},

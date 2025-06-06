@@ -3,53 +3,37 @@ import { useLocaleContents } from "@/modules/i18n/content"
 import { getPostsByLocale } from "@/content"
 
 import PDF from "@/modules/html2pdf/print"
-import { Main, Block } from "@/layouts"
-import { BreadCrumbs, Comments, Toc } from "@/components"
+import { Block, Main, Section } from "@/layouts"
+import { Graph, Comments, Toc, BreadCrumbs } from "@/components"
 import type { BlogPosting } from "schema-dts"
 
-import "./_page.scss"
+import locales from "./_locales"
 import postStyles from "./_post.module.scss"
 import contentStyles from "./_content.module.scss"
 
 import renderPostMdx from "@/libs/server/post-renderer"
 
 import type { PostHydrated } from "@/content"
-import { Picture } from "astro:assets"
+import PostCover from "@/components/post/PostCover.astro"
 
 interface Props {
 	post: PostHydrated
 }
 
 export const { getStaticPaths, getLocaleContent } = useLocaleContents(
-	{
-		toc: {
-			headings: {
-				fr: "Table des matières",
-				en: "Table of content",
-			},
-			figures: {
-				fr: "Table des figures",
-				en: "Table of figure",
-			},
-			tables: {
-				fr: "Table des tableaux",
-				en: "Table of table",
-			},
-		},
-	},
+	locales,
 	async () => {
 		return Object.entries(await getPostsByLocale()).flatMap(
-			([locale, posts]) =>
-				posts.map((post) => ({
-					params: { locale, hash: post.hash },
-					props: { post },
-				}))
+			([locale, posts]) => posts.map(({slug, ...post}) => ({
+				params: { slug },
+				props: { post },
+			}))
 		)
 	}
 )
 
 const {
-		post: { hash, data },
+		post: { slug, data },
 	} = Astro.props,
 	content = getLocaleContent(Astro),
 	{ cover, type, title, description, keywords, date } = data,
@@ -90,31 +74,11 @@ if (type == "pdf")
 		],
 	}}
 >
-	<Block el="section">
+	<Section id="content">
 		<header>
-			<h1 transition:name={hash + "-t"} style="grid-area:title">
-				{title}
-			</h1>
-			<BreadCrumbs
-				displayPath={Astro.url.pathname.replace(/[^/]*\/?$/, "") +
-					title}
-			/>
-			{
-				cover && (
-					<Picture
-						transition:name={hash + "-i"}
-						alt="Illustration cover"
-						src={cover}
-					/>
-				)
-			}
-			{
-				description && (
-					<p transition:name={hash + "-d"} style="grid-area:desc">
-						{description}
-					</p>
-				)
-			}
+			<h1>{title}</h1>
+			<p>{description}</p>
+			{cover && <PostCover cover={cover}/>}
 		</header>
 		{
 			pdfData ? (
@@ -131,6 +95,7 @@ if (type == "pdf")
 		}
 		<nav>
 			<div>
+				<Graph />
 				{
 					toc.headings.length > 0 && (
 						<Toc
@@ -151,79 +116,65 @@ if (type == "pdf")
 			</div>
 		</nav>
 		<footer>
-			<Comments discussion={`Post #${hash}`} />
+			<Comments discussion={`Post #${slug}`} />
 		</footer>
-	</Block>
+	</Section>
 </Main>
 
 <style lang="scss">
 	@use "@/styles/layout.module.scss" as layout;
 
-	main {
+	:global(#content) {
+		display: grid;
+		grid-template-columns: 1fr .25fr;
+		grid-template-areas: 
+			'h h'
+			'c n'
+			'f f';
+		gap: 2em;
+
+		section {
+			grid-area: c;
+		}
+	}
+
+	header {
+		grid-area: h;
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
+		gap: 1em;
+		padding: 4em 2em;
+		align-items: center;
+		text-align: center;
+		text-wrap: balance;
+		border-top: 1px solid currentColor;
+		border-bottom: 1px solid currentColor;
+		background: theme.$texture-cross;
 
-		& > section {
-			--t: ;
-			display: grid;
-			grid-template-areas:
-				"h h h"
-				"c c s"
-				"f f f";
-			grid-auto-columns: 1fr 1fr minmax(min(fit-content, 8rem), 1fr);
+		picture {
+			max-height: 50vh;
+			// aspect-ratio: 4 / 3;
+			border-radius: 1em;
+			filter: brightness(calc(1 - .1 * (theme.$bool-is-dark)));
+			margin-top: 1em;
+		}
+	}
+
+	footer {
+		grid-area: f;
+	}
+
+	nav {
+		grid-area: n;
+		position: sticky;
+		
+		& > div {
+			position: sticky;
+			top: layout.$window-padding-y;
+			height: fit-content;
+			display: flex;
+			flex-direction: column;
 			gap: 2em;
-
-			& > header {
-				display: flex;
-				grid-area: h;
-				flex-direction: column;
-				gap: 1em;
-
-				img {
-					filter: grayscale(1);
-					border-radius: 1em;
-					width: 100%;
-					height: 10em;
-					object-fit: cover;
-				}
-			}
-
-			& > nav {
-				grid-area: s;
-				overflow: hidden;
-
-				& > div {
-					position: sticky;
-					top: layout.$window-padding-y;
-					height: fit-content;
-				}
-			}
-
-			& > footer {
-				grid-area: f;
-			}
-
-			& > section {
-				display: flex;
-				grid-area: c;
-
-				&.pdf {
-					@media screen, pagedjs-ignore {
-						:global(.pagedjs_pages) {
-							display: flex;
-							flex-flow: row wrap;
-							justify-content: center;
-							align-items: center;
-							gap: 2em;
-						}
-
-						:global(.pagedjs_page) {
-							border: 1px solid theme.$color-grey;
-							background-color: theme.$color-white;
-						}
-					}
-				}
-			}
 		}
 	}
 </style>

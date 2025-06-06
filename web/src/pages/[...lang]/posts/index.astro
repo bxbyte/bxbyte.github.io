@@ -32,7 +32,7 @@ const postsPerMonth = Object.groupBy(posts, ({ data: { date } }) =>
 
 <Main class={layoutStyles.chunk}>
 	<Section>
-		<ul class="timeline">
+		<ul>
 			{
 				Object.entries(postsPerMonth)
 					.map(
@@ -62,7 +62,7 @@ const postsPerMonth = Object.groupBy(posts, ({ data: { date } }) =>
 </Main>
 
 <style lang="scss">
-	.timeline {
+	ul {
 		display: flex;
 		flex-direction: column;
 		gap: 2em;

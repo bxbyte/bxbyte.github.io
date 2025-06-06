@@ -35,9 +35,9 @@ $last-dot-border-width: 1px;
 
 		&::before,
 		&::after {
-			border-left: $border-width solid theme.$color-black;
+			border-left: $border-width dashed theme.$color-black;
 			background-color: transparent;
-			height: 1.9em;
+			height: 2em;
 		}
 
 		&::before {
@@ -65,7 +65,7 @@ $last-dot-border-width: 1px;
 			&::before {
 				position: absolute;
 				top: 50%;
-				left: calc(-1 * var(--pad-left) - $dot-size / 2);
+				left: calc(-1 * var(--pad-left) - ($dot-space + $dot-size) / 2);
 				transform: translateY(-50%);
 				outline: $dot-space solid theme.$color-white;
 				border-radius: $dot-radius;

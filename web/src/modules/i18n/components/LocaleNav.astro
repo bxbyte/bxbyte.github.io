@@ -1,18 +1,26 @@
 ---
 import { Ref } from "@/components"
 import { locales } from "../config"
-import { replaceLocaleUrl } from "../content"
+import { getLocaleUrl } from "../content"
 ---
 
 <script>
-	import { $locale } from "../store"
+	import { prefetch } from "astro:prefetch"
+	import { $locale, getLocaleUrl } from "../store"
 	import { define } from "@/modules/composer/client"
 
 	define("locale-link", { extends: "a" })(
 		class extends HTMLAnchorElement {
 			connectedCallback() {
-				this.addEventListener("click", () => 
-					$locale.set(this.dataset.locale as i18n.Locales)
+				const locale = this.dataset.locale as i18n.Locales
+				this.addEventListener("click", () => $locale.set(locale))
+				this.addEventListener(
+					"mouseover", 
+					() => {
+						const url = getLocaleUrl(locale)
+						if (url) prefetch(url.href)
+					},
+					{ once: true }
 				)
 			}
 		}
@@ -24,13 +32,14 @@ import { replaceLocaleUrl } from "../content"
 		locales.map((locale) => {
 			const attrs = locale == Astro.currentLocale ? {defaultActive: true} : {
 				is: "locale-link",
-				href: replaceLocaleUrl(Astro.url, locale) // Allow prefetching
+				href: getLocaleUrl(Astro, locale) // Allow prefetching
 			}
 			return (
 				<Ref
 					translate="no"
 					data-locale={locale}
 					label={locale}
+					role="navigation"
 					{...attrs}
 				/>
 			)

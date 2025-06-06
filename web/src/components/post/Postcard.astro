@@ -7,6 +7,7 @@ import { Button } from "@/components"
 import { SharpPicture } from "@/modules/picture/components"
 import { Icon } from "astro-icon/components"
 import PLine from "../docs/PLine.astro"
+import PostCover from "./PostCover.astro"
 
 interface Props {
 	post: PostHydrated
@@ -28,35 +29,28 @@ const content = getLocaleContent(
 
 const {
 	post: {
-		hash,
+		slug,
 		locale,
 		data: { title, description, cover, type },
 	},
 } = Astro.props
 ---
 
-<a href={getRelativeLocaleUrl(Astro.currentLocale as string, "/posts/" + hash)}>
+<a href={getRelativeLocaleUrl(Astro.currentLocale as string, "/posts/" + slug)}>
 	<article title={title}>
 		<header>
 			<Icon name={{
 				pdf: 'mdi:book',
 				post: 'mdi:text'
 			}[type]} />
-			<Button variant="tag">
+			<!-- <Button variant="tag">
 				{content.share}
 				<Icon name="mdi:share-variant" />
-			</Button>
+			</Button> -->
 		</header>
 		{
 			cover && (
-				<SharpPicture
-					src={cover}
-					alt="cover"
-					class="cover"
-					width={1920}
-					height={1080}
-					computeImg={(img) => img.greyscale()}
-				/>
+				<PostCover cover={cover}/>
 			) 
 		}
 		<footer>
@@ -73,9 +67,9 @@ const {
 	article {
 		--open: 0;
 		--transition: .25s ease-in-out;
+		--color: #{theme.$color-grey};
 
-		border: 1px solid theme.$color-grey;		
-		border-radius: .5rem;
+		border-bottom: 1px solid var(--color);
 		position: relative;
 		overflow: hidden;
 		display: flex;
@@ -85,6 +79,7 @@ const {
 		justify-content: space-between;
 		padding: 1rem;
 		box-sizing: border-box;
+		transition: border var(--transition);
 
 		&:not(:has(picture)) {
 			background-image: theme.$texture-cross;
@@ -99,7 +94,7 @@ const {
 			gap: 1rem;
 			z-index: 1;
 
-			&>svg {
+			& > svg {
 				color: color-mix(in srgb, theme.$color-black calc(var(--open) * 100%), transparent);
 				transition: color var(--transition);
 			}
@@ -138,20 +133,23 @@ const {
 			}
 
 			picture:not(.loading) ~ footer::before {
-				background: linear-gradient(to top, theme.$color-white, theme.$color-white 3em, transparent);
 				position: absolute;
 				content: '';
 				width: 200%;
 				left: -50%;
-				height: 250%;
+				height: 150%;
 				top: -100%;
 				z-index: -1;
+				transition: backdrop-filter var(--transition);
+				backdrop-filter: blur(calc(.1em * var(--open)));
+				mask-image: linear-gradient(transparent, black);
 			}
 
 		}
 
 		&:hover {
 			--open: 1;
+			--color: #{theme.$color-main};
 		}
 	}
 </style>

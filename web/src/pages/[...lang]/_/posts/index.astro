@@ -2,7 +2,7 @@
 import { Section } from "@/layouts"
 import { getLocaleContent } from "@/modules/i18n/content"
 import locales from "./locales"
-import { Button, PostCard, Ref, Title } from "@/components"
+import { Button, PostCard, Title } from "@/components"
 import { getPostsByLocale } from "@/content"
 import { Graph } from "@/components"
 
@@ -13,14 +13,14 @@ const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]
 <Section id="posts" layout="col2i">
 	<Title title={content.title} description={content.description}>
 		<Button>
-			<a href="/posts">See all publications</a>
+			<a href="/posts">{content.seeAll}</a>
 		</Button>
 	</Title>
 	<ul>
 		{
 			posts
 				.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-				.slice(2, 4)
+				.slice(0, 2)
 				.map((post) => (
 					<li>
 						<PostCard post={post} />
@@ -34,7 +34,8 @@ const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]
 <style lang="scss">
 	ul {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
+		grid-template-columns: 1fr 1fr;
+		// grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
 		grid-auto-rows: 12em;
 		gap: 1em;
 

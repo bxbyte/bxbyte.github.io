@@ -1,4 +1,4 @@
-import type { GetStaticPaths } from "astro"
+import type { AstroGlobal, GetStaticPaths } from "astro"
 import { getRelativeLocaleUrl } from "astro:i18n"
 import cloneDeep from "clone-deep"
 import deepmerge from "deepmerge"
@@ -15,12 +15,21 @@ export const localePaths = Object.fromEntries(
 /**
  * Switch between different url locale
  */
-export function replaceLocaleUrl(
-	url: URL,
-	locale: (typeof locales)[number]
+export function getLocaleUrl(
+	astro: AstroGlobal,
+	newLocale: (typeof locales)[number]
 ): URL {
-	const matcher = new RegExp(`(?<=^${url.origin})\/\\w*\/?`)
-	return new URL(url.href.replace(matcher, localePaths[locale]))
+	const url = new URL(
+		astro.url.pathname.replace(
+			new RegExp(
+				`^${localePaths[astro.currentLocale as (typeof locales)[number]]}`
+			),
+			localePaths[newLocale]
+		),
+		astro.url.origin
+	)
+	url.hash = astro.url.hash
+	return url
 }
 
 /**

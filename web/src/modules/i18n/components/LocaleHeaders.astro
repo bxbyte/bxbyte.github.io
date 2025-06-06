@@ -1,5 +1,5 @@
 ---
-import { replaceLocaleUrl } from "../content"
+import { getLocaleUrl } from "../content"
 import { locales } from "../config"
 ---
 
@@ -9,7 +9,7 @@ import { locales } from "../config"
 			<link
 				rel="alternate" 
 				hreflang={locale} 
-				href={replaceLocaleUrl(Astro.url, locale)}
+				href={getLocaleUrl(Astro, locale)}
 			>
 		)
 	)
