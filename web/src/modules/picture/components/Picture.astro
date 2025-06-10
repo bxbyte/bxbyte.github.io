@@ -6,9 +6,10 @@ type PictureProps = component.Props_<typeof AstroPicture>
 
 type Props = Pick<
 	component.Props_<typeof AstroPicture>,
-	"src" | "alt" | "width" | "height"
+	"alt" | "width" | "height"
 > & PictureProps["pictureAttributes"] & {
-	noPlaceholder?: boolean
+	noPlaceholder?: boolean,
+	src: ImageMetadata
 }
 
 const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
@@ -39,15 +40,15 @@ const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
 </script>
 
 <AstroPicture
-	format="avif"
-	formats={["avif", "webp", "jpg"]}
-	fallbackFormat="webp"
-	src={src as ImageMetadata}
+	src={src}
 	alt={alt}
 	width={width}
 	height={height}
 	densities={[.5, 1]}
 	pictureAttributes={props.end()}
+	format="avif",
+	formats={["avif", "webp", "jpg"]}
+	fallbackFormat={src.format}
 />
 
 <style lang="scss">

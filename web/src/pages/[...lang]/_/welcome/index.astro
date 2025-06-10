@@ -5,7 +5,6 @@ import locales from "./locales"
 import { GridPicture, SharpPicture, getMeta, withCanvas, withSteps } from "@/modules/picture/components"
 import backImgPath from "./back.png?path"
 import ppImgPath from "./pp.png"
-import { md } from "@/modules/composer/server"
 import { mulberry32 } from "@/modules/composer/utils"
 
 const content = getLocaleContent(locales, Astro)
@@ -62,7 +61,9 @@ const content = getLocaleContent(locales, Astro)
 			width="512"
 			height="512"
 		/>
-		<Fragment set:html={md(content.what)}>
+		<p>
+			{content.what}
+		</p>
 	</div>
 
 	<p class="footer">{content.easteregg}</p>

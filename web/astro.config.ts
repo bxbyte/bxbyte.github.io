@@ -6,13 +6,14 @@ import icon from "astro-icon"
 import { defineConfig } from "astro/config"
 import rehypeKatex from "rehype-katex"
 import remarkMath from "remark-math"
+import remarkMermaid from "remark-mermaidjs"
 
 import { env } from "./astro.env"
 import pkg from "./package.json"
 import composer from "./src/modules/composer"
 import compute from "./src/modules/compute"
 import html2pdf from "./src/modules/html2pdf"
-import i18n, { remarki18n } from "./src/modules/i18n"
+import i18n from "./src/modules/i18n"
 import seo from "./src/modules/seo"
 import theme from "./src/modules/theme"
 
@@ -37,6 +38,7 @@ export default defineConfig({
 		},
 	},
 	markdown: {
+		remarkPlugins: [remarkMath, remarkMermaid],
 		shikiConfig: {
 			transformers: [transformerNotationDiff() as any],
 		},
@@ -49,7 +51,7 @@ export default defineConfig({
 		compute("_/"),
 		icon(),
 		mdx({
-			remarkPlugins: [remarkMath],
+			remarkPlugins: [remarkMath, remarkMermaid],
 			rehypePlugins: [
 				[
 					rehypeKatex,

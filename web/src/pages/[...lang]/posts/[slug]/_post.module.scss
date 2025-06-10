@@ -62,4 +62,12 @@
 			border-top: none;
 		}
 	}
+
+	img {
+		$pad-x: 1em;
+		padding: 1em $pad-x;
+		width: calc(100% - $pad-x);
+		max-width: 40em;
+		height: auto;
+	}
 }

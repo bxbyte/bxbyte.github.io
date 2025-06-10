@@ -1,11 +1,11 @@
 const content = {
 	title: {
 		fr: "Mon parcours",
-		en: "My story",
+		en: "My journey",
 	},
 	description: {
 		fr: "Un petit résumé des grandes étapes qui m'ont guidé sur le chemin de l'informatique.",
-		en: "A short resume of the big step that lead me on the path of informatics.",
+		en: "A short summary of the major steps that led me on the path to computer science.",
 	},
 	timeline: [
 		{
@@ -15,8 +15,8 @@ const content = {
 				en: "Covid-19 lockdown",
 			},
 			description: {
-				fr: `Beaucoup de temps libres, découverte et experimentation de la programmation.`,
-				en: `Lots of free time, discovery and experimentation of programming.`,
+				fr: `Beaucoup de temps libre, découverte et expérimentation de la programmation.`,
+				en: `Lots of free time, discovering and experimenting with programming.`,
 			},
 		},
 		{
@@ -27,8 +27,8 @@ const content = {
 				en: "High School Diploma",
 			},
 			description: {
-				fr: `Entre mathématics et informatiques, apprentissage des fondamentaux`,
-				en: `Between mathematics and informatics, learning of the basis.`,
+				fr: `Entre mathématiques et informatique, apprentissage des fondamentaux.`,
+				en: `Between mathematics and computer science, learning the fundamentals.`,
 			},
 		},
 		{
@@ -39,11 +39,11 @@ const content = {
 			},
 			title: {
 				fr: "BUT en Informatique",
-				en: "Minor in Computer Sciences",
+				en: "Bachelor in Computer Science",
 			},
 			description: {
-				fr: `Etude appliquer de multiple domaine de l'informatique, spécialisé dans le devellopement d'application`,
-				en: `Applicated study of multiple informatics domains, with a specialisation in application development`,
+				fr: `Étude appliquée de multiples domaines de l'informatique, spécialisé dans le développement d'applications.`,
+				en: `Applied study of multiple computer science fields, specialized in application development.`,
 			},
 			items: [
 				{
@@ -51,11 +51,11 @@ const content = {
 					end: new Date("2025-06-20"),
 					title: {
 						fr: "Stage dans l'équipe AIRSEA du LJK",
-						en: "Internship in the AIRSEA teams of the LJK",
+						en: "Internship in the AIRSEA team at LJK",
 					},
 					description: {
-						fr: `Evaluation de méthodes de compensation d'erreurs et implémentation dans le compilateur Poseidon`,
-						en: `Errors compensation methods evaluation and implementation in the Poseidon compilateur.`,
+						fr: `Implémentation d'optimisation au sein du compilateur Poseidon.`,
+						en: `Optimisation implementation inside the Poseidon compiler.`,
 					},
 				},
 			],

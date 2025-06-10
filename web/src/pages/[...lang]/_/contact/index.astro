@@ -7,10 +7,12 @@ import { md } from "@/modules/composer/server"
 import infos from "@/data/infos"
 import { Ref } from "@/components"
 
+export const id = "contact"
+
 const content = getLocaleContent(locales, Astro)
 ---
 
-<Section id="contact" layout="col2">
+<Section id={id} layout="col2">
 	<div>
 		<p role="heading" style="font-size: 1.75rem;">{content.still}</p>
 		<h1>{content.title}</h1>

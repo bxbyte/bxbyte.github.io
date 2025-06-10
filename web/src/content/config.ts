@@ -5,13 +5,8 @@ import {
 	reference,
 	z,
 } from "astro:content"
-import deepmerge from "deepmerge"
-
-import defaultJob from "./jobs/_default"
 
 const AUTHORS_DATA_PATH = "src/data/authors.json"
-
-export type JobProps = typeof defaultJob & Job
 
 const AuthorData = z.object({
 	id: z.string(),
@@ -26,9 +21,9 @@ const PostData = z.object({
 	title: z.string(),
 	description: z.optional(z.string()),
 	keywords: z.optional(z.array(z.string())),
+	tags: z.optional(z.array(z.string())),
 	date: z.date(),
 	authors: z.array(reference("authors")).optional(),
-	group: z.array(z.enum(groups)).or(z.enum(groups)),
 	type: z.enum(types).default(types[0]),
 })
 
@@ -53,22 +48,6 @@ export const collections = {
 				z.object({
 					cover: z.optional(image()),
 				})
-			),
-	}),
-	jobs: defineCollection<JobProps[]>({
-		loader: async () =>
-			await Promise.all(
-				Object.entries(
-					await import.meta.glob("./jobs/**/*.ts", {
-						import: "default",
-						eager: true,
-					})
-				)
-					.filter(([k]) => !k.includes("_"))
-					.map(
-						async ([k, v]: any) =>
-							deepmerge(defaultJob, v) as JobProps
-					)
 			),
 	}),
 }

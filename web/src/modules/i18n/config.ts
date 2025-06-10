@@ -3,8 +3,8 @@
  */
 export const localeDefs = {
 	// Language traduction in other locale by locale
-	fr: { en: "🇫🇷" },
-	en: { fr: "🇬🇧" },
+	fr: { en: "FR" },
+	en: { fr: "EN" },
 }
 
 export const locales = Object.keys(localeDefs) as i18n.Locales[]

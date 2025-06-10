@@ -1,0 +1,44 @@
+---
+title: Satellite Viewer
+description: |
+    Visualisation graphique des coordonnées de 
+    satellites des APIs Celestrak et TLE-API.
+cover: ./showcase.png
+date: 2025-23-30
+type: post
+tag:
+    - iut
+---
+
+## Contexte
+
+Dans le cadre d'un cours de Javascript à l'IUT2 de l'Université Grenoble Alpes,
+il était demandé de réaliser un mini-projet en Javascript permettant d'interagir
+avec une API et de mettre certaines recherches en favori, le projet étant structuré sous une forme Modèle Orienté Objet (MVC).
+
+## Réalisation
+
+Pour proposer quelque chose d'original, j'ai décidé de visualiser sommairement
+les coordonnées de satellites orbitant autour de la Terre disponibles sur l'API communautaire
+[Celestrak](https://celestrak.org/) et [TLE-API](https://tle.ivanstanojevic.me/#/),
+cette dernière étant aussi basée sur Celestrak, mais imposant moins de limites d'utilisation.
+
+L'outil permet de voir en accéléré ($\times 1000$) l'évolution des coordonnées des satellites,
+explorables via une simple barre de recherche et des options dépendant de l'API utilisée.
+
+![Démo](./showcase.gif)
+
+## Implémentation
+
+Le code est réalisé en vanilla pure, sans la moindre bibliothèque.
+Le Javascript est séparé en trois parties respectant le format MVC :
+une pour le formulaire, une pour le canvas où sont affichés les satellites,
+et une pour le système de favoris.
+
+En ignorant une bonne partie des détails techniques, on peut noter l'utilisation
+d'un système de résolution numérique d'équations permettant d'extraire les coordonnées
+à l'instant $t$ d'un satellite à partir de son TLE, un ensemble de paramètres physiques
+décrivant le mouvement elliptique du satellite. L'implémentation est tirée de ce [papier](https://github.com/bxbyte/satellite-viewer/blob/master/docs/Keplerian_Orbit_Elements_to_Cartesian_State_Vectors.pdf)
+de M. René Schwarz.
+
+Le code source est disponible sur github : [github.com/bxbyte/satellite-viewer](https://github.com/bxbyte/satellite-viewer)

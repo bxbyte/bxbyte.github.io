@@ -1,4 +1,4 @@
-export function p<T extends Object>(props: T) {
+export function p<T extends Object>(props: T = {} as T) {
 	const wrapper = {
 		with<K extends keyof T>(
 			attr: K,

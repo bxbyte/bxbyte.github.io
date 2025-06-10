@@ -67,9 +67,9 @@ const {
 	article {
 		--open: 0;
 		--transition: .25s ease-in-out;
-		--color: #{theme.$color-grey};
 
-		border-bottom: 1px solid var(--color);
+		border: 1px solid color-mix(in srgb, theme.$color-grey, theme.$color-black calc(var(--open) * 40%));
+		border-radius: .25rem;
 		position: relative;
 		overflow: hidden;
 		display: flex;
@@ -149,7 +149,6 @@ const {
 
 		&:hover {
 			--open: 1;
-			--color: #{theme.$color-main};
 		}
 	}
 </style>

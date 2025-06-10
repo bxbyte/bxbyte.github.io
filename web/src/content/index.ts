@@ -4,7 +4,7 @@ import { createHash } from "crypto"
 import { defaultLocale, locales } from "@/modules/i18n/config"
 import { matchLocalePattern } from "@/modules/i18n/content"
 
-import type { AuthorData, JobProps, PostData } from "./config"
+import type { AuthorData, PostData } from "./config"
 
 export type * from "./config"
 
@@ -93,8 +93,4 @@ export async function getPostsByLocale(): Promise<{
 	}
 
 	return postByLocal
-}
-
-export async function getJobs(): Promise<JobProps[]> {
-	return (await getCollection("jobs")).map(unpack<JobProps>)
 }
