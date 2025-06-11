@@ -5,7 +5,7 @@ const owner = {
 	additionalName: "bxbyte",
 	jobTitle: "IT Student",
 	affiliation: "IUT 2 Grenoble",
-	email: "mailletl@etu.univ-grenoble-alpes.fr",
+	email: "in@lucas-maillet.fr",
 	tel: "+33 06 68 10 76 04",
 }
 

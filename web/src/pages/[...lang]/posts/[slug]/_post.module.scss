@@ -1,9 +1,12 @@
+@use "@/styles/layout.module.scss";
+
 .post {
 	display: flex;
 	flex-direction: column;
+	counter-reset: image;
 
 	// Text spacing
-	:is(p, h1, h2, h3, h4, h5, h6) {
+	:is(p, h1, h2, h3, h4, h5, h6, ul, ol, figure) {
 		margin-bottom: 1em;
 	}
 
@@ -63,11 +66,51 @@
 		}
 	}
 
-	img {
-		$pad-x: 1em;
-		padding: 1em $pad-x;
-		width: calc(100% - $pad-x);
-		max-width: 40em;
-		height: auto;
+	figure {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1em;
+		background: theme.$texture-cross;
+		padding: 2em 2em 1em 2em;
+
+		img {
+			counter-increment: image;
+			border-radius: 0.5rem;
+			width: 100%;
+			max-width: layout.$img-max-width;
+			height: auto;
+		}
+
+		figcaption::before {
+			font-weight: 400;
+		}
+
+		img ~ figcaption::before {
+			content: "Figure " counter(image) " : ";
+		}
+	}
+
+	ul, ol {
+		display: flex;
+		gap: .5rem;
+		flex-direction: column;
+
+		li {
+			list-style-type: disc;
+			margin-left: 1rem;
+			padding-left: .5rem;
+		}
+		
+	}
+
+	ol li {
+		list-style: lower-alpha;
+	}
+
+	ul li {
+		list-style-type: disc;
+		margin-left: 1rem;
+		padding-left: .5rem;
 	}
 }

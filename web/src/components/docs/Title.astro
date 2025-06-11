@@ -1,23 +1,28 @@
 ---
+import { p } from '@/modules/composer/server'
+
 interface Props {
     title?: string
-    description?: string
+	variant?: 'left'
 }
 
-const { title, description } = Astro.props
+const { title, variant, ...rawProps } = Astro.props
+
+const props = p(rawProps)
+	.with("class", variant)
+	.end()
 ---
 
 <div>
-    <div>
+    <div {...props}>
 		<slot name="pre"/>
         <h1>{title}</h1>
-        <p>{description}</p>
 		<slot/>
     </div>
 </div>
 
 <style lang="scss">
-	div {
+	div:has(div) {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -25,18 +30,30 @@ const { title, description } = Astro.props
 		div {
 			display: flex;
 			flex-direction: column;
-			width: min-content;
-			gap: 1em;
+			gap: .75rem;
+			text-align: center;
+			align-items: center;
 
-			* {
-				flex-grow: 1;
+			:global(>*) {
 				text-wrap: balance;
-				text-align: center;
+				min-width: fit-content;
+				width: min-content;
+			}
 
-				&:is(h1) {
-					text-wrap: nowrap;
-					padding: 0 1em;
-				}
+			h1 {
+				padding: 0 1em;
+				max-width: 60vw;
+				width: max-content;
+				text-wrap: nowrap;
+			}
+		}
+
+		div.left {
+			text-align: left;
+			align-items: start;
+			
+			h1 {
+				padding: 0 1em 0 0;
 			}
 		}
 	}

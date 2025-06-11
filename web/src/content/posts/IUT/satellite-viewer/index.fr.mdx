@@ -1,5 +1,5 @@
 ---
-title: Satellite Viewer
+title: IUT - Satellite Viewer
 description: |
     Visualisation graphique des coordonnées de 
     satellites des APIs Celestrak et TLE-API.
@@ -8,6 +8,11 @@ date: 2025-23-30
 type: post
 tag:
     - iut
+links:
+    celestrak: https://celestrak.org
+    tle: https://tle.ivanstanojevic.me
+    paper: https://github.com/bxbyte/satellite-viewer/blob/master/docs/Keplerian_Orbit_Elements_to_Cartesian_State_Vectors.pdf
+    repo: github.com/bxbyte/satellite-viewer
 ---
 
 ## Contexte
@@ -20,13 +25,15 @@ avec une API et de mettre certaines recherches en favori, le projet étant struc
 
 Pour proposer quelque chose d'original, j'ai décidé de visualiser sommairement
 les coordonnées de satellites orbitant autour de la Terre disponibles sur l'API communautaire
-[Celestrak](https://celestrak.org/) et [TLE-API](https://tle.ivanstanojevic.me/#/),
-cette dernière étant aussi basée sur Celestrak, mais imposant moins de limites d'utilisation.
+
+<a href={frontmatter.links.celestrak}>Celestrak</a> et
+<a href={frontmatter.links.tle}>TLE-API</a>, cette dernière étant aussi basée
+sur Celestrak, mais imposant moins de limites d'utilisation.
 
 L'outil permet de voir en accéléré ($\times 1000$) l'évolution des coordonnées des satellites,
 explorables via une simple barre de recherche et des options dépendant de l'API utilisée.
 
-![Démo](./showcase.gif)
+![Démonstration des fonctionnalités](./showcase.gif)
 
 ## Implémentation
 
@@ -38,7 +45,7 @@ et une pour le système de favoris.
 En ignorant une bonne partie des détails techniques, on peut noter l'utilisation
 d'un système de résolution numérique d'équations permettant d'extraire les coordonnées
 à l'instant $t$ d'un satellite à partir de son TLE, un ensemble de paramètres physiques
-décrivant le mouvement elliptique du satellite. L'implémentation est tirée de ce [papier](https://github.com/bxbyte/satellite-viewer/blob/master/docs/Keplerian_Orbit_Elements_to_Cartesian_State_Vectors.pdf)
+décrivant le mouvement elliptique du satellite. L'implémentation est tirée de ce <a href={frontmatter.links.paper}>papier</a>
 de M. René Schwarz.
 
-Le code source est disponible sur github : [github.com/bxbyte/satellite-viewer](https://github.com/bxbyte/satellite-viewer)
+Le code source est disponible sur github : <a href={"https://" + frontmatter.links.repo}>{frontmatter.links.repo}</a>

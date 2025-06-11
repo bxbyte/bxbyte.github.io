@@ -1,0 +1,46 @@
+---
+title: IUT - News classification algorithms 
+description: Implementation and optimization of text classification algorithms
+cover:  ../iut2.jpg
+date: 2023-10-00
+type: post
+tag:
+    - iut
+links:
+    knn: https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm
+    report: ./report.pdf 
+---
+
+import reportUrl from "./report.pdf?url"
+import { Author } from "@/components/docs"
+
+## Context
+
+Project conducted during the first semester of BUT Computer Science in collaboration with <Author id="thuillim"/>. 
+
+## Objective
+
+Implementation and optimization of automatic text classification algorithms to categorize news articles into 5 categories: politics, culture, environment/technology, economics, and sports.
+
+## Implementation
+
+### Weight based classification
+
+First approach based on weighted scoring per category for each word:
+- Word normalization (case, plurals, vowels)
+- Binary search optimization
+- Common word filtering
+- ~65% accuracy 
+
+### <a href={frontmatter.links.knn}>K-nearest neighbors</a>
+
+Second approach using vector representations:
+- Articles represented as weight vectors
+- Distance calculations between vectors
+- Category determined by k closest neighbors vote
+- ~75% accuracy with k=5
+- Optimized complexity to O(n log n)
+
+## Results
+
+Performance analysis detailed in <a href={reportUrl}>the attached report</a> showed KNN outperforming the weight-based approach while maintaining reasonable computational complexity through optimizations.

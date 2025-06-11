@@ -3,8 +3,8 @@ import { useLocaleContents } from "@/modules/i18n/content"
 import { getPostsByLocale } from "@/content"
 
 import PDF from "@/modules/html2pdf/print"
-import { Block, Main, Section } from "@/layouts"
-import { Graph, Comments, Toc, BreadCrumbs } from "@/components"
+import {  Main, Section } from "@/layouts"
+import {  Comments, Toc } from "@/components"
 import type { BlogPosting } from "schema-dts"
 
 import locales from "./_locales"
@@ -24,8 +24,8 @@ export const { getStaticPaths, getLocaleContent } = useLocaleContents(
 	locales,
 	async () => {
 		return Object.entries(await getPostsByLocale()).flatMap(
-			([locale, posts]) => posts.map(({slug, ...post}) => ({
-				params: { slug },
+			([locale, posts]) => posts.map(({ slug, ...post }) => ({
+				params: { slug, locale },
 				props: { post },
 			}))
 		)
@@ -40,7 +40,6 @@ const {
 	{ toc, rendered, rawFrontmatter } = await renderPostMdx(Astro.props.post)
 
 var pdfData: Parameters<typeof PDF>[0] | undefined
-
 if (type == "pdf")
 	pdfData = {
 		...rawFrontmatter,
@@ -76,9 +75,11 @@ if (type == "pdf")
 >
 	<Section id="content">
 		<header>
-			<h1>{title}</h1>
-			<p>{description}</p>
-			{cover && <PostCover cover={cover}/>}
+			<div>
+				<h1>{title}</h1>
+				<p>{description}</p>
+				{cover && <PostCover src={cover}/>}
+			</div>
 		</header>
 		{
 			pdfData ? (
@@ -133,6 +134,11 @@ if (type == "pdf")
 			'f f';
 		gap: 2em;
 
+		@media screen and (max-width: (layout.$window-max-width * 0.7)) {
+			grid-template-columns: 1fr !important;
+			grid-template-areas: 'h' 'n' 'c' 'f';
+		}
+
 		section {
 			grid-area: c;
 		}
@@ -140,23 +146,30 @@ if (type == "pdf")
 
 	header {
 		grid-area: h;
-		display: flex;
-		flex-direction: column;
-		gap: 1em;
-		padding: 4em 2em;
-		align-items: center;
-		text-align: center;
-		text-wrap: balance;
-		border-top: 1px solid currentColor;
-		border-bottom: 1px solid currentColor;
 		background: theme.$texture-cross;
+		border-top: 1px solid theme.$color-grey;
+		border-bottom: 1px solid theme.$color-grey;
+		display: flex;
+		justify-content: center;
 
-		picture {
-			max-height: 50vh;
-			// aspect-ratio: 4 / 3;
-			border-radius: 1em;
-			filter: brightness(calc(1 - .1 * (theme.$bool-is-dark)));
-			margin-top: 1em;
+		div {
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+			padding: 4em 2em;
+			text-wrap: balance;
+
+			h1, p {
+				min-width: 100%;
+				width: min-content;
+			}
+
+			picture {
+				max-width: layout.$img-max-width;;
+				border-radius: 1em;
+				filter: brightness(calc(1 - .1 * (theme.$bool-is-dark)));
+				margin-top: 1em;
+			}
 		}
 	}
 

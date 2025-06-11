@@ -4,7 +4,7 @@
 	display: grid;
 	justify-content: center;
 	align-items: center;
-	gap: 2em;
+	gap: 4em 2em;
 
 	@media screen and (max-width: (layout.$window-max-width * 0.7)) {
 		grid-template-columns: 1fr !important;

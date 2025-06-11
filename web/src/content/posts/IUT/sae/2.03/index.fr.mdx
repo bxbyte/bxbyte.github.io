@@ -1,0 +1,64 @@
+---
+title: IUT - Installation d'une Infrastructure de Services Réseau
+description: Installation et configuration de services réseau sur un environnement Debian virtualisé
+date: 2024-03-11
+cover: ./cover.png
+tags:
+  - debian
+  - postgresql
+  - apache
+  - virtualisation
+links:
+  debian: https://www.debian.org
+  postgresql: https://www.postgresql.org
+  apache: https://httpd.apache.org
+---
+
+## Contexte
+
+Projet académique axé sur l'administration système et le déploiement de services réseau
+dans un environnement virtualisé. Le projet aborde les aspects pratiques de la configuration
+et de la gestion de serveurs.
+
+## Objectifs
+
+Mise en place d'une infrastructure complète de services réseau avec focus sur :
+
+- Configuration et gestion de machines virtuelles
+- Installation et configuration des services essentiels
+- Configuration des accès distants
+- Implémentation du système de base de données
+
+## Réalisation
+
+### 1. Configuration de l'environnement virtuel
+
+- Déploiement d'une machine virtuelle Debian basée sur QEMU
+- Installation en ligne de commande sans environnement graphique
+- Configuration de la redirection de ports pour l'accès distant
+- Implémentation des procédures de sauvegarde et restauration
+
+### 2. Configuration des services principaux
+
+- Déploiement du service SSH pour la gestion distante
+- Installation et vérification du serveur web Apache
+- Configuration de PostgreSQL et gestion des utilisateurs
+- Configuration des accès distants à la base de données
+
+### 3. Intégration des services
+
+- Configuration de l'intercommunication des services réseau
+- Configuration de la sécurité pour l'accès distant
+- Implémentation du monitoring système
+- Validation des performances
+
+## Résultats
+
+Livrables principaux :
+- Environnement virtuel Debian pleinement fonctionnel
+- Services réseau configurés (SSH, Apache, PostgreSQL)
+- Capacité d'accès distant pour tous les services
+- Documentation technique complète
+
+Cette infrastructure fournit une base pour l'hébergement d'applications web avec support de base de données,
+accessible localement et à distance via la redirection de ports configurée.

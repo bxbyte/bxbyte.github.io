@@ -25,6 +25,11 @@ export type PostHydrated = Omit<CollectionEntry<"posts">, "data"> & {
 	}
 }
 
+export type PostReferenceData = Pick<PostData, "title" | "tags"> &
+	Pick<PostHydrated, "slug"> & {
+		links: Exclude<PostData["links"], undefined>[string]
+	}
+
 function hashSlug(slug: string) {
 	return encodeURIComponent(
 		createHash("sha256").update(slug).digest("hex").slice(0, 16)
@@ -33,6 +38,11 @@ function hashSlug(slug: string) {
 
 export function unpack<T>({ data }: { data: T }): T {
 	return data
+}
+
+export async function getAuthors(ids: string[]): Promise<AuthorData[]> {
+	const authors = await getEntries(ids.map(id => ({id, collection: 'authors'})))
+	return authors.map(unpack<AuthorData>)
 }
 
 export async function getPostsByLocale(): Promise<{

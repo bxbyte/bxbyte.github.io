@@ -3,8 +3,6 @@ import type { PostHydrated } from "@/content"
 import { getRelativeLocaleUrl } from "astro:i18n"
 import { getLocaleContent } from "@/modules/i18n/content"
 import { localeDefs } from "@/modules/i18n/config"
-import { Button } from "@/components"
-import { SharpPicture } from "@/modules/picture/components"
 import { Icon } from "astro-icon/components"
 import PLine from "../docs/PLine.astro"
 import PostCover from "./PostCover.astro"
@@ -50,7 +48,7 @@ const {
 		</header>
 		{
 			cover && (
-				<PostCover cover={cover}/>
+				<PostCover src={cover}/>
 			) 
 		}
 		<footer>
@@ -106,7 +104,7 @@ const {
 			gap: .5rem;
 			position: relative;
 			width: 100%;
-			transform: scale(calc(1 + var(--open) * .01));
+			// transform: scale(calc(1 + var(--open) * .01));
 			transition: transform var(--transition);
 
 			p[role=heading] span {
@@ -116,35 +114,32 @@ const {
 		}
 
 		// Add gradient mask if picture provided
-		&:has(picture) {
-			picture {
-				height: 100%;
-				width: 100%;
-				left: 0;
-				top: 0;
-				z-index: -1;
-				position: absolute;
-				filter: opacity(calc(.8 - var(--open) * .2));
-				transition: filter var(--transition);
+		picture {
+			z-index: -1;
+			filter: opacity(calc(.8 - var(--open) * .2));
+			transition: filter var(--transition);
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			left: 0;
+			top: 0;
 
-				&:not(.loading) {
-					mask: linear-gradient(to top, transparent, #fff);
-				}
+			&:not(.loading) {
+				mask-image: linear-gradient(to top, #00000011, #fff);
 			}
+		}
 
-			picture:not(.loading) ~ footer::before {
-				position: absolute;
-				content: '';
-				width: 200%;
-				left: -50%;
-				height: 150%;
-				top: -100%;
-				z-index: -1;
-				transition: backdrop-filter var(--transition);
-				backdrop-filter: blur(calc(.1em * var(--open)));
-				mask-image: linear-gradient(transparent, black);
-			}
-
+		picture:not(.loading) ~ footer::before {
+			position: absolute;
+			content: '';
+			width: 200%;
+			left: -50%;
+			height: 200%;
+			bottom: -50%;
+			z-index: -1;
+			transition: backdrop-filter var(--transition);
+			backdrop-filter: blur(calc(1em * var(--open)));
+			mask-image: linear-gradient(#00000000, #000, #000);
 		}
 
 		&:hover {

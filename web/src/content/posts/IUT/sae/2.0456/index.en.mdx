@@ -1,0 +1,75 @@
+---
+title: IUT - Development of a travel app
+description: Creation and deployment of a travel management application
+cover: ./bridge.webp
+date: 2024-12-01
+tag:
+    - iut
+    - web
+keywords:
+    - Astro.js
+    - Vue.js
+    - Web Development
+type: post
+authors:
+    - thuillim
+    - sechike
+    - banroma
+    - drouiyl
+    - passelu
+    - ruffleke
+links: 
+    astro: https://astro.build
+    drizzle: https://orm.drizzle.team
+    vue: https://vuejs.org
+    typescript: https://www.typescriptlang.org
+    node: https://nodejs.org
+    postgresql: https://www.postgresql.org
+    db: https://www.data.gouv.fr/fr/datasets/base-ouverte-des-ponts-de-france/
+---
+
+import { getAuthors } from "@/content"
+
+## Context
+
+As part of a group project in BUT Computer Science,
+we were asked to create a web application promoting France's cultural heritage,
+based on open data.
+
+Our team chose to create an application offering tourist activities
+around French bridges, based on a
+<a href={frontmatter.links.db}>dataset from the French government</a>.
+
+## Design
+
+During the project's design phase, I contributed to writing
+the interim report on the following aspects:
+
+- The design of graphical interfaces.
+
+- Technical choices, meaning the languages and software used to
+design and run the application, which included among others:
+
+    - <a href={frontmatter.links.node}>Node.js</a>: a JavaScript code executor used to run the JavaScript code
+    of the application server, preferred for its ease of use.
+
+    - <a href={frontmatter.links.typescript}>TypeScript</a>: a JavaScript derivative language adding typing concepts
+    to the JavaScript language.
+
+    - <a href={frontmatter.links.astro}>Astro.js</a>: a backend JavaScript framework used to structure the code and
+    run the application, distinguished from other JavaScript frameworks by its
+    concepts that are "closer" to web natives.
+
+    - <a href={frontmatter.links.drizzle}>Drizzle</a>: a JavaScript ORM allowing easy design and interaction
+    with our database, preferred over its more complex competitor Prisma.
+
+    - <a href={frontmatter.links.postgresql}>PostgreSQL</a>: a robust database management system.
+
+    - <a href={frontmatter.links.vue}>Vue.js</a>: a frontend JavaScript framework for managing user interface
+    interactions.
+
+## Development
+
+I participated in the website development for both backend
+and primarily frontend implementation, being responsible for features such as the site exploration system,
+the booking system, and the offer addition system, as well as account creation and login functionality.

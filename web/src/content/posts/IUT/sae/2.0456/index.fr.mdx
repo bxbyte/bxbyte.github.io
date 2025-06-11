@@ -1,0 +1,76 @@
+---
+title: IUT - Développement d'une application de voyages
+description: Création et déploiement d'une application de gestion de voyages
+cover: ./bridge.webp
+date: 2024-12-01
+tag:
+    - iut
+    - web
+keywords:
+    - Astro.js
+    - Vue.js
+    - Developement web
+type: post
+authors:
+    - thuillim
+    - sechike
+    - banroma
+    - drouiyl
+    - passelu
+    - ruffleke
+links:
+    astro: https://astro.build
+    drizzle: https://orm.drizzle.team
+    vue: https://vuejs.org
+    typescript: https://www.typescriptlang.org
+    node: https://nodejs.org
+    postgresql: https://www.postgresql.org
+    db: https://www.data.gouv.fr/fr/datasets/base-ouverte-des-ponts-de-france/
+---
+
+import { getAuthors } from "@/content"
+
+## Contexte
+
+Dans le cadre d'un projet de groupe réalisé en BUT Informatique,
+il était demandé de créer une application web valorisant le patrimoine
+culturels de France, basées sur des données de l'open data.
+
+Notre équipe à alors choisie de créer une application proposant des
+activités touristiques autour des ponts de France, basé sur un
+<a href={frontmatter.links.db}>dataset du data du
+gouvernement français</a>.
+
+## Conception
+
+Lors de la phase de conception du projet, j'ai participé à la rédaction 
+du bilan intérmédiaire sur les aspects suivant :
+
+- Le design des interfaces graphiques.
+
+- Les choix techniques, c'est à dire ici les languages et logiciels utilisés pour 
+concevoir et executé l'application, qui ont concisté entres-autres en :
+
+    - <a href={frontmatter.links.node}>Node.js</a> : un éxécuteur de code javascript utilisé pour éxécuté le code javascript
+    du serveur de l'application, privilégie pour sa facilité d'utilisation.
+
+    - <a href={frontmatter.links.typescript}>TypeScript</a> : un language dérivé de JavaScript ajoutant la notion de typage
+    au language JavaScript.
+
+    - <a href={frontmatter.links.astro}>Astro.js</a> : un framework javascript backend utilisé pour structuer le code et 
+    exécuter l'application, ce distinguant des autres framework javascript par ses
+    concepts "plus proches" de ce natif au web. 
+
+    - <a href={frontmatter.links.drizzle}>Drizzle</a> : un ORM javascript permettant de désigner et d'intéragir facilement
+    avec notre base de données, préféré à son concurent plus complexe Prisma.
+
+    - <a href={frontmatter.links.postgresql}>PostgreSQL</a> : un gestionnaire de base de données robuste.
+
+    - <a href={frontmatter.links.vue}>Vue.js</a> : un framework javascript frontend permettant de gérér l'interaction 
+    de l'interface avec l'utilisateur.
+
+## Développement
+
+J'ai participé au développement du site web pour la réalisation du backend
+mais surtout du frontend, chargé par exemple du système d'exploration du site,
+du système de réservation et du système d'ajout d'offre, de création et connexion de compte.

@@ -15,8 +15,28 @@
 		"name": "Hashem Belal"
 	},
 	{
-		"id": "lejeunea",
-		"social": "https://www.linkedin.com/in/lejeune-anne-47898719/",
-		"name": "Mme. Anne Lejeune"
+		"id": "sechike",
+		"social": "https://www.linkedin.com/in/kenzo-sechi-b77808308/",
+		"name": "Kenzo Sechi"
+	},
+	{
+		"id": "banroma",
+		"social": "https://www.linkedin.com/in/matteo-banroques-mathian-0a7ba1329/",
+		"name": "Mattéo Banroques-Mathian"
+	},
+	{
+		"id": "drouiyl",
+		"social": "https://www.linkedin.com/in/ilyes-drouiche-5b2695271/",
+		"name": "Ilyès Drouiche"
+	},
+	{
+		"id": "passelu",
+		"social": "https://www.linkedin.com/in/lucas-passet-b13a77338/",
+		"name": "Lucas Passet"
+	},
+	{
+		"id": "ruffleke",
+		"social": "https://www.linkedin.com/in/kenzo-rufflet-ejiri-998b69329/",
+		"name": "Kenzo Rufflet-Ejiri"
 	}
 ]

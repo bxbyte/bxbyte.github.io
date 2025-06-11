@@ -1,0 +1,46 @@
+---
+title: IUT - Algorithmes de classification de dépêches
+description: Implémentation et optimisation d'algorithmes de classification de textes
+cover: ../iut2.jpg
+date: 2023-10-00
+type: post
+tag:
+    - iut
+links:
+    knn: https://fr.wikipedia.org/wiki/M%C3%A9thode_des_k_plus_proches_voisins
+---
+
+import reportUrl from "./report.pdf?url"
+import { Author } from "@/components/docs"
+
+## Contexte
+
+Projet réalisé en collaboration avec <Author id="thuillim"/> lors du premier semestre de BUT Informatique.
+L'objectif était d'implémenter et d'optimiser des algorithmes de classification automatique
+de dépêches selon 5 catégories : politique, culture, environnement/technologie, économie et sport.
+
+## Implémentation
+
+### 1. Classification par poids
+
+Première approche basée sur une table de poids attribuant des scores par catégorie
+pour chaque mot. La catégorie ayant le score total le plus élevé est sélectionnée.
+
+Optimisations réalisées :
+- Normalisation des mots (casse, pluriels, voyelles)
+- Recherche dichotomique pour améliorer les performances
+- Filtrage des mots trop communs
+
+### 2. Classification KNN 
+
+Seconde approche utilisant la méthode des <a href={frontmatter.links.knn}>k plus proches voisins</a>.
+Les articles sont représentés comme des vecteurs de poids permettant de calculer des distances.
+La catégorie est déterminée par vote majoritaire des k voisins les plus proches.
+
+## Résultats
+
+Les performances des deux approches ont été analysées dans <a href={reportUrl}>le rapport joint</a> :
+
+- Approche par poids : ~65% de précision
+- Approche KNN : ~75% de précision avec k=5
+- Complexité optimisée de O(n log n)

@@ -11,9 +11,10 @@ const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]
 ---
 
 <Section id="posts" layout="col2i">
-	<Title title={content.title} description={content.description}>
-		<Button>
-			<a href="/posts">{content.seeAll}</a>
+	<Title title={content.title}>
+		<p>{content.description}</p>
+		<Button el="a" href="/posts">
+			{content.seeAll}
 		</Button>
 	</Title>
 	<ul>
@@ -27,7 +28,9 @@ const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]
 					</li>
 				))
 		}
-		<Graph label={content.graph} />
+		<Graph label={content.graph} posts={posts.map(
+			({ slug, data: { title, tags, links }}) => ({ slug, title, tags, links: Object.values(links) }))
+		} />
 	</ul>
 </Section>
 
@@ -41,17 +44,6 @@ const posts = (await getPostsByLocale())[Astro.currentLocale as i18n.Locales]
 
 		&>:not(li) {
 			grid-row: 1 / span 2;
-		}
-	}
-
-	div {
-		display: flex;
-		flex-direction: column;
-		gap: 1em;
-
-		* {
-			text-wrap: balance;
-			text-align: center;
 		}
 	}
 </style>

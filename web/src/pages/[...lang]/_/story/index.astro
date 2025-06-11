@@ -9,6 +9,7 @@ const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="story" layout="col2">
-	<Title title={content.title} description={content.description}/>
+	<Title title={content.title}>
+		<p>{content.description}</p></Title>
 	<Timeline items={content.timeline} />
 </Section>

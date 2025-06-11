@@ -22,7 +22,7 @@ function dateFormat(date: Date): string {
 
 <li class={styles.timeItem}>
 	<section>
-		<p role="heading" set:html={md(title)} />
+		<p role="heading">{title}</p>
 		<p data-metadata={metadata}>
 			<time datetime={start.toISOString()}>{dateFormat(start)}</time>{
 				end && (

@@ -39,20 +39,19 @@ function getCaptionItems(cheerio: CheerioAPI, selector: string) {
 export default async function renderPostMdx(post: PostHydrated) {
 	const { Content: astroContent, remarkPluginFrontmatter: rawFrontmatter } =
 			await render(post as any),
-		cheerio = load(
-			await (
-				await experimental_AstroContainer.create({
-					astroConfig,
-					renderers: await loadRenderers([getContainerRenderer()]),
-				})
-			).renderToString(astroContent, {
-				props: {
-					components: {
-						...html2pdfComponents,
-					},
-				},
+		astroRenderedContent = await (
+			await experimental_AstroContainer.create({
+				astroConfig,
+				renderers: await loadRenderers([getContainerRenderer()]),
 			})
-		)
+		).renderToString(astroContent, {
+			props: {
+				components: {
+					...html2pdfComponents,
+				},
+			},
+		}),
+		cheerio = load(astroRenderedContent)
 
 	// Hash ids
 	const idElements = [...cheerio("[id]")],
@@ -65,21 +64,41 @@ export default async function renderPostMdx(post: PostHydrated) {
 		el.attribs.id = newId
 	})
 
+	// Toc
+	const toc = {
+		headings: [...cheerio(":is(h1,h2,h3,h4,h5,h6)")].map((el) =>
+			Object.assign(processEl(cheerio, el as Element), {
+				lvl: parseInt(
+					(el as Element).tagName.match(/\d/) as unknown as string
+				),
+			})
+		),
+		figures: getCaptionItems(
+			cheerio,
+			"figure:has(figcaption) :is(img,svg)"
+		),
+		tables: getCaptionItems(cheerio, "figure:has(figcaption) table"),
+	}
+
+	// Handle caption
+	// Based on https://route360.dev/fr/post/astro-markdown-figcaption/
+	cheerio("img").replaceWith(
+		(_, { attribs: { src, alt, title, width, height } }) => `
+		<figure>
+			<img
+				src=${src}
+				alt=${alt}
+				loading="lazy"
+				title=${title}
+				width=${width}
+				height=${height}
+				decoding="auto"
+			/>${alt ? `<figcaption>${alt}</figcaption>` : ""}
+		</figure>`
+	)
+
 	return {
-		toc: {
-			headings: [...cheerio(":is(h1,h2,h3,h4,h5,h6)")].map((el) =>
-				Object.assign(processEl(cheerio, el as Element), {
-					lvl: parseInt(
-						(el as Element).tagName.match(/\d/) as unknown as string
-					),
-				})
-			),
-			figures: getCaptionItems(
-				cheerio,
-				"figure:has(figcaption) :is(img,svg)"
-			),
-			tables: getCaptionItems(cheerio, "figure:has(figcaption) table"),
-		},
+		toc,
 		rendered: cheerio.html(),
 		rawFrontmatter,
 	}

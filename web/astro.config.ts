@@ -4,9 +4,14 @@ import { transformerNotationDiff } from "@shikijs/transformers"
 import compress from "astro-compress"
 import icon from "astro-icon"
 import { defineConfig } from "astro/config"
+import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeKatex from "rehype-katex"
+import rehypeSlug from "rehype-slug"
+import remarkCaptions from "remark-captions"
 import remarkMath from "remark-math"
 import remarkMermaid from "remark-mermaidjs"
+import remarkReferenceLinks from "remark-reference-links"
+import remarkToc from "remark-toc"
 
 import { env } from "./astro.env"
 import pkg from "./package.json"
@@ -38,10 +43,25 @@ export default defineConfig({
 		},
 	},
 	markdown: {
-		remarkPlugins: [remarkMath, remarkMermaid],
 		shikiConfig: {
 			transformers: [transformerNotationDiff() as any],
 		},
+		remarkPlugins: [
+			remarkMath,
+			remarkMermaid,
+			remarkReferenceLinks,
+			remarkCaptions,
+			[remarkToc, { heading: "contents" }],
+			[rehypeSlug, [rehypeAutolinkHeadings, { behavior: "append" }]],
+		],
+		rehypePlugins: [
+			[
+				rehypeKatex,
+				{
+					output: "mathml",
+				},
+			],
+		],
 	},
 	integrations: [
 		i18n,
@@ -51,15 +71,7 @@ export default defineConfig({
 		compute("_/"),
 		icon(),
 		mdx({
-			remarkPlugins: [remarkMath, remarkMermaid],
-			rehypePlugins: [
-				[
-					rehypeKatex,
-					{
-						output: "mathml",
-					},
-				],
-			],
+			optimize: true,
 		}),
 		await html2pdf(pkg.config),
 		compress({ Image: false }),

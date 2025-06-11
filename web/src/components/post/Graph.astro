@@ -1,54 +1,105 @@
 ---
+import type { PostReferenceData } from "@/content"
+import { compute } from "@/modules/compute/compute"
 import type { HTMLAttributes } from 'astro/types'
 
 type Props = HTMLAttributes<'object'> & {
-    scale?: number
     label?: string
-} 
+    posts: PostReferenceData[]
+}
 
-const { scale = 500, label, ...props } = Astro.props
+const { posts, label, ...props } = Astro.props
+
+const postsURL = await compute(posts, (add) => add(JSON.stringify(posts), "json"));
 ---
 
 <script>
+	import type { PostReferenceData } from "@/content"
 	import { define } from "@/modules/composer/client"
-    import { select, schemePastel1, scaleOrdinal, forceSimulation, forceLink, forceManyBody, forceX, forceY, drag} from "d3"
+    import { 
+        type Simulation,
+        type ForceLink,
+        type SimulationLinkDatum,
+        type SimulationNodeDatum,
+        select, schemePastel1, scaleOrdinal, forceSimulation, forceLink, forceManyBody, forceX, forceY, drag
+    } from "d3"
 
-    type Link = { source: any, target: any }
-    type Node = { id: any, radius: number, color: string }
-    type NodeWithCoord = Node & { x: number, y: number, fx?: number, fy?: number }
-    type NodeEvent = {active: boolean, x: number, y: number, subject: NodeWithCoord}
+    type PostNode = SimulationNodeDatum & PostReferenceData & { radius: number, type: string }
+    type Link = SimulationLinkDatum<PostNode>
+    type NodeEvent = { active: boolean, x: number, y: number, subject: SimulationNodeDatum }
     
     const color = scaleOrdinal(schemePastel1);
-    let nodes = Array.from({length: 200}, (_, id) => ({
-        id,
-        name: 'Test',
-        // color: '#fff',
-        color: color(Math.round(Math.random() * 10)),
-        radius: (1 + Math.round(Math.random() * 4)),
-    })) as Node[]
-
-    let links = Array.from({length: 240}, () => ({
-        source: Math.floor(Math.random() * nodes.length),
-        target: Math.floor(Math.random() * nodes.length),
-    })) as Link[]
-
-    @define("svg-graph", { extends: "object" })
-	class SVGGraph extends HTMLObjectElement {
-        simulation
+    const strongURLForceRegexp = /^((?:[a-z]+:\/\/[^\/?#]+)|\.)/gm
+    
+    @define("post-graph", { extends: "div" })
+	class SVGGraph extends HTMLDivElement {
+        simulation: Simulation<PostNode, SimulationLinkDatum<PostNode>>
         svg
         tooltip
+        posts: PostNode[]
+        nodes: PostNode[]
+        padding = 20
+        scale = 3
+        // dataset: { href: string }
         
-		constructor() {
-			super()
-            this.simulation = SVGGraph.getSimulation(nodes, links)
+		async connectedCallback() {
             this.svg = select(this.firstElementChild as SVGSVGElement)
             this.tooltip = this.genTooltip();
+            this.posts = await (await fetch(this.dataset.href)).json()
 
-            const SVGlinks = this.genSVGLinks(links),
-                SVGNodes = this.genSVGNodes(nodes)
+            const tagForce = this.addRelationForce({
+                    nodes: this.posts,
+                    attr: "tags",
+                    force: 2
+                }),
+                weakURLForce = this.addRelationForce({
+                    nodes: this.posts,
+                    attr: "links",
+                    force: 1
+                }),
+                strongURLForce = this.addRelationForce({
+                    nodes: weakURLForce.nodes,
+                    attr: "slug",
+                    force: 2,
+                    aggregator: (slug) => strongURLForceRegexp.exec(slug)?.[0]
+                })
 
-            SVGNodes.append("title")
-                .text(d => d.id)
+            this.nodes = [
+                ...this.posts.map(p => ({ ...p, radius: p.tags?.length ?? 0, type: 'post'})),
+                ...tagForce.nodes,
+                ...weakURLForce.nodes,
+                ...strongURLForce.nodes,
+            ]
+            const links = [
+                    ...tagForce.links,
+                    ...weakURLForce.links,
+                    ...strongURLForce.links,
+                ]
+            
+            this.simulation = forceSimulation(this.nodes)
+                .force("link", tagForce.force.id(d => d.slug))
+                .force("link", weakURLForce.force.id(d => d.slug))
+                .force("link", strongURLForce.force.id(d => d.slug))
+                .force("charge", forceManyBody())
+                .force("x", forceX())
+                .force("y", forceY());
+
+            const SVGlinks = this.svg.append("g")
+                .attr("stroke", "currentColor")
+                .attr("stroke-opacity", 0.5)
+                .selectAll("line")
+                .data(links)
+                .join("line")
+                .attr("stroke-width", 2);
+
+            const SVGNodes = this.svg.append("g")
+                .attr("stroke", "currentColor")
+                .attr("stroke-width", 1)
+                .selectAll("circle")
+                .data(this.nodes)
+                .join("circle")
+                .attr("r", (d: PostNode) => 3 * (1 + Math.log(1 + (d.radius))))
+                .attr("fill", (d: PostNode) => color(d.type));
             
             // Render simulation
             this.simulation.on("tick", () => {
@@ -63,6 +114,8 @@ const { scale = 500, label, ...props } = Astro.props
                     .attr("cy", d => d.y);
             });
 
+            this.updateViewport()
+
             // Add controls
             SVGNodes
                 .call(drag()
@@ -73,14 +126,62 @@ const { scale = 500, label, ...props } = Astro.props
                 .on("mouseleave", this.#disableTooltip.bind(this))
 		}
 
-        static getSimulation(nodes: Node[], links: Link[]) {
-            const linkForce = forceLink(links)
-            linkForce.strength(2)
-            return forceSimulation(nodes)
-                .force("link", linkForce.id(d => d.id))
-                .force("charge", forceManyBody())
-                .force("x", forceX())
-                .force("y", forceY());
+        addRelationForce<K extends keyof PostReferenceData>({
+            attr,
+            nodes,
+            force,
+            aggregator = (v) => v
+        }: {
+            nodes: PostNode[],
+            attr: K,
+            force: number,
+            aggregator?: (item: { [k in K]: PostReferenceData[k], post: PostReferenceData}) => string | undefined,
+        }): {
+            nodes: PostNode[],
+            links: { value: string, post: PostReferenceData }[],
+            force: ForceLink<SimulationNodeDatum, { source: any, target: any}>
+        } {
+            const prelinks = Object.groupBy(
+                    nodes
+                        .flatMap(post => (
+                            Array.isArray(post[attr]) 
+                            ? post[attr]?.map(value => ({
+                                value: aggregator(value),
+                                post
+                            }))
+                            : [{
+                                value: aggregator(post[attr]),
+                                post
+                            }]
+                        )),
+                    post => post.value
+                ),
+                outnodes = Object.entries(prelinks)
+                    .map(([slug, posts]) => (
+                        { slug, title: slug, type: attr, radius: posts?.length }
+                    )),
+                links = outnodes.flatMap(node => prelinks[node.slug]?.map(
+                    ({post}) => ({source: post, target: node})
+                )),
+                linkForce = forceLink(links)
+            linkForce.strength(force)
+            console.log(attr, prelinks)
+            
+            return { nodes: outnodes, links, force: linkForce }
+        }
+
+        updateViewport() {
+            const xExtent = [
+                    (Math.min(...this.nodes.map(d => d.x as number)) - this.padding) * this.scale,
+                    (Math.max(...this.nodes.map(d => d.x as number)) + this.padding) * this.scale
+                ];
+                const yExtent = [
+                    (Math.min(...this.nodes.map(d => d.y as number)) - this.padding) * this.scale,
+                    (Math.max(...this.nodes.map(d => d.y as number)) + this.padding) * this.scale
+                ];
+
+                // Update viewBox
+                this.svg.attr("viewBox", `${xExtent[0]} ${yExtent[0]} ${xExtent[1] - xExtent[0]} ${yExtent[1] - yExtent[0]}`);
         }
 
         genTooltip() {
@@ -90,38 +191,16 @@ const { scale = 500, label, ...props } = Astro.props
                 .style("display", "none");
         }
 
-        #updateTooltip(ev: MouseEvent, node: NodeWithCoord) {
+        #updateTooltip(ev: MouseEvent, node: PostNode) {
             this.tooltip
                 .style("display", null)
                 .attr("x", node.x)
                 .attr("y", node.y)
-                .text(node.name)
+                .text(node.title)
         }
 
-        #disableTooltip(ev: MouseEvent, node: NodeWithCoord) {
+        #disableTooltip(ev: MouseEvent, node: PostNode) {
             this.tooltip.style("display", "none");
-        }
-
-        genSVGLinks(links: Link[]) {
-            return this.svg.append("g")
-                .attr("stroke", "currentColor")
-                .attr("stroke-opacity", 0.4)
-                .selectAll("line")
-                .data(links)
-                .join("line")
-                .attr("stroke-width", d => Math.sqrt(d.value));
-        }
-
-        genSVGNodes(nodes: Node[]) {
-            return this.svg.append("g")
-                .attr("stroke", "currentColor")
-                .attr("stroke-width", 1)
-                .attr("stroke-opacity", 0.4)
-                .selectAll("circle")
-                .data(nodes)
-                .join("circle")
-                .attr("r", d => d.radius)
-                .attr("fill", d => d.color);
         }
 
         #dragstarted(event: NodeEvent) {
@@ -143,13 +222,13 @@ const { scale = 500, label, ...props } = Astro.props
 	}
 </script>
 
-<object is="svg-graph" aria-hidden="true" {...props}>
-    <svg viewBox={[-.5, -.5, 1, 1].map(v => v * scale).join(' ')} preserveAspectRatio="xMidYMid meet"></svg>
+<div is="post-graph" data-href={(await import(`${postsURL}?url`)).default} aria-hidden="true" {...props}>
+    <svg preserveAspectRatio="xMidYMid meet"></svg>
     {label ? <p>{label}</p> : ''}
-</object>
+</div>
 
 <style lang="scss">
-	[is=svg-graph] {
+	[is=post-graph] {
 		border-radius: .25rem;
 		background: theme.$texture-cross;
 		border: theme.$color-grey 1px solid;

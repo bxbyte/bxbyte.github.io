@@ -9,11 +9,9 @@ const content = {
 	},
 	content: {
 		fr: `
-			Une question, un renseignement ? N'hésitez pas ! <br>
-			Pour des informations sensibles, envoyer un email à cette addresse :
+			Pour les échanges sensibles, envoyer un email à cette addresse :
 		`,
 		en: `
-			A question, need an informations ? Don't hesitate ! <br>
 			For sensible informations, please send a mail to this address :
 		`,
 	},

@@ -1,15 +1,16 @@
 ---
 import { SharpPicture } from "@/modules/picture/components";
 
-interface Props {
-    cover: component.Props_<typeof SharpPicture>['src']
-}
+type Props = Pick<
+	component.Props_<typeof SharpPicture>,
+	"src"
+>
 
-const { cover, ...props } = Astro.props
+const { src, ...props } = Astro.props
 ---
 
 <SharpPicture
-    src={cover}
+    src={src}
     alt="Cover"
     width={1920}
     height={1080}

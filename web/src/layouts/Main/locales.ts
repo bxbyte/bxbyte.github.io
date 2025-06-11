@@ -7,7 +7,7 @@ export default {
 	navLinks: [
 		{ label: { fr: "Accueil", en: "Home" }, href: "/", match: "equal" },
 		{
-			label: { fr: "Posts", en: "Posts" },
+			label: "Publications",
 			href: "/posts",
 			match: "start",
 		},
