@@ -16,7 +16,7 @@ const content = getLocaleContent(locales, Astro)
 		<p slot="pre" role="heading" style="font-size: 1.75rem;">{content.still}</p>
 		<p>
 			{content.content}
-			<Ref href={infos.owner.email} label={infos.owner.email}/>
+			<Ref href={`mailto:${infos.owner.email}`} label={infos.owner.email}/>
 		</p>
 	</Title>
 	<ContactForm />
