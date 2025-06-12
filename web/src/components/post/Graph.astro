@@ -9,8 +9,7 @@ type Props = HTMLAttributes<'object'> & {
 }
 
 const { posts, label, ...props } = Astro.props,
-    postsRefDataURL = await compute(posts, (add) => add(JSON.stringify(posts), "json"), "relative")
-
+    postsRefDataURL = await compute(posts, (add) => add(JSON.stringify(posts), "json"), "url")
 ---
 
 <script>

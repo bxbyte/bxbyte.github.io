@@ -12,7 +12,7 @@ type ArtefactData = Buffer | string
  */
 export const $compute: {
 	absolutePath: string
-	relativePath: string
+	urlPath: string
 	computed: Record<string, any>
 } = ((global as any)["$compute"] ||= {
 	computed: {},
@@ -40,7 +40,7 @@ export async function compute<T>(
 			id?: string
 		) => string
 	) => T,
-	pathMode: 'relative' | 'absolute' = 'relative', 
+	pathMode: "url" | "absolute" = "url"
 ): Promise<T> {
 	const hash = hashObject(key)
 	let computed = $compute.computed[hash]
@@ -60,10 +60,12 @@ export async function compute<T>(
 						(await data) as any
 					)
 				)
-				console.log(pathMode)
+
 				// Return path to artefact
 				return join(
-					pathMode == 'relative' ? $compute.relativePath : $compute.absolutePath, 
+					pathMode == "url"
+						? $compute.urlPath
+						: $compute.absolutePath,
 					filename
 				)
 			}
