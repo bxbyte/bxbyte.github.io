@@ -1,5 +1,6 @@
 import { writeFile } from "fs/promises"
 import hashObject from "object-hash"
+import { join } from "path"
 
 /**
  * Artefact possible data type
@@ -10,8 +11,8 @@ type ArtefactData = Buffer | string
  * Compute store, with shared infos relative to computed & cached data
  */
 export const $compute: {
-	getArtefactAbsolutePath: (filename: string) => string
-	getArtefactRelativePath: (filename: string) => string
+	absolutePath: string
+	relativePath: string
 	computed: Record<string, any>
 } = ((global as any)["$compute"] ||= {
 	computed: {},
@@ -38,7 +39,8 @@ export async function compute<T>(
 			filetype: string,
 			id?: string
 		) => string
-	) => T
+	) => T,
+	pathMode: 'relative' | 'absolute' = 'relative', 
 ): Promise<T> {
 	const hash = hashObject(key)
 	let computed = $compute.computed[hash]
@@ -54,13 +56,16 @@ export async function compute<T>(
 				// Write artefact
 				promised.push(async () =>
 					writeFile(
-						$compute.getArtefactAbsolutePath(filename),
+						join($compute.absolutePath, filename),
 						(await data) as any
 					)
 				)
-
+				console.log(pathMode)
 				// Return path to artefact
-				return $compute.getArtefactRelativePath(filename)
+				return join(
+					pathMode == 'relative' ? $compute.relativePath : $compute.absolutePath, 
+					filename
+				)
 			}
 		)
 		await Promise.all(promised.map((c) => c())) // Wait for all concurrent promise

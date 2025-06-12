@@ -1,6 +1,6 @@
 ---
 import type { PostReferenceData } from "@/content"
-import { compute } from "@/modules/compute/compute"
+import { $compute, compute } from "@/modules/compute/compute"
 import type { HTMLAttributes } from 'astro/types'
 
 type Props = HTMLAttributes<'object'> & {
@@ -8,9 +8,9 @@ type Props = HTMLAttributes<'object'> & {
     posts: PostReferenceData[]
 }
 
-const { posts, label, ...props } = Astro.props
+const { posts, label, ...props } = Astro.props,
+    postsRefDataURL = await compute(posts, (add) => add(JSON.stringify(posts), "json"), "relative")
 
-const postsURL = await compute(posts, (add) => add(JSON.stringify(posts), "json"));
 ---
 
 <script>
@@ -165,7 +165,6 @@ const postsURL = await compute(posts, (add) => add(JSON.stringify(posts), "json"
                 )),
                 linkForce = forceLink(links)
             linkForce.strength(force)
-            console.log(attr, prelinks)
             
             return { nodes: outnodes, links, force: linkForce }
         }
@@ -222,7 +221,7 @@ const postsURL = await compute(posts, (add) => add(JSON.stringify(posts), "json"
 	}
 </script>
 
-<div is="post-graph" data-href={(await import(`${postsURL}?url`)).default} aria-hidden="true" {...props}>
+<div is="post-graph" data-href={postsRefDataURL} aria-hidden="true" {...props}>
     <svg preserveAspectRatio="xMidYMid meet"></svg>
     {label ? <p>{label}</p> : ''}
 </div>

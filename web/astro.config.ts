@@ -68,7 +68,7 @@ export default defineConfig({
 		theme,
 		seo,
 		composer(),
-		compute("_/"),
+		compute(),
 		icon(),
 		mdx({
 			optimize: true,
