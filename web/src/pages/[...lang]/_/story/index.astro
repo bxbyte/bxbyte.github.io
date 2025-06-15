@@ -1,15 +1,15 @@
 ---
 import locales from "./locales"
 import { Section } from "@/layouts"
-import Timeline from "@/components/docs/Timeline"
+import { Title, Timeline } from "@/components"
 import { getLocaleContent } from "@/modules/i18n/content"
-import { Title } from "@/components"
 
 const content = getLocaleContent(locales, Astro)
 ---
 
 <Section id="story" layout="col2">
 	<Title title={content.title}>
-		<p>{content.description}</p></Title>
+		<p>{content.description}</p>
+	</Title>
 	<Timeline items={content.timeline} />
 </Section>

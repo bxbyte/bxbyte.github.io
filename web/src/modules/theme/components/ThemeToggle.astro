@@ -1,5 +1,10 @@
 ---
-const N_SEGMENTS = 6
+import { getLocaleContent } from "@/modules/i18n/content"
+
+const content = getLocaleContent({
+	fr: "Changer de theme",
+	en: "Switch theme",
+}, Astro)
 ---
 
 <script>
@@ -16,7 +21,7 @@ const N_SEGMENTS = 6
 	)
 </script>
 
-<button is="toggle-theme"><slot></button>
+<button is="toggle-theme" title={content}><slot></button>
 
 <style lang="scss">
 	button::after {

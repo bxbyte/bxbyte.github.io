@@ -42,8 +42,14 @@ const content = {
 				en: "Bachelor in Computer Science",
 			},
 			description: {
-				fr: `Étude appliquée de multiples domaines de l'informatique, spécialisé dans le développement d'applications.`,
-				en: `Applied study of multiple computer science fields, specialized in application development.`,
+				fr: `
+					Études à l'IUT2 de Grenoble de multiples domaines de l'informatique, 
+					spécialisé dans le développement d'applications.
+				`,
+				en: `
+					Study at the IUT2 of Grenoble of multiple computer science fields, 
+					specialized in application development.
+					`,
 			},
 			items: [
 				{

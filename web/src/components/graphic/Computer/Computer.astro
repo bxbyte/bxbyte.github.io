@@ -1,0 +1,65 @@
+---
+import { SharpPicture } from "@/modules/picture/components";
+import computerImg from "./computer.png"
+import type { HTMLAttributes } from "astro/types";
+
+export type Props = HTMLAttributes<'div'>
+
+const { class: class_, ...props } = Astro.props
+---
+
+<div {...props} >
+    <SharpPicture 
+        src={computerImg}
+        computeImg={img => img.greyscale()}
+        alt="Picture profile"
+    />
+    <div>
+        <slot/>
+    </div>
+</div>
+
+
+<style lang="scss">
+	div {
+		padding: 2em;
+		position: relative;
+		transform-style: preserve-3d;
+		perspective-origin: 100% 60%;
+		perspective: 4000px;
+
+		&>picture {
+			pointer-events: none;
+			user-select: none;
+			transform: translate3d(5px, -1px, 30px);
+
+			&.loading + * {
+				opacity: 0;
+			}
+
+			& + * {
+				transition: opacity 1s ease-in-out;
+			}
+		}
+
+		:global(img) {
+			height: 100%;
+			width: 100%;
+			filter: brightness(calc(1 - .25 * theme.$bool-is-dark));
+		}
+
+		& > div {
+			position: absolute;
+			pointer-events: all;
+			width: 43%;
+			height: 43%;
+			top: 0;
+			left: 0;
+			color: #f0ecec;
+			font-size: .6rem;
+			overflow: scroll;
+			box-sizing: border-box;
+			transform: translate3d(68%,31%,0) rotateX(-5deg) rotateY(-11deg) rotateX(-1deg);
+		}
+	}
+</style>

@@ -78,7 +78,7 @@ if (type == "pdf")
 			<div>
 				<h1>{title}</h1>
 				<p>{description}</p>
-				{cover && <PostCover src={cover}/>}
+				{cover && <PostCover src={cover} ratio/>}
 			</div>
 		</header>
 		{
@@ -165,7 +165,7 @@ if (type == "pdf")
 			}
 
 			picture {
-				max-width: layout.$img-max-width;;
+				max-width: layout.$img-max-width;
 				border-radius: 1em;
 				filter: brightness(calc(1 - .1 * (theme.$bool-is-dark)));
 				margin-top: 1em;

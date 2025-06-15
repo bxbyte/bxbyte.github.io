@@ -91,6 +91,7 @@ const { head, ...props } = Astro.props
 
 		& > header {
 			justify-content: space-between;
+			flex-wrap: wrap;
 			backdrop-filter: blur(1em);
 			transition: transform 0.2s ease-in-out;
 			background: linear-gradient(
@@ -141,7 +142,7 @@ const { head, ...props } = Astro.props
 			pre {
 				right: 0;
 				bottom: 0;
-				opacity: 0.4;
+				color: color-mix(in srgb, theme.$color-grey, theme.$color-black 20%);
 				margin-top: auto;
 				margin-left: auto;
 			}

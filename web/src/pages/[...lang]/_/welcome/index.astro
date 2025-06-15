@@ -4,7 +4,8 @@ import { getLocaleContent } from "@/modules/i18n/content"
 import locales from "./locales"
 import { GridPicture, SharpPicture, getMeta, withCanvas, withSteps } from "@/modules/picture/components"
 import backImgPath from "./back.png?path"
-import ppImgPath from "./pp.png"
+import ppImg from "./pp.png"
+import { md } from "@/modules/composer/server"
 import { mulberry32 } from "@/modules/composer/utils"
 
 const content = getLocaleContent(locales, Astro)
@@ -48,22 +49,20 @@ const content = getLocaleContent(locales, Astro)
 	/>
 
 	<div class="hi">
-		<p role="heading">{content.hi}</p>
+		<p>{content.hi}</p>
 		<h1>{content.iam}</h1>
 		<p>{content.status}</p>
 	</div>
 
 	<div class="infos">
 		<SharpPicture 
-			src={ppImgPath}
+			src={ppImg}
 			computeImg={img => img.greyscale()}
 			alt="Picture profile"
 			width="512"
 			height="512"
 		/>
-		<p>
-			{content.what}
-		</p>
+		<Fragment set:html={md(content.what)} />
 	</div>
 
 	<p class="footer">{content.easteregg}</p>

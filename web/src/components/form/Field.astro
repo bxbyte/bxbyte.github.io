@@ -1,6 +1,5 @@
 ---
 import type { HTMLAttributes } from "astro/types"
-import { newId } from "@/modules/composer/server"
 
 type Props<T extends "input" | "textarea" = "input"> = HTMLAttributes<T> & {
 	el?: T
@@ -8,7 +7,6 @@ type Props<T extends "input" | "textarea" = "input"> = HTMLAttributes<T> & {
 	placeholder?: string
 }
 
-const id = newId()
 const { el: Element = "input", name, placeholder, ...props } = Astro.props
 ---
 
@@ -16,11 +14,11 @@ const { el: Element = "input", name, placeholder, ...props } = Astro.props
 	<Element
 		{...props}
 		class={props.class}
-		id={id}
+		id={name}
 		name={name}
 		placeholder=""
 	/>
-	<label for={id}>{placeholder}</label>
+	<label for={name}>{placeholder}</label>
 </div>
 
 <style lang="scss">
@@ -33,7 +31,7 @@ const { el: Element = "input", name, placeholder, ...props } = Astro.props
 		&:not(:has(*:placeholder-shown)) label,
 		&:has(*:focus) label {
 			top: $input-padding;
-			opacity: 0.8;
+			// opacity: 0.8;
 			font-size: $label-size;
 		}
 
@@ -41,17 +39,17 @@ const { el: Element = "input", name, placeholder, ...props } = Astro.props
 			position: absolute;
 			top: calc($input-padding + $label-size / 2);
 			left: $input-padding;
-			opacity: 0.5;
+			// opacity: 0.5;
 			transition: 0.1s ease-in-out;
 			transition-property: top, left, opacity, font-size;
 			width: fit-content;
 			pointer-events: none;
-			color: #{theme.$color-black};
+			color: color-mix(in srgb, theme.$color-grey, theme.$color-black 70%);
 		}
 
 		input,
 		textarea {
-			border: 1px solid #{theme.$color-grey};
+			border: 1px solid theme.$color-grey;
 			border-radius: 0.2em;
 			padding: calc($label-size + $input-padding) $input-padding
 				$input-padding $input-padding;

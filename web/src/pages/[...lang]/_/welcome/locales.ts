@@ -1,3 +1,5 @@
+import infos from "@/data/infos"
+
 const content = {
 	hi: {
 		en: "Welcome !",
@@ -9,28 +11,28 @@ const content = {
 	},
 	status: {
 		en: "Applicated computer science student at the University of Grenoble-Alpes",
-		fr: "Etudiant en BUT informatique de l'Université Grenoble-Alpes",
+		fr: "Étudiant en BUT Informatique à l'Université Grenoble-Alpes",
 	},
 	what: {
 		en: `
-			Hi ! Lucas Maillet here, this is my portfolio with all my stuff,
-			some infos on me, some publications, etc. you get the idea.
-			As an informatic maniac, I study to become a researcher in the field,
-			but for now I need to finish my BUT.
-			I like hiking on the Alpes and from time to time I found  a rock
-			for my collection.
+			Hello! I'm Lucas Maillet, and this is my portfolio,
+			with information about me, some publications, etc.—in short, a portfolio.
+			Passionate about computer science, I'm studying to become a researcher in the field,
+			but the road is long and for now I'm finishing my BUT in Computer Science.
+			Besides computer science, I'm also passionate about photography and mineralogy,
+			which is why I love hiking in the Grenoble Alps.
 		`,
 		fr: `
-			Bonjour ! Ici Lucas Maillet et voici mon portfolio,
+			Bonjour ! Je suis Lucas Maillet, et voici mon portfolio,
 			avec des infos sur moi, des publications, etc., bref un portfolio quoi.
-			Passioné d'informatique, j'étudie pour devenir chercheur en la matière,
-			mais bon pour l'instant je finis mon BUT.
-			J'aime bien galoper sur les Alpes et j'y ramasse un caillou 
-			de temps en temps pour ma collection.
+			Passionné d'informatique, j'étudie pour devenir chercheur dans ce domaine,
+			mais le chemin est long et pour l'instant je termine mon BUT Informatique.
+			À part l'informatique, je me passionne aussi pour la photo et la minéralogie,
+			c'est pourquoi j'aime me balader dans les Alpes grenobloises. 
 		`,
 	},
 	easteregg: {
-		fr: "🗻 Parc Nat' de Belledone",
+		fr: "🗻 Parc Nat' de Belledonne",
 		en: "🗻 Belledone's park",
 	},
 }

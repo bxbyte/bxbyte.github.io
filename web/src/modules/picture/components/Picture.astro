@@ -8,15 +8,17 @@ type Props = Pick<
 	component.Props_<typeof AstroPicture>,
 	"alt" | "width" | "height"
 > & PictureProps["pictureAttributes"] & {
-	noPlaceholder?: boolean,
-	src: ImageMetadata
+	src: ImageMetadata,
+	nop?: boolean,
+	ratio?: boolean
 }
 
-const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
+const { src, alt, width, height, nop = false, ratio = false, ...rawProps } = Astro.props,
 	props = p(rawProps)
 		.with("is", "optimized-image")
 		.with("class", "loading")
-		.with("class", noPlaceholder && "nop")
+		.with("class", nop && "nop")
+		.with("style", ratio && `--r:${ Math.round(src.width / src.height * 1e3) / 1e3 }`)
 ---
 
 <script>
@@ -55,6 +57,8 @@ const { src, alt, width, height, noPlaceholder, ...rawProps } = Astro.props,
 	picture {
 		position: relative;
 		overflow: hidden;
+		display: flex;
+		aspect-ratio: var(--r);
 
 		img,
 		&::after {

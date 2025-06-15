@@ -31,15 +31,6 @@ const { head, ...props } = Astro.props
 		<slot name="head" />
 	</head>
 	<body {...props}>
-		{
-			globalComponents && (
-				<div hidden>
-					{globalComponents.map((c) => (
-						<c.default />
-					))}
-				</div>
-			)
-		}
 		<slot />
 	</body>
 </html>

@@ -6,6 +6,7 @@ const owner = {
 	jobTitle: "IT Student",
 	affiliation: "IUT 2 Grenoble",
 	email: "in@lucas-maillet.fr",
+	linkedin: "https://www.linkedin.com/in/mailletl",
 	tel: "+33 06 68 10 76 04",
 }
 
@@ -15,7 +16,7 @@ export default {
 		{
 			label: "Linkedin",
 			icon: "mdi:linkedin",
-			href: "https://www.linkedin.com/in/mailletl",
+			href: owner.linkedin,
 		},
 		{
 			label: "Github",

@@ -38,10 +38,10 @@ const content = getLocaleContent(locales, Astro)
 </script>
 
 <form is="contact-form" onsubmit="return false">
-	<fieldset>
+	<div>
 		<Field name="name" required placeholder={content.form.name} />
 		<Field name="email" type="email" required placeholder={content.form.email} />
-	</fieldset>
+	</div>
 	<Field name="subject" required placeholder={content.form.subject} />
 	<Field
 		el="textarea"
@@ -50,13 +50,13 @@ const content = getLocaleContent(locales, Astro)
 		placeholder={content.form.message}
 		rows="6"
 	/>
-	<fieldset>
+	<div>
 		<Button type="submit">{content.form.send}</Button>
 		<Button variant="secondary" type="reset">
 			{content.form.clear}
 			<Icon name="mdi:trash" />
 		</Button>
-	</fieldset>
+	</div>
 </form>
 
 <style lang="scss">
@@ -82,7 +82,7 @@ const content = getLocaleContent(locales, Astro)
 		flex-direction: column;
 		gap: 1em;
 
-		& > fieldset {
+		& > div {
 			display: flex;
 			flex-flow: row wrap;
 			gap: 1em;
