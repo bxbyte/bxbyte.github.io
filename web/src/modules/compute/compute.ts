@@ -65,7 +65,7 @@ export async function compute<T>(
 				return join(
 					pathMode == "url"
 						? $compute.urlPath
-						: $compute.absolutePath,
+						: "file://" + $compute.absolutePath,
 					filename
 				)
 			}
